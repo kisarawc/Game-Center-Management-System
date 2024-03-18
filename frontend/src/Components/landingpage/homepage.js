@@ -16,7 +16,7 @@ const HomePage = () => {
           backgroundPosition: 'center',
           minHeight: '100vh',
           display: 'flex',
-          flexDirection: 'column', // Added to display items vertically
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'flex-start',
         
