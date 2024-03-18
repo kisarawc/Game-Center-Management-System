@@ -1,6 +1,5 @@
 import React from 'react';
-import { Box, ThemeProvider, Typography } from '@mui/material';
-import theme from '../../styles/theme';
+import { Box, Typography } from '@mui/material';
 import Header from '../common/Header/header';
 import Footer from '../common/Footer/footer';
 
@@ -8,7 +7,7 @@ import Footer from '../common/Footer/footer';
 
 const HomePage = () => {
   return (
-    <ThemeProvider theme={theme}>
+    <Box>
       <Header />
       <Box
         sx={{
@@ -17,7 +16,7 @@ const HomePage = () => {
           backgroundPosition: 'center',
           minHeight: '100vh',
           display: 'flex',
-          flexDirection: 'column', // Added to display items vertically
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'flex-start',
         
@@ -44,7 +43,7 @@ const HomePage = () => {
         </Box>
       </Box>
       <Footer />
-    </ThemeProvider>
+    </Box>
   );
 }
 
