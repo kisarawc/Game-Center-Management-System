@@ -14,9 +14,9 @@ const Header = () => {
 
   const getButton = () => ({
     variant: "outlined",
-    size: 'large',
-    sx: { ml: 10 ,color: 'white' , borderRadius: '10px' ,  fontSize: '1.09rem'}
+    sx: { ml: 10 ,color: 'white' , borderRadius: '10px',fontSize:'1.1rem',padding:'10px 50px' }
   });
+  
 
   return (
     <ThemeProvider theme={theme}>
@@ -36,14 +36,14 @@ const Header = () => {
           <Button component={NavLink} to="/events" {...getButton()}>Events</Button>
 
       
-          <Divider orientation="vertical" flexItem sx={{ml: 30,width: 5, backgroundColor: 'purple', mr: 10}} />
+          <Divider orientation="vertical" flexItem sx={{ml: 20,width: 5, backgroundColor: 'purple', mr: 5}} />
            <Box sx={{display:'flex', flexDirection: 'column', alignItems:'center'}}>
             <Button variant='outlined' sx={{width:'100px' , mb:'8px'}}>Register</Button>
             <Button variant='outlined' sx={{width:'100px'}}>Log in</Button>
 
           </Box>
           
-            <AccountCircleOutlinedIcon  sx={{ fontSize: '45px', color:'white' , ml:5}}/> 
+            <AccountCircleOutlinedIcon  sx={{ fontSize: '45px', color:'white' , ml:2}}/> 
           
          
         
