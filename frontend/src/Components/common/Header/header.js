@@ -14,7 +14,7 @@ const Header = () => {
 
   const getButton = () => ({
     variant: "outlined",
-    sx: { ml: 10 ,color: 'white' , borderRadius: '10px',fontSize:'1.1rem',padding:'10px 50px' }
+    sx: { ml: 10 ,color: 'white' , borderRadius: '10px',fontSize:'1.1rem',padding:'10px 50px' , boxShadow: '0 0 10px #05cff7'}
   });
   
 
@@ -38,8 +38,8 @@ const Header = () => {
       
           <Divider orientation="vertical" flexItem sx={{ml: 20,width: 5, backgroundColor: 'purple', mr: 5}} />
            <Box sx={{display:'flex', flexDirection: 'column', alignItems:'center'}}>
-            <Button variant='outlined' sx={{width:'100px' , mb:'8px'}}>Register</Button>
-            <Button variant='outlined' sx={{width:'100px'}}>Log in</Button>
+            <Button variant='outlined' sx={{width:'100px' , mb:'8px',boxShadow: '0 0 8px #9605f7'}}>Register</Button>
+            <Button variant='outlined' sx={{width:'100px',boxShadow: '0 0 8px #9605f7'}}>Log in</Button>
 
           </Box>
           

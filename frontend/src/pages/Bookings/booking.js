@@ -24,7 +24,7 @@ const Book = () => {
             ...
             ... */}
   
-  
+
           </Box>
       <Footer />
     </Box>
