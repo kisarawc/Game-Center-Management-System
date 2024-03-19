@@ -20,9 +20,7 @@ const Book = () => {
            }}>
 
 
-            {/* code ...
-            ...
-            ... */}
+          hello
   
 
           </Box>
