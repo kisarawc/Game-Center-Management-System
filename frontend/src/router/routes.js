@@ -8,6 +8,7 @@ const MyRouter = () => {
            <Routes>
                 <Route exact path='/' Component={HomePage}></Route>
                 <Route path='/book' Component={Book}></Route>
+                
             </Routes>
     );
 }
