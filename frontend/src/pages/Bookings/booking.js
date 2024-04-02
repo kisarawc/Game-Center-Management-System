@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 const Book = () => {
   return (
@@ -18,10 +18,8 @@ const Book = () => {
             justifyContent: 'flex-start',
           
            }}>
-
-
-         
-
+           
+          
           </Box>
       <Footer />
     </Box>
