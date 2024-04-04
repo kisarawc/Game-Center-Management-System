@@ -34,7 +34,7 @@ const BookingForm = () => {
       </Box>
       
       {/* Form */}
-      <Box sx={{ width: '400px', padding: '20px',textAlign: 'center', backgroundColor: 'rgba(255, 255, 255, 0.4)', borderRadius: '20px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.8)' }}>
+      <Box sx={{ width: '400px', padding: '20px',textAlign: 'center', backgroundColor: 'rgba(255, 255, 255, 0.7)', borderRadius: '20px', boxShadow: '0 4px 6px rgba(0, 0, 0, 0.8)' }}>
         <Typography variant="h4" sx={{ marginBottom: '20px'}}>Booking Form</Typography>
         <form onSubmit={handleSubmit}>
           <TextField
