@@ -7,11 +7,14 @@ import PaymentOne from '../pages/payment/paymnetone';
 import PaymentTwo from '../pages/payment/paymnettwo';
 import PaymentThree from '../pages/payment/paymentthree';
 
+import Event from '../pages/events/Event';
+
 const MyRouter = () => {
     return (
         <Routes>
             <Route exact path='/' element={<HomePage />} />
             <Route path='/book' element={<Book />} />
+
             <Route path='/payment' element={<Payment />} />
             <Route path='/paymentone' element={<PaymentOne />} />
             <Route path='/paymenttwo' element={<PaymentTwo />} />
@@ -19,6 +22,9 @@ const MyRouter = () => {
 
             
             
+
+            <Route path='/Events' element={<Event/>} />
+
             
         </Routes>
     );
