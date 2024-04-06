@@ -34,19 +34,16 @@ const Header = () => {
           <Button component={NavLink} to="/games" {...getButton()}>Games</Button>
           <Button component={NavLink} to="/book" {...getButton()} >Book</Button>
           <Button component={NavLink} to="/events" {...getButton()}>Events</Button>
-
-      
+          
           <Divider orientation="vertical" flexItem sx={{ml: 20,width: 5, backgroundColor: 'purple', mr: 5}} />
            <Box sx={{display:'flex', flexDirection: 'column', alignItems:'center'}}>
-            <Button variant='outlined' sx={{width:'100px' , mb:'8px',boxShadow: '0 0 8px #9605f7'}}>Register</Button>
+            <Button component={NavLink} to="/signup" {...getButton()} variant='outlined' sx={{width:'100px' , mb:'8px',boxShadow: '0 0 8px #9605f7'}}>Register</Button>
             <Button component={NavLink} to="/login" {...getButton()} variant='outlined' sx={{width:'100px',boxShadow: '0 0 8px #9605f7'}}>Log in</Button>
 
           </Box>
           
             <AccountCircleOutlinedIcon  sx={{ fontSize: '45px', color:'white' , ml:2}}/> 
           
-         
-        
         </Toolbar>
       </AppBar>
     </ThemeProvider>

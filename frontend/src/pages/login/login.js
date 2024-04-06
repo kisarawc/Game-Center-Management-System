@@ -1,80 +1,73 @@
 import React from 'react';
-import { makeStyles } from '@mui/styles';
-import { Container, Typography, TextField, Button, Grid } from '@mui/material';
-import { spacing } from '@mui/system'; // Import the spacing function
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    marginTop: spacing(8), // Use spacing function directly
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  form: {
-    width: '100%',
-    marginTop: spacing(1), // Use spacing function directly
-  },
-  submit: {
-    margin: spacing(3, 0, 2), // Use spacing function directly
-  },
-}));
+import { Container, Typography, TextField, Button, Grid, Link, Paper, CssBaseline } from '@mui/material';
+import { NavLink } from 'react-router-dom';
+import loginBackground from '../../images/login/login.jpg';
 
 const Login = () => {
-  const classes = useStyles();
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your login logic here
   };
 
+const getButton = () => ({
+    variant: "outlined",
+    sx: { ml: 10 ,color: 'white' , borderRadius: '10px',fontSize:'1.1rem',padding:'10px 50px' , boxShadow: '0 0 10px #05cff7'}
+  });
+
   return (
+    <div style={{ backgroundImage: `url(${loginBackground})`, backgroundSize: 'cover', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+
     <Container component="main" maxWidth="xs">
-      <div className={classes.root}>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form className={classes.form} onSubmit={handleSubmit}>
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Sign In
-          </Button>
-          <Grid container justifyContent="flex-end">
-            <Grid item>
-              <Button href="#" color="primary">
-                Forgot password?
-              </Button>
+      <CssBaseline />
+      <div style={{ marginTop: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Paper style={{ marginTop: '64px', padding: '32px', display: 'flex', flexDirection: 'column', alignItems: 'center', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)' }}>
+          <Typography component="h1" variant="h5" style={{ fontFamily: 'Arial', fontSize: '32px', fontWeight: 'bold', marginBottom: '16px' }}>
+            Log In
+          </Typography>
+          <form style={{ width: '100%', marginTop: '8px' }} onSubmit={handleSubmit}>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+            />
+            <Button 
+              component={NavLink} to="/profile" {...getButton()}
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              style={{ margin: '24px 0px 16px' }}
+            >
+              Sign In
+            </Button >
+            <Grid container justifyContent="center" style={{ marginTop: '16px' }}>
+              <Grid>
+                <Link href="signup" variant="body2">
+                  Don't have an account? Sign Up
+                </Link>
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
+          </form>
+        </Paper>
       </div>
     </Container>
+    </div>
   );
 };
 
