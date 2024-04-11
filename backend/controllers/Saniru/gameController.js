@@ -20,19 +20,41 @@ exports.getAllGames = async (req, res) => {
   }
 };
 
+// exports.deleteGame = async (req, res) => {
+//   try {
+//     const { gameId } = req.params;
+
+//     // Delete the game
+//     const deletedGame = await Game.findByIdAndDelete(gameId);
+
+//     if (!deletedGame) {
+//       return res.status(404).json({ error: 'Game not found' });
+//     }
+//   } 
+//   catch (error) {
+//     res.status(500).json({ error: 'Internal server error' });
+//   }
+// };
+
 exports.deleteGame = async (req, res) => {
   try {
-    const { gameId } = req.params;
-
-    // Delete the game
-    const deletedGame = await Game.findByIdAndDelete(gameId);
-
-    if (!deletedGame) {
-      return res.status(404).json({ error: 'Game not found' });
+    const games = await Game.findByIdAndDelete(req.params.gameId);
+    if (!games) {
+      res.status(404).json({
+        status: 'fail',
+        message: 'Booking not found'
+      });
+      return;
     }
-  } 
-  catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(204).json({
+      status: 'success',
+      data: null
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: err.message
+    });
   }
 };
 

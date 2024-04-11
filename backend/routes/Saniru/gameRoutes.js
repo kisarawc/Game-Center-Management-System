@@ -4,8 +4,8 @@ const router = express.Router();
 const gameController = require('../../controllers/Saniru/gameController');
 
 router.get('/', gameController.getAllGames);
-router.post('/', gameController.createEvent);
-router.delete('/:eventId', gameController.deleteEvent);
-router.put('/:eventId', gameController.updateEvent);
+router.post('/createGame', gameController.createGame);
+router.delete('/deleteGame/:gameId', gameController.deleteGame);
+router.put('/updateGame/:gameId', gameController.updateGame);
 
 module.exports = router;
