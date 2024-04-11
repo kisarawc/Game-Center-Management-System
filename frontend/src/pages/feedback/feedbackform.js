@@ -3,7 +3,7 @@ import { Grid, Typography, Input } from "@mui/material";
 
 const feedbackform = props => {
     return (
-        <Grid
+        <Grid component={'center'}
 
 
 
@@ -177,13 +177,15 @@ const feedbackform = props => {
             </Grid>
             <button
                 sx={{
+                    margin: 'auto',
                     marginRight: '200px',
-                    marginBottom: '200px',
+                    marginBottom: '20px',
                     backgroundColor: '#00c6e6',
                     color: '#000000',
                     marginleft: '200px',
-                    marginTop: '300px',
-                    width: '200px',
+                    marginTop: '30px',
+
+
                     '&:hover': {
                         Opacity: '0.7',
                         backgroundColor: '#00c6e6',
