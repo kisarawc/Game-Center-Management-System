@@ -1,3 +1,5 @@
+//login
+
 import React from 'react';
 import { Container, Typography, TextField, Button, Grid, Link, Paper, CssBaseline } from '@mui/material';
 import { NavLink } from 'react-router-dom';
@@ -8,13 +10,13 @@ const Login = () => {
     e.preventDefault();
   };
 
-const getButton = () => ({
+  const getButton = () => ({
     variant: "outlined",
     sx: { ml: 10 ,color: 'white' , borderRadius: '10px',fontSize:'1.1rem',padding:'10px 50px' , boxShadow: '0 0 10px #05cff7'}
   });
 
   return (
-    <div style={{ backgroundImage: `url(${loginBackground})`, backgroundSize: 'cover', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <div style={{ backgroundImage: `url(${loginBackground})`, backgroundSize: 'cover', height: '100vh', width: '221.9vh', display: 'flex', justifyContent: 'center', alignItems: 'center' , marginLeft: -24}}>
 
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -58,7 +60,14 @@ const getButton = () => ({
             </Button >
             <Grid container justifyContent="center" style={{ marginTop: '16px' }}>
               <Grid>
-                <Link href="signup" variant="body2">
+                <Link href="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+            </Grid>
+            <Grid container justifyContent="center" style={{ marginTop: '8px' }}>
+              <Grid>
+                <Link component={NavLink} to="/signup" variant="body2">
                   Don't have an account? Sign Up
                 </Link>
               </Grid>
