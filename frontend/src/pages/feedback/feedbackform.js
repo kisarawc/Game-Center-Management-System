@@ -179,7 +179,7 @@ const feedbackform = props => {
                 sx={{
                     margin: 'auto',
                     marginRight: '200px',
-                    marginBottom: '20px',
+                    marginBottom: '10px',
                     backgroundColor: '#00c6e6',
                     color: '#000000',
                     marginleft: '200px',

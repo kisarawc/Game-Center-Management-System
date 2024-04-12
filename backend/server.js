@@ -2,8 +2,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const eventRoutes = require('./routes/Ravindu/eventRoutes'); 
+const eventRoutes = require('./routes/Ravindu/eventRoutes');
 const commentRoutes = require('./routes/Ravindu/commentRoutes');
+const feedbackRoutes = require('./routes/Radeesa/feedbackRoutes');
+const commentRoutes = require('./routes/Radeesa/commentRoutes');
 require('dotenv').config();
 
 
@@ -13,25 +15,29 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json()); // Middleware to parse JSON request bodies
 
+
 // Connect to MongoDB Atlas
 mongoose.connect(process.env.MONGODB_URL, {
-    dbName: 'GGLounge', 
+    dbName: 'GGLounge',
     // useNewUrlParser: true,
     // useUnifiedTopology: true,
 })
-.then(() => {
-    console.log('Connected to MongoDB Atlas');
-    
-    // Use event routes
-    app.use('/api/events', eventRoutes);
-    app.use('/api/events', commentRoutes);// Using '/api' as the base URL for event routes
+    .then(() => {
+        console.log('Connected to MongoDB Atlas');
 
-    
-    // Start the server
-    app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
+        // Use event routes
+        app.use('/api/events', eventRoutes);
+        app.use('/api/events', commentRoutes);// Using '/api' as the base URL for event routes
+
+        app.use('/api/feedback', feedbackRoutes);
+        app.use('/api/feedback', commentRoutes);
+
+        // Start the server
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
+    })
+    .catch(err => {
+        console.error('Error connecting to MongoDB Atlas:', err);
     });
-})
-.catch(err => {
-    console.error('Error connecting to MongoDB Atlas:', err);
-});
+
