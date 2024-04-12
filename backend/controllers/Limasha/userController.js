@@ -1,5 +1,5 @@
 const User = require('../../models/Limasha/User');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 // Get all the users
@@ -23,7 +23,6 @@ exports.getAllUsers = async (req, res) => {
 //create a user
 exports.createUser = async (req, res) => {
   try {
-<<<<<<< Updated upstream
     const { name, username, email, password, joinDate, gender, role } = req.body;
 
     // Hash the password
@@ -32,10 +31,6 @@ exports.createUser = async (req, res) => {
     const newUser = new User({ name, username, email, password: hashedPassword, joinDate, gender, role 
     });
 
-=======
-    const { name, username, email, password, joinDate, gender } = req.body;
-    const newUser = new User({ name, username, email, password, joinDate, gender });
->>>>>>> Stashed changes
     const savedUser = await newUser.save();
 
     // Return the response
@@ -53,7 +48,6 @@ exports.createUser = async (req, res) => {
     });
   }
 };
-
 
 //update user
 exports.updateUser = async (req, res) => {
@@ -83,42 +77,97 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
-//login 
+// //login 
+// exports.userLogin = async (req, res) => {
+//   const { email, password } = req.body;
+
+//   try {
+//     const user = await User.findOne({ email });
+
+//     if (!user) {
+//       return res.status(401).json({ message: 'Invalid email or password' });
+//     }
+
+//     const passwordMatch = await bcrypt.compare(password, user.password);
+
+//     if (!passwordMatch) {
+//       return res.status(401).json({ message: 'Invalid email or password' });
+//     }
+
+//     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
+
+//     return res.status(200).json({ token, userId: user._id });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ message: 'Internal server error' });
+//   }
+// };
+
+
+// //login
+// exports.userLogin = async (req, res) => {
+//   const { email, password } = req.body;
+
+//   // Basic validation (improve based on your requirements)
+//   if (!email || !password) {
+//     return res.status(400).json({ message: 'Email and password are required.' });
+//   }
+
+//   try {
+//     // Find user by email
+//     const user = await User.findOne({ email });
+
+//     if (!user) {
+//       return res.status(401).json({ message: 'Invalid email .' });
+//     }
+
+//     // Compare password hashes (using bcrypt)
+//     const isMatch = await bcrypt.compare(password, user.password);
+
+//     if (!isMatch) {
+//       return res.status(401).json({ message: 'Invalid password.' });
+//     }
+
+//     // Login successful (replace with appropriate token generation and handling)
+//     const token = 'your_jwt_token'; // Replace with actual token generation logic
+
+//     res.json({
+//       message: 'Login successful!',
+//       token,
+//       user: { // Send relevant user data after successful login
+//         userId: user._id,
+//         email: user.email,
+//         // Other user data you want to send to the frontend
+//       }
+//     });
+//   } catch (error) {
+//     console.error(error); // Log the error for debugging
+//     res.status(500).json({ message: 'Internal server error.' }); // Send generic error to user
+//   }
+// };
+
 exports.userLogin = async (req, res) => {
   const { email, password } = req.body;
 
-  // Test email and password received from the frontend
-  console.log(email, password);
-
   try {
-    const user = await User.findOne({ Email: email });
-
-    // Test if user is found
-    console.log(user);
+    // Find the user by email
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    // Test if user passwords are correctly matched
-    console.log(password);
-    console.log(user.Password);
+    // Compare the user-provided password with the hashed password stored in the database
+    const passwordMatch = await bcrypt.compare(password, user.password);
 
-    // Check if password is correct
-    if (password !== user.Password) {
+    if (!passwordMatch) {
       return res.status(401).json({ message: 'Invalid email or password' });
-    } else {
-      // Login successful
-      console.log('Login success');
-      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
-      // Test token generation
-      console.log(token);
-      // Send the token
-      return res.status(200).json({ token, userId: user._id });
     }
+
+    // If the passwords match, return success
+    res.json({ message: 'Success' });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
-

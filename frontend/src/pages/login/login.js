@@ -5,33 +5,23 @@ import loginBackground from '../../images/login/login.jpg';
 import axios from 'axios';
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
-  // HANDLE LOGIN
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    try {
-      const response = await axios.post('/users/login', {
-        email,
-        password,
-      });
-      localStorage.setItem('userId', response.data.userId);
+       e.preventDefault();
 
-      if (email === 'ranmali@gmail.com' && password === 'ran123') {
-        // Redirect to the admin dashboard
-        window.location.href = '/adminDashboard';
-      } else {
-        // Redirect to the profile page
-        window.location.href = '/profile';
-      }
-    } 
-    catch (error) {   // if error occurs while login
-      alert('Check your email or password');
-      console.log(error);
-    }
-  };
+       axios.post('http://localhost:5000/api/users/login', {email, password})
+       .then(result => {
+        console.log(result)
+        if(result.data === "Success")
+        {
+          window.location.href = '/adminDashboard';
+        }
+       })
+       .catch(err=> console.log(err))
+}
 
   const getButton = () => ({
     variant: "outlined",

@@ -28,14 +28,10 @@ const SignUp = () => {
       if(response.status === 201){
         window.alert('You have successfully registered!');
         window.location.href = '/login';
-<<<<<<< Updated upstream
       } 
       else {
         window.alert(`Error : ${response.data.message}`);
-=======
-      } else {
-        window.alert(`error : ${response.data.message}`);
->>>>>>> Stashed changes
+
       }
 
     } catch (error) {
