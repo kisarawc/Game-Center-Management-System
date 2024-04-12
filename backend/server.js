@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const eventRoutes = require('./routes/Ravindu/eventRoutes'); 
 const commentRoutes = require('./routes/Ravindu/commentRoutes');
+const paymentRoutes = require('./routes/Shavindi/paymentRoutes');
+const cardRoutes = require('./routes/Shavindi/cardRoutes');
 require('dotenv').config();
 
 
@@ -25,7 +27,8 @@ mongoose.connect(process.env.MONGODB_URL, {
     // Use event routes
     app.use('/api/events', eventRoutes);
     app.use('/api/events', commentRoutes);// Using '/api' as the base URL for event routes
-
+    app.use('/api/payments', paymentRoutes);
+    app.use('/api/payments', cardRoutes);
     
     // Start the server
     app.listen(PORT, () => {
