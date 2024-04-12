@@ -6,7 +6,7 @@ const bookingSchema = new mongoose.Schema({
   end_time: { type: Date },
   message_request: { type: String },
   user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  game_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Game' },
+  game_name: { type: String }, 
   status: { type: String },
   num_players: { type: Number }
 });

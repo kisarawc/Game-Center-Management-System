@@ -1,4 +1,5 @@
 const Booking = require('../../models/Chathuka/Booking');
+const Game = require('../../models/Saniru/Game');
 
 // Controller function to get all bookings
 exports.getAllBookings = async (req, res) => {
@@ -111,3 +112,24 @@ exports.deleteBooking = async (req, res) => {
     });
   }
 };
+
+
+exports.getBookingDetailsByGameAndDate = async (req, res) => {
+  const { gameName, date } = req.params;
+
+  try {
+    // Find all bookings related to the selected game name and date
+    const bookings = await Booking.find({ game_name: gameName, date: date }).exec();
+
+    if (bookings.length === 0) {
+      return res.status(404).json({ message: 'No bookings found for the game and date.' });
+    }
+
+    res.json(bookings);
+  } catch (error) {
+    console.error('Error fetching booking details:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+

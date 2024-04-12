@@ -25,13 +25,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const BookingTable = () => {
+const BookingTable = ({ loggedInUserId }) => {
   const [bookings, setBookings] = useState([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedBookingId, setSelectedBookingId] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/api/bookings')
+    axios.get(`http://localhost:3000/api/bookings?userId=${loggedInUserId}`)
       .then(response => {
         const formattedBookings = response.data.data.bookings.map(booking => ({
           ...booking,
@@ -44,7 +44,7 @@ const BookingTable = () => {
       .catch(error => {
         console.error('Error fetching bookings:', error);
       });
-  }, []); 
+  }, [loggedInUserId]); 
 
   const handleEdit = (bookingId) => {
     // Replace this with your edit logic
@@ -68,7 +68,6 @@ const BookingTable = () => {
       });
     setDeleteDialogOpen(false);
   };
-  
 
   const handleCloseDeleteDialog = () => {
     setDeleteDialogOpen(false);
