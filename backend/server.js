@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const eventRoutes = require('./routes/Ravindu/eventRoutes'); 
 const commentRoutes = require('./routes/Ravindu/commentRoutes');
+const feedbackRoutes = require('./routes/Radeesa/feedbackRoutes');
 require('dotenv').config();
 
 
@@ -25,7 +26,7 @@ mongoose.connect(process.env.MONGODB_URL, {
     // Use event routes
     app.use('/api/events', eventRoutes);
     app.use('/api/events', commentRoutes);// Using '/api' as the base URL for event routes
-
+    app.use('/api/feedbacks', feedbackRoutes);
     
     // Start the server
     app.listen(PORT, () => {
