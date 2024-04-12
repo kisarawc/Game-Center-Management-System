@@ -1,3 +1,4 @@
+//SIGNUP
 import React, { useState } from 'react';
 import { Typography, Button, Container, CssBaseline, Paper, TextField, Grid, RadioGroup, Radio, FormControlLabel, Checkbox, FormLabel } from '@mui/material'; 
 import { NavLink } from 'react-router-dom';
@@ -27,9 +28,14 @@ const SignUp = () => {
       if(response.status === 201){
         window.alert('You have successfully registered!');
         window.location.href = '/login';
+<<<<<<< Updated upstream
       } 
       else {
         window.alert(`Error : ${response.data.message}`);
+=======
+      } else {
+        window.alert(`error : ${response.data.message}`);
+>>>>>>> Stashed changes
       }
 
     } catch (error) {

@@ -23,6 +23,7 @@ exports.getAllUsers = async (req, res) => {
 //create a user
 exports.createUser = async (req, res) => {
   try {
+<<<<<<< Updated upstream
     const { name, username, email, password, joinDate, gender, role } = req.body;
 
     // Hash the password
@@ -31,6 +32,10 @@ exports.createUser = async (req, res) => {
     const newUser = new User({ name, username, email, password: hashedPassword, joinDate, gender, role 
     });
 
+=======
+    const { name, username, email, password, joinDate, gender } = req.body;
+    const newUser = new User({ name, username, email, password, joinDate, gender });
+>>>>>>> Stashed changes
     const savedUser = await newUser.save();
 
     // Return the response
