@@ -1,4 +1,6 @@
 const User = require('../../models/Limasha/User');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 // Get all the users
 exports.getAllUsers = async (req, res) => {
@@ -18,12 +20,20 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-// Create a user
+//create a user
 exports.createUser = async (req, res) => {
   try {
     const { name, username, email, password, joinDate, gender, role } = req.body;
-    const newUser = new User({ name, username, email, password, joinDate, gender, role });
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    const newUser = new User({ name, username, email, password: hashedPassword, joinDate, gender, role 
+    });
+
     const savedUser = await newUser.save();
+
+    // Return the response
     res.status(201).json({
       status: 'success',
       data: {
@@ -38,6 +48,7 @@ exports.createUser = async (req, res) => {
     });
   }
 };
+
 
 //update user
 exports.updateUser = async (req, res) => {
@@ -70,22 +81,39 @@ exports.deleteUser = async (req, res) => {
 //login 
 exports.userLogin = async (req, res) => {
   const { email, password } = req.body;
+
+  // Test email and password received from the frontend
+  console.log(email, password);
+
   try {
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ Email: email });
+
+    // Test if user is found
+    console.log(user);
+
     if (!user) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
-    
-    // Temporary: Directly compare the password
-    if (password !== user.password) {
-      return res.status(401).json({ message: 'Invalid email or password' });
-    }
 
-    // Here, you can skip generating the JWT token and just return user ID
-    res.status(200).json({ userId: user._id });
-  } 
-  catch (error) {
+    // Test if user passwords are correctly matched
+    console.log(password);
+    console.log(user.Password);
+
+    // Check if password is correct
+    if (password !== user.Password) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    } else {
+      // Login successful
+      console.log('Login success');
+      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
+      // Test token generation
+      console.log(token);
+      // Send the token
+      return res.status(200).json({ token, userId: user._id });
+    }
+  } catch (error) {
     console.error(error);
-    res.status(500).json(error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
+

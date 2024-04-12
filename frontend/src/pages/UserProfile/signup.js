@@ -21,13 +21,14 @@ const SignUp = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:5000/api/users', formData);
+      const response = await axios.post('http://localhost:5000/api/users/createUser', formData);
       console.log('New user created:', response.data);
 
-      if(response.status === 200){
+      if(response.status === 201){
         window.alert('You have successfully registered!');
         window.location.href = '/login';
-      } else {
+      } 
+      else {
         window.alert(`Error : ${response.data.message}`);
       }
 
