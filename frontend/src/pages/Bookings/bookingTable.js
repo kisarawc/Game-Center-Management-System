@@ -37,7 +37,12 @@ const BookingTable = ({ loggedInUserId }) => {
           ...booking,
           date: new Date(booking.date).toLocaleDateString('en-US'),
           start_time: new Date(booking.start_time).toLocaleTimeString('en-US'),
-          end_time: new Date(booking.end_time).toLocaleTimeString('en-US')
+          duration: booking.duration, // Add duration field
+          message_request: booking.message_request,
+          user_id: booking.user_id,
+          game_id: booking.game_id,
+          status: booking.status,
+          num_players: booking.num_players
         }));
         setBookings(formattedBookings);
       })
@@ -81,7 +86,7 @@ const BookingTable = ({ loggedInUserId }) => {
             <TableRow>
               <StyledTableHeaderCell>Date</StyledTableHeaderCell>
               <StyledTableHeaderCell>Start Time</StyledTableHeaderCell>
-              <StyledTableHeaderCell>End Time</StyledTableHeaderCell>
+              <StyledTableHeaderCell>Duration (minutes)</StyledTableHeaderCell> {/* Update header */}
               <StyledTableHeaderCell>Message Request</StyledTableHeaderCell>
               <StyledTableHeaderCell>User ID</StyledTableHeaderCell>
               <StyledTableHeaderCell>Game ID</StyledTableHeaderCell>
@@ -95,7 +100,7 @@ const BookingTable = ({ loggedInUserId }) => {
               <StyledTableRow key={booking._id}>
                 <StyledTableCell>{booking.date}</StyledTableCell>
                 <StyledTableCell>{booking.start_time}</StyledTableCell>
-                <StyledTableCell>{booking.end_time}</StyledTableCell>
+                <StyledTableCell>{booking.duration}</StyledTableCell> {/* Insert duration field */}
                 <StyledTableCell>{booking.message_request}</StyledTableCell>
                 <StyledTableCell>{booking.user_id}</StyledTableCell>
                 <StyledTableCell>{booking.game_id}</StyledTableCell>
