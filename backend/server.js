@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const eventRoutes = require('./routes/Ravindu/eventRoutes'); 
 const commentRoutes = require('./routes/Ravindu/commentRoutes');
+const gameRoutes = require('./routes/Saniru/gameRoutes');
 require('dotenv').config();
-
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -24,7 +24,8 @@ mongoose.connect(process.env.MONGODB_URL, {
     
     // Use event routes
     app.use('/api/events', eventRoutes);
-    app.use('/api/events', commentRoutes);// Using '/api' as the base URL for event routes
+    app.use('/api/events', commentRoutes);
+    app.use('/api/games', gameRoutes);
 
     
     // Start the server
