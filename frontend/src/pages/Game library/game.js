@@ -5,8 +5,8 @@ import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
+import { NavLink } from 'react-router-dom';
 
-// Import images from the images folder
 import gameImage1 from '../../images/GamesLibrary/pic1.png';
 import gameImage2 from '../../images/GamesLibrary/pic2.jpg';
 import gameImage3 from '../../images/GamesLibrary/unnamed.png';
@@ -14,13 +14,13 @@ import gameImage3 from '../../images/GamesLibrary/unnamed.png';
 const ImageButton = styled(ButtonBase)(({ theme }) => ({
   position: 'relative',
   height: 200,
-  width: 200, // Adjust as needed
+  width: 200, 
   margin: '30px', 
   border: '1px solid #FB41FF',
-  borderBottom: 'none', // Remove border-bottom
-  variant: "outlined",// Adjust as needed
+  borderBottom: 'none',
+  variant: "outlined",
   [theme.breakpoints.down('sm')]: {
-    width: '100% !important', // Overrides inline-style
+    width: '100% !important', 
     height: 100,
   },
   '&:hover, &.Mui-focusVisible': {
@@ -34,7 +34,7 @@ const ImageButton = styled(ButtonBase)(({ theme }) => ({
     '& .MuiTypography-root': {
       border: '3px solid #FFFF',
       variant: "outlined",
-      color: '#FFFFFF', // Change color to white
+      color: '#FFFFFF', 
     },
   },
 }));
@@ -84,16 +84,16 @@ const ImageMarked = styled('span')(({ theme }) => ({
 
 const Game = () => {
   const games = [
-    { 
-      id: 1,
+    {
+      gameId: 1,
       title: 'See More',
       description: 'Description of Game 1',
       image: gameImage1, // Path to the image for Game 1
       rating: 4.5,
-      genre: 'Adventure'
+      genre: 'Adventure',
     },
     { 
-      id: 2,
+      gameId: 2,
       title: 'See More',
       description: 'Description of Game 2',
       image: gameImage2, // Path to the image for Game 2
@@ -101,7 +101,7 @@ const Game = () => {
       genre: 'Action'
     },
     { 
-      id: 3,
+      gameId: 3,
       title: 'See More',
       description: 'Description of Game 3',
       image: gameImage3, // Path to the image for Game 3
@@ -109,7 +109,7 @@ const Game = () => {
       genre: 'Strategy'
     },
     { 
-      id: 3,
+      gameId: 3,
       title: 'See More',
       description: 'Description of Game 3',
       image: gameImage3, // Path to the image for Game 3
@@ -117,7 +117,7 @@ const Game = () => {
       genre: 'Strategy'
     },
     { 
-      id: 3,
+      gameId: 3,
       title: 'See More',
       description: 'Description of Game 3',
       image: gameImage3, // Path to the image for Game 3
@@ -125,7 +125,7 @@ const Game = () => {
       genre: 'Strategy'
     },
     { 
-      id: 3,
+      gameId: 3,
       title: 'See More',
       description: 'Description of Game 3',
       image: gameImage3, // Path to the image for Game 3
@@ -133,7 +133,7 @@ const Game = () => {
       genre: 'Strategy'
     },
     { 
-      id: 3,
+      gameId: 3,
       title: 'See More',
       description: 'Description of Game 3',
       image: gameImage3, // Path to the image for Game 3
@@ -141,7 +141,7 @@ const Game = () => {
       genre: 'Strategy'
     },
     { 
-      id: 3,
+      gameId: 3,
       title: 'See More',
       description: 'Description of Game 3',
       image: gameImage3, // Path to the image for Game 3
@@ -149,7 +149,7 @@ const Game = () => {
       genre: 'Strategy'
     },
     { 
-      id: 3,
+      gameId: 3,
       title: 'See More',
       description: 'Description of Game 3',
       image: gameImage3, // Path to the image for Game 3
@@ -157,14 +157,13 @@ const Game = () => {
       genre: 'Strategy'
     },
      { 
-      id: 3,
+      gameId: 3,
       title: 'See More',
       description: 'Description of Game 3',
       image: gameImage3, // Path to the image for Game 3
       rating: 4.2,
       genre: 'Strategy'
     },
-    // Add more games with their details as needed
   ];
 
   return (
@@ -192,32 +191,31 @@ const Game = () => {
           }}
         >
           {games.map(game => (
-            <ImageButton
-              focusRipple
-              key={game.title}
-            >
-              <ImageSrc style={{ backgroundImage: `url(${game.image})` }} />
-              <ImageBackdrop className="MuiImageBackdrop-root" />
-              <Image>
-                <Typography
-                  component="span"
-                  variant="subtitle1"
-                  sx={{
-                    position: 'absolute',
-                    bottom: '10px', // Align to the bottom
-                    fontSize: '12px', // Decrease font size
-                    color: 'rgba(107, 107, 107, 0.5)', // Decrease visibility
-                    p: 4,
-                    pt: 2,
-                    pb: (theme) => `calc(${theme.spacing(1)} + 6px)`,
-                    textDecoration: 'none', // Remove underline
-                  }}
-                >
-                  {game.title}
-                  <ImageMarked className="MuiImageMarked-root" />
-                </Typography>
-              </Image>
-            </ImageButton>
+            <NavLink key={game.gameId} to={`/gamedetails/${game.gameId}`} style={{ textDecoration: 'none' }}>
+              <ImageButton focusRipple>
+                <ImageSrc style={{ backgroundImage: `url(${game.image})` }} />
+                <ImageBackdrop className="MuiImageBackdrop-root" />
+                <Image>
+                  <Typography
+                    component="span"
+                    variant="subtitle1"
+                    sx={{
+                      position: 'absolute',
+                      bottom: '10px', // Align to the bottom
+                      fontSize: '12px', // Decrease font size
+                      color: 'rgba(107, 107, 107, 0.5)', // Decrease visibility
+                      p: 4,
+                      pt: 2,
+                      pb: (theme) => `calc(${theme.spacing(1)} + 6px)`,
+                      textDecoration: 'none', // Remove underline
+                    }}
+                  >
+                    {game.title}
+                    <ImageMarked className="MuiImageMarked-root" />
+                  </Typography>
+                </Image>
+              </ImageButton>
+            </NavLink>
           ))}
         </Box>
       </Box>
