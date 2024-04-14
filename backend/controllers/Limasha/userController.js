@@ -1,3 +1,4 @@
+const Mongoose = require('mongoose');
 const User = require('../../models/Limasha/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -23,12 +24,12 @@ exports.getAllUsers = async (req, res) => {
 //create a user
 exports.createUser = async (req, res) => {
   try {
-    const { name, username, email, password, joinDate, gender, role } = req.body;
+    const { name, username, email, password, joinDate, gender} = req.body;
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const newUser = new User({ name, username, email, password: hashedPassword, joinDate, gender, role 
+    const newUser = new User({ name, username, email, password: hashedPassword, joinDate, gender
     });
 
     const savedUser = await newUser.save();
@@ -50,16 +51,16 @@ exports.createUser = async (req, res) => {
 };
 
 //update user
-exports.updateUser = async (req, res) => {
-  const { userId } = req.params;
-  try {
-    const updatedUser = await User.findByIdAndUpdate(userId, req.body, { new: true });
-    res.status(200).json(updatedUser);
-  } 
-  catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+// exports.updateUser = async (req, res) => {
+//   const { userId } = req.params;
+//   try {
+//     const updatedUser = await User.findByIdAndUpdate(userId, req.body, { new: true });
+//     res.status(200).json(updatedUser);
+//   } 
+//   catch (error) {
+//     res.status(400).json({ message: error.message });
+//   }
+// };
 
 //delete a user
 exports.deleteUser = async (req, res) => {
@@ -165,9 +166,49 @@ exports.userLogin = async (req, res) => {
     }
 
     // If the passwords match, return success
-    res.json({ message: 'Success' });
-  } catch (error) {
+    return res.status(200).json({ message: "Success login" });
+  } 
+  catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+//getUserByID
+exports.getUserById = async (req, res) => {
+
+  const {userId} = req.params;
+
+      //check for valid id
+      if (!Mongoose.Types.ObjectId.isValid(userId)){
+          return res.status(404).json({error:'invalid id'})
+      }
+  
+  const user = await User.findById(userId)
+
+      //if User not found
+      if(!user){
+          return res.status(400).json({error:'User not found'})
+      }
+  
+      res.status(200).json(user)
+  }
+
+  // exports.updateUser = async (req, res) => {
+
+  //   try{
+  //     const userId = req.params.userId
+  //     const updatedUser = await User.findByIdAndUpdate(userId.req.body,
+  //       {new:true})
+
+  //       if(!updatedUser){
+  //         return res.status(404).json({success:false, message:'user not found'})
+  //       }
+  //       res.status(200).json({success:true, message:'Userupdated successfully', updatedUser})
+  //   }
+  //   catch(error){
+  //     console.log(error)
+  //     return res.status(500).json({success: false, message: 'internal server error'})
+  //   }
+
+  // };

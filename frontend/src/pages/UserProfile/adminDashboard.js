@@ -1,16 +1,20 @@
-import React from "react"
-import {useLocation, useNavigate} from 'react-router-dom';
+import React from "react";
+import { useLocation, useNavigate } from 'react-router-dom';
 
-function Home (){
-    const location=useLocation()
+function Dashboard() {
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const handleUserProfileClick = () => {
+        navigate('/usersTable');
+    };
 
     return (
         <div className="homepage">
-
-            <h1>admin dashboard</h1>
-
+            <h1>Admin Dashboard</h1>
+            <button onClick={handleUserProfileClick}>User Profile Management</button>
         </div>
-    )
+    );
 }
 
-export default Home
+export default Dashboard;

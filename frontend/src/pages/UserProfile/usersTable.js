@@ -1,151 +1,153 @@
-import React, { useEffect, useState } from "react"
-import Table from 'react-bootstrap/Table';
-import jsPDF from 'jspdf'
-import autoTable from 'jspdf-autotable'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
-const UsersTable = () => {
+const StyledHeader = styled(Typography)(({ theme }) => ({
+  textAlign: 'center',
+  padding: theme.spacing(2), 
+  backgroundColor: '#4B0089',
+  color: theme.palette.common.white,
+  fontWeight: 'bold',
+  marginBottom: theme.spacing(2),
+  fontFamily: 'Arial', // Change font style
+}));
 
-    const [userData, setUserData] = useState(null)
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  textAlign: 'center',
+  padding: theme.spacing(2), 
+  borderBottom: '1px solid #ccc',
+}));
 
-    /* Fetching Data to page */
-    useEffect(() => {
-        const fetchWorkouts = async () => {
-            /* get workouts through the API and save to res variable*/
-            
-            const res = await fetch('/users')
-            const json = await res.json()
-            
-            if(res.ok){
-                setUserData(json)
-            }
-        }
-        fetchWorkouts()
-    }, []);
-    /* End of Fetching Data to page */
+const StyledTableHead = styled(TableHead)(({ theme }) => ({
+  backgroundColor: '#5A189A', // Adjust color of purple bar
+}));
 
-/* Delete user */
-const handleDelete = async (id) => {
-    try{
-      fetch(`/users/${id}`, { method: 'DELETE' })
-      alert('User successfully deleted!')
-      window.location.reload()
-    }
-    catch(err){
-        console.log(err)
-        window.alert('Error deleting user!')
-    }
-}
-/* end of Delete user */
+const StyledTableHeaderCell = styled(TableCell)(({ theme }) => ({
+  color: theme.palette.common.white,
+  backgroundColor: '#7B1FA2', // Adjust color of table header cell
+  fontWeight: 'bold', 
+  textAlign: 'center', // Center align the text in the header cell
+}));
 
-    /* Generate user report */
-    const generateUserReport = () => {
-        const doc = new jsPDF()
-             
-        /* Add title and font style to pdf */
-        doc.setFontSize(30)
-        doc.setFont('helvetica', 'bold')
-        /* Font color is blue*/
-        doc.setTextColor(0, 0, 255)
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: '#f0f0f0', // Changed to a lighter shade
+  },
+}));
 
-        doc.text('User Report', 105, 10, 'center')
-        
+const DeleteButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.common.white,
+  backgroundColor: '#ff0000',
+  '&:hover': {
+    backgroundColor: '#cc0000', // Darkened the hover color
+  },
+}));
 
-        /* table data */
-        autoTable(
-            doc,
-            {
-                head:rtitle,
-                body:rbody
-            },40,100
-        )
-        /* table style */
+const UsersTable = ({ loggedInUserId }) => {
+  const [users, setUsers] = useState([]);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedUserID, setSelectedUserID] = useState(null);
 
-        /* Save Table */
-        doc.save('UserReport.pdf')
-    }
+  useEffect(() => {
+    axios.get(`http://localhost:3000/api/users?userId=${loggedInUserId}`)
+      .then(response => {
+        const formattedUsers = response.data.data.users.map(user => ({
+          ...user,
+          name: user.name,
+          username: user.username,
+          email: user.email,
+          gender: user.gender,
+          joinDate: user.joinDate
+        }));
+        setUsers(formattedUsers);
+      })
+      .catch(error => {
+        console.error('Error fetching users:', error);
+      });
+  }, [loggedInUserId]); 
 
-    /* table title */
-    var rtitle = [['Name', 'Email', 'Package', 'Phone','Address']]
+  const handleDelete = (userId) => {
+    setSelectedUserID(userId);
+    setDeleteDialogOpen(true);
+  };
 
-    /* table body */
-    var rbody = userData && userData.map((users) => (
-        [users.Name, users.Email, 'Basic', users.Phone, users.Address]
-    ))
-    /* End of Generate user report */
+  const handleConfirmDelete = () => {
+    console.log(`Deleting user with id ${selectedUserID}`);
+    axios.delete(`http://localhost:3000/api/users/deleteUser/${selectedUserID}`)
+      .then(response => {
+        console.log('User deleted successfully');
+        setUsers(users.filter(user => user._id !== selectedUserID));
+      })
+      .catch(error => {
+        console.error('Error deleting user:', error);
+      });
+    setDeleteDialogOpen(false);
+  };
 
-    /* Function to search user */
-    const searchUser = (e) => {
-        const search = e.target.value
-        const filteredUsers = userData.filter((user) => {
-            return user.Name.toLowerCase().includes(search.toLowerCase())
-        })
-        setUserData(filteredUsers)
-    }
+  const handleCloseDeleteDialog = () => {
+    setDeleteDialogOpen(false);
+  };
 
+  return (
+    <>
+      <StyledHeader variant="h4">All Users</StyledHeader>
+      <TableContainer component={Paper}>
+        <Table>
+          <StyledTableHead>
+            <TableRow>
+              <StyledTableHeaderCell>Name</StyledTableHeaderCell>
+              <StyledTableHeaderCell>Username</StyledTableHeaderCell>
+              <StyledTableHeaderCell>Email</StyledTableHeaderCell>
+              <StyledTableHeaderCell>Gender</StyledTableHeaderCell>
+              <StyledTableHeaderCell>Joined Date</StyledTableHeaderCell>
+              <StyledTableHeaderCell>Actions</StyledTableHeaderCell>
+            </TableRow>
+          </StyledTableHead>
+          <TableBody>
+            {users.map(user => (
+              <StyledTableRow key={user._id}>
+                <StyledTableCell>{user.name}</StyledTableCell>
+                <StyledTableCell>{user.username}</StyledTableCell>
+                <StyledTableCell>{user.email}</StyledTableCell>
+                <StyledTableCell>{user.gender}</StyledTableCell>
+                <StyledTableCell>{user.joinDate}</StyledTableCell>
+                <StyledTableCell>
+                  <DeleteButton 
+                    variant="contained" 
+                    onClick={() => handleDelete(user._id)}
+                  >
+                    Delete
+                  </DeleteButton>
+                </StyledTableCell>
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={handleCloseDeleteDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Delete User"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this user?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteDialog} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmDelete} color="primary" autoFocus>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
+};
 
-    return (
-        <div className="container-fluid" id="ManagerDashboard">
-
-            <div className="text-center" value="search" id="ManagerDashboard-Title">All Users</div>
-
-            <div className="row">
-                <div className="col-6">    
-                    {/* <div className="container content-justify-center text-center" id="ManagerDashboard-search">
-                        <Search searchUser={searchUser} />
-                    </div> */}
-                </div>
-
-                <div className="col-6">
-                    {/*Create div with button to generate user report*/}
-                    <div className="container text-center" id="ManagerDashboard-user-report">
-                        <button className="btn btn-primary" id="user-report-btn" onClick={generateUserReport}>Generate User Report</button>
-                    </div>
-                </div>
-            </div>
-
-            {/*Create div with table to show all users*/}
-            <div className="container-fluid" id="ManagerDashboard-users-table">
-
-                <Table striped className="bg-light container">
-
-                    {/*Header of table*/}
-                    <thead>
-                        <tr>
-                        <th>Name</th>
-                        <th>Gender</th>
-                        <th>Email</th>
-                        <th>Package</th>
-                        <th>Phone Number</th>
-                        <th></th>
-                        </tr>
-                    </thead>
-
-                    {/*Body of table*/}  
-                    <tbody>
-                        {userData && userData.map((users) => (
-                            <tr key={users.userId}>
-                                <td>{users.Name}</td>
-                                <td>{users.Gender}</td>
-                                <td>{users.Email}</td>
-                                <td>Basic</td>
-                                <td>0{users.Phone}</td>
-                                <td><button className="btn btn-primary" id="delete-user-btn" onClick={() => handleDelete(users._id)}>delete</button></td>
-                            </tr>
-                        ))}
-                        </tbody>  
-                </Table>
-
-          </div>
-        <div className="row">
-            <div className="col-6">
-            
-            </div>
-            <div className="col-6">
-            
-            </div>
-        </div>
-    </div>
-    );
-}
- 
 export default UsersTable;

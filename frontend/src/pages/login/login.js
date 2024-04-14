@@ -5,31 +5,63 @@ import loginBackground from '../../images/login/login.jpg';
 import axios from 'axios';
 
 const Login = () => {
-
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleSubmit = async (e) => {
-       e.preventDefault();
+    e.preventDefault();
 
-       axios.post('http://localhost:5000/api/users/login', {email, password})
-       .then(result => {
-        console.log(result)
-        if(result.data === "Success")
-        {
-          window.location.href = '/adminDashboard';
+    axios.post('http://localhost:3000/api/users/login', { email, password })
+      .then(result => {
+        if (result.status === 200) {
+          window.alert('You have successfully logged in!');
+          const token = result.data.token;
+          localStorage.setItem('token', token); // Store token in localStorage
+
+          if (email === 'chathuka@gmail.com' && password === 'chathuka123') 
+          {
+              window.location.href = '/adminDashboard';
+          } 
+          else if (email === 'limasha@gmail.com' && password === 'limasha123')
+          {
+              window.location.href = '/adminDashboard';
+          }
+          else if (email === 'ravindu@gmail.com' && password === 'ravindu123')
+          {
+              window.location.href = '/adminDashboard';
+          }
+          else if (email === 'radeesa@gmail.com' && password === 'radeesa123')
+          {
+              window.location.href = '/adminDashboard';
+          }
+          else if (email === 'saniru@gmail.com' && password === 'saniru123')
+          {
+              window.location.href = '/adminDashboard';
+          }
+          else if (email === 'shavindi@gmail.com' && password === 'shavindi123')
+          {
+              window.location.href = '/adminDashboard';
+          }
+          else 
+          {
+              window.location.href = '/profile';
+          }
+
+        } 
+        else {
+          window.alert(`Error: ${result.data.message}`);
         }
-       })
-       .catch(err=> console.log(err))
-}
+      })
+      .catch(err => console.error(err));
+  }
 
   const getButton = () => ({
     variant: "outlined",
-    sx: { ml: 10 ,color: 'white' , borderRadius: '10px',fontSize:'1.1rem',padding:'10px 50px' , boxShadow: '0 0 10px #05cff7'}
+    sx: { ml: 10, color: 'white', borderRadius: '10px', fontSize: '1.1rem', padding: '10px 50px', boxShadow: '0 0 10px #05cff7' }
   });
 
   return (
-    <div style={{ backgroundImage: `url(${loginBackground})`, backgroundSize: 'cover', height: '100vh', width: '221.8vh', display: 'flex', justifyContent: 'center', alignItems: 'center' , marginLeft: -24}}>
+    <div style={{ backgroundImage: `url(${loginBackground})`, backgroundSize: 'cover', height: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: -24 }}>
 
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -49,6 +81,7 @@ const Login = () => {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
               <TextField
@@ -61,9 +94,10 @@ const Login = () => {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <Button 
+              <Button
                 {...getButton()}
                 type="submit"
                 fullWidth
