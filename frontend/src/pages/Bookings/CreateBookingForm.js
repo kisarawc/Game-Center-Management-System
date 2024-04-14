@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FormControl, InputLabel, MenuItem, Select, Button, Table, TableHead, TableBody, TableRow, TableCell, Typography, Paper, TextField } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, Button, Table, TableHead, TableBody, TableRow, TableCell, Typography, Paper, TextField, Modal } from '@mui/material';
 
 const BookingPage = () => {
   const [games, setGames] = useState([]);
@@ -8,12 +8,14 @@ const BookingPage = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [bookingCreated,setBookingCreated] = useState(false);
+  const [openModal, setOpenModal] = useState(false); 
+  const [errorMessage, setErrorMessage] = useState(''); 
   // Additional state for form fields
   const [numPlayers, setNumPlayers] = useState('');
   const [messageRequest, setMessageRequest] = useState('');
   const [selectedStartTime, setSelectedStartTime] = useState('');
-  const [selectedDuration, setSelectedDuration] = useState(30); // Default duration: 30 minutes
+  const [selectedDuration, setSelectedDuration] = useState(30);
 
   useEffect(() => {
     // Fetch game names when the component mounts
@@ -49,7 +51,7 @@ const BookingPage = () => {
           ...booking,
           date: formatDate(booking.date),
           start_time: formatTime(booking.start_time),
-          duration: booking.duration, // Insert duration field
+          end_time: formatTime(booking.end_time), 
         }));
         setBookings(formattedBookings);
         setLoading(false);
@@ -57,40 +59,131 @@ const BookingPage = () => {
       .catch(error => {
         console.error('Error fetching bookings:', error);
         setLoading(false);
+
       });
   };
 
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+  
   const handleFormSubmit = (event) => {
     event.preventDefault();
-    const selectedDateTime = new Date(`${selectedDate}T${selectedStartTime}:00.000Z`);
+
+    const currentDate = new Date();
+    const selectedDateTime = new Date(`${selectedDate}T${selectedStartTime}`);
+  
+    if (selectedDateTime < currentDate) {
+      setErrorMessage("You cannot create a booking for a past date.");
+      return;
+    }
+
+    if (numPlayers <= 0) {
+      setErrorMessage("Please enter a valid number of players.");
+      return;
+    }
+
+    setErrorMessage(''); // Clear previous error message
+
+
+// Convert selectedStartTime to a Date object
+const startTimeParts = selectedStartTime.split(':');
+const selectedTime = new Date();
+selectedTime.setHours(parseInt(startTimeParts[0], 10));
+selectedTime.setMinutes(parseInt(startTimeParts[1], 10));
+
+// Add duration to selected start time
+const selectedEndTime = new Date(selectedTime.getTime() + selectedDuration * 60000);
+
+// Format selectedEndTime as "HH:mm"
+const endHours = selectedEndTime.getHours().toString().padStart(2, '0');
+const endMinutes = selectedEndTime.getMinutes().toString().padStart(2, '0');
+const formattedEndTime = new Date(`${selectedDate}T${endHours}:${endMinutes}`);
+
+
+//console.log('End Time:', formattedEndTime);
+const timezoneOffset = selectedDateTime.getTimezoneOffset();
+const selectedDateTimeEnd = new Date(formattedEndTime.getTime()- timezoneOffset * 60000);
+
+
+
+
+
+
+const existingBookingWithStartTime = bookings.some(booking => {
+    const bookingStartTime = booking.start_time;
+    const bookingEndTime = booking.end_time;
+    //const moment = require('moment');
+    // // Parse the date string into a moment object
+    // const momentDate = moment.utc(bookingEndTime);
+
+    // // Get the formatted time in the UTC time zone
+    // const formattedTime = momentDate.format('HH:mm');
+
+    console.log('bt', bookingStartTime);
+    console.log('be', bookingEndTime);
+    console.log('st', selectedStartTime);
+
+    if (selectedStartTime >= bookingStartTime && 
+      selectedStartTime < bookingEndTime) {
+      return true; // Double booking found
+  } return false; // No double booking found
+});
+if(existingBookingWithStartTime) {
+  console.log('Double booking found!');
+} else {
+  console.log('No double booking found.');
+}
+    if (existingBookingWithStartTime) {
+      setErrorMessage("There's already a booking at the selected start time.");
+      return;
+    }
+
+    // Continue with the booking creation logic
+ 
+    const selectedDateTimeLocal = new Date(selectedDateTime.getTime() - timezoneOffset * 60000);
+    
+    //console.log('et',selectedDateTimeEnd)
     const newBooking = {
-      date: selectedDateTime.toISOString().split('T')[0], // Convert date to ISO string format
+      date: selectedDateTimeLocal.toISOString().split('T')[0], // Convert date to ISO string format
       game_name: selectedGame,
-      start_time: selectedDateTime.toISOString(), // Convert start time to ISO string format
+      start_time: selectedDateTimeLocal.toISOString(), // Convert start time to ISO string format
+      end_time: selectedDateTimeEnd.toISOString(),
       duration: selectedDuration,
       num_players: numPlayers,
+      status: 'pending',
       message_request: messageRequest,
       user_id: '609d97334529cd465ab5c8a0'
     };
-    // Inside your component function
-    console.log('Selected Game:', selectedGame);
-    console.log('Selected Date:', selectedDate);
-    console.log('Selected Start Time:', selectedStartTime);
-    console.log('Selected Duration:', selectedDuration);
-    console.log('Number of Players:', numPlayers);
-    console.log('Message Request:', messageRequest);
+
     axios.post('http://localhost:3000/api/bookings', newBooking)
       .then(response => {
         console.log('Booking created successfully:', response.data);
+        setBookingCreated(true); // Set booking creation state to true
+        setOpenModal(true); // Open the modal after successful booking creation
       })
       .catch(error => {
         console.error('Error creating booking:', error);
       });
   };
 
-  // const formatTime = (time) => {
-  //   return new Date(time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  // };
+  const handlePaymentNow = () => {
+    window.location.href = '/payment'; // Redirect to payment page
+  };
+
+  const handlePaymentLater = () => {
+    setBookingCreated(false); // Reset booking creation state
+    setOpenModal(false); // Close the modal
+    // Clear form fields
+    setSelectedGame('');
+    setSelectedDate('');
+    setSelectedStartTime('');
+    setNumPlayers('');
+    setMessageRequest('');
+    setLoading(false);
+    setBookings([]);
+    window.location.reload(); // Reload the page
+  };
 
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString();
@@ -109,11 +202,10 @@ const BookingPage = () => {
     return options;
   };
 
- const formatTime = (time) => {
-  const localTime = new Date(time);
-  return localTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-};
-
+  const formatTime = (time) => {
+    const localTime = new Date(time);
+    return localTime.toLocaleTimeString([], { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' });
+  };
 
   return (
     <Paper style={{ padding: '20px', maxWidth: '600px', margin: 'auto' }}>
@@ -150,29 +242,54 @@ const BookingPage = () => {
       </Button>
 
       {bookings.length > 0 ? (
-  <Table style={{ marginTop: '20px' }}>
-    <TableHead>
-      <TableRow>
-        <TableCell>Date</TableCell>
-        <TableCell>Start Time</TableCell>
-        <TableCell>Duration (minutes)</TableCell> 
-      </TableRow>
-    </TableHead>
-    <TableBody>
-    {bookings.map(booking => (
-    <TableRow key={booking._id}>
-      <TableCell>{booking.date}</TableCell>
-      <TableCell>{booking.start_time}</TableCell>
-      <TableCell>{booking.duration}</TableCell>
-    </TableRow>
+        <Table style={{ marginTop: '20px' }}>
+          <TableHead>
+            <TableRow>
+              <TableCell>Date</TableCell>
+              <TableCell>Start Time</TableCell>
+              <TableCell>End Time</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {bookings.map(booking => (
+              <TableRow key={booking._id}>
+                <TableCell>{booking.date}</TableCell>
+                <TableCell>{booking.start_time}</TableCell>
+                <TableCell>{booking.end_time}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      ) : (
+        <Typography variant="body1" style={{ marginTop: '20px' }}>No bookings found for the selected game and date.</Typography>
+      )}
 
-))}
+      {/* Modal for displaying booking success */}
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Paper style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', padding: '20px' }}>
+          <Typography variant="h6" gutterBottom>
+            Booking created successfully!
+          </Typography>
+          <Button variant="contained" onClick={handlePaymentNow} style={{ marginRight: '10px' }}>
+            Do the Payment Now
+          </Button>
+          <Button variant="contained" onClick={handlePaymentLater}>
+            Do the Payment Later
+          </Button>
+        </Paper>
+      </Modal>
 
-    </TableBody>
-  </Table>
-) : (
-  <Typography variant="body1" style={{ marginTop: '20px' }}>No bookings found for the selected game and date.</Typography>
-)}
+      {/* Display error message */}
+      {errorMessage && (
+        <Typography variant="body1" style={{ color: 'red', marginTop: '10px' }}>
+          {errorMessage}
+        </Typography>
+      )}
 
       {/* Form for creating a new booking */}
       <form onSubmit={handleFormSubmit} style={{ marginTop: '20px' }}>
@@ -216,7 +333,7 @@ const BookingPage = () => {
           onChange={(event) => setMessageRequest(event.target.value)}
           style={{ marginBottom: '10px' }}
         />
-        <Button variant="contained" type="submit" >
+        <Button variant="contained" type="submit" disabled={!selectedGame || !selectedDate || !selectedStartTime || !numPlayers} >
           Create Booking
         </Button>
       </form>

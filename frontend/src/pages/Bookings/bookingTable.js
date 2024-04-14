@@ -36,8 +36,8 @@ const BookingTable = ({ loggedInUserId }) => {
         const formattedBookings = response.data.data.bookings.map(booking => ({
           ...booking,
           date: new Date(booking.date).toLocaleDateString('en-US'),
-          start_time: new Date(booking.start_time).toLocaleTimeString('en-US'),
-          duration: booking.duration, // Add duration field
+          start_time: new Date(booking.start_time).toLocaleTimeString('en-US', {timeZone: 'UTC'}), // Adjust timezone to UTC
+          duration: booking.duration,
           message_request: booking.message_request,
           user_id: booking.user_id,
           game_id: booking.game_id,
@@ -89,7 +89,7 @@ const BookingTable = ({ loggedInUserId }) => {
               <StyledTableHeaderCell>Duration (minutes)</StyledTableHeaderCell> {/* Update header */}
               <StyledTableHeaderCell>Message Request</StyledTableHeaderCell>
               <StyledTableHeaderCell>User ID</StyledTableHeaderCell>
-              <StyledTableHeaderCell>Game ID</StyledTableHeaderCell>
+              <StyledTableHeaderCell>Game Name</StyledTableHeaderCell>
               <StyledTableHeaderCell>Status</StyledTableHeaderCell>
               <StyledTableHeaderCell>Number of Players</StyledTableHeaderCell>
               <StyledTableHeaderCell>Actions</StyledTableHeaderCell>
@@ -100,10 +100,10 @@ const BookingTable = ({ loggedInUserId }) => {
               <StyledTableRow key={booking._id}>
                 <StyledTableCell>{booking.date}</StyledTableCell>
                 <StyledTableCell>{booking.start_time}</StyledTableCell>
-                <StyledTableCell>{booking.duration}</StyledTableCell> {/* Insert duration field */}
+                <StyledTableCell>{booking.duration}</StyledTableCell>
                 <StyledTableCell>{booking.message_request}</StyledTableCell>
                 <StyledTableCell>{booking.user_id}</StyledTableCell>
-                <StyledTableCell>{booking.game_id}</StyledTableCell>
+                <StyledTableCell>{booking.game_name}</StyledTableCell>
                 <StyledTableCell>{booking.status}</StyledTableCell>
                 <StyledTableCell>{booking.num_players}</StyledTableCell>
                 <StyledTableCell>
