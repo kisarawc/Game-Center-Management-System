@@ -6,7 +6,8 @@ exports.createGame = async (req, res) => {
         const newGame = new Game({ name, image_path, availability, platform, hourly_rate, game_rating});
         const savedGame = await newGame.save();
         res.status(201).json(savedGame);
-    } catch (error) {
+    } 
+    catch (error) {
         res.status(400).json({ message: error.message });
     }
 };

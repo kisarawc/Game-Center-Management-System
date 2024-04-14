@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button } from '@mui/material';
+import axios from 'axios';
+import { NavLink } from 'react-router-dom'; // Import NavLink from react-router-dom
 
 const AddGame = () => {
   const [gameDetails, setGameDetails] = useState({
-    gameId: '',
-    title: '',
-    description: '',
-    rating: '',
-    genre: '',
-    image: null, // Initialize image state to null
+    name: '',
+    image_path: null,
+    availability: '',
+    platform: '',
+    hourly_rate: '',
+    game_rating: '',
   });
+
+  const [formData, setFormData] = useState(new FormData());
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,18 +24,49 @@ const AddGame = () => {
   };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0]; // Get the first selected file
-    setGameDetails(prevState => ({
-      ...prevState,
-      image: file
-    }));
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const blob = new Blob([reader.result], { type: file.type });
+        formData.append('image_path', blob, file.name);
+        setFormData(formData);
+      };
+      reader.readAsArrayBuffer(file);
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Submitted Game Details:", gameDetails);
+    formData.append('name', gameDetails.name);
+    formData.append('availability', gameDetails.availability);
+    formData.append('platform', gameDetails.platform);
+    formData.append('hourly_rate', gameDetails.hourly_rate);
+    formData.append('game_rating', gameDetails.game_rating);
 
+    try {
+      const response = await axios.post('http://localhost:5000/api/games/createGame', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      console.log('New Game created:', response.data);
+
+      if (response.status === 201) {
+        window.alert('New game created!');
+        setGameDetails({
+          name: '',
+          image_path: null,
+          availability: '',
+          platform: '',
+          hourly_rate: '',
+          game_rating: '',
+        });
+      }
+    } catch (error) {
+      console.error('Error creating game:', error);
+    }
   };
 
   return (
@@ -47,52 +82,51 @@ const AddGame = () => {
         <h2>Add New Game</h2>
         <form onSubmit={handleSubmit}>
           <TextField
-            name="gameId"
-            label="Game ID"
+            name="name"
+            label="Name"
             variant="outlined"
-            value={gameDetails.gameId}
+            value={gameDetails.name}
             onChange={handleChange}
             fullWidth
             margin="normal"
           />
           <TextField
-            name="title"
-            label="Title"
+            name="availability"
+            label="Availability"
             variant="outlined"
-            value={gameDetails.title}
+            value={gameDetails.availability}
             onChange={handleChange}
             fullWidth
             margin="normal"
           />
           <TextField
-            name="description"
-            label="Description"
+            name="platform"
+            label="Platform"
             variant="outlined"
-            value={gameDetails.description}
+            value={gameDetails.platform}
             onChange={handleChange}
             fullWidth
             margin="normal"
           />
           <TextField
-            name="rating"
-            label="Rating"
+            name="hourly_rate"
+            label="Hourly Rate"
             variant="outlined"
-            value={gameDetails.rating}
+            value={gameDetails.hourly_rate}
             onChange={handleChange}
             fullWidth
             margin="normal"
           />
           <TextField
-            name="genre"
-            label="Genre"
+            name="game_rating"
+            label="Game Rating"
             variant="outlined"
-            value={gameDetails.genre}
+            value={gameDetails.game_rating}
             onChange={handleChange}
             fullWidth
             margin="normal"
           />
-          {/* File input for uploading image */}
-          <Box mt={2}> {/* Two-line space */}
+          <Box mt={2}>
             <input
               type="file"
               accept="image/*"
@@ -105,16 +139,24 @@ const AddGame = () => {
                 Upload Image
               </Button>
             </label>
-            {gameDetails.image && (
-              <p>Selected Image: {gameDetails.image.name}</p>
+            {gameDetails.image_path && (
+              <p>Selected Image: {gameDetails.image_path.name}</p>
             )}
           </Box>
-          <Box textAlign="center" mt={2}> {/* Center the button */}
+          <Box textAlign="center" mt={2}>
             <Button type="submit" variant="contained" color="primary">
               Add Game
             </Button>
           </Box>
         </form>
+        <Box textAlign="center" mt={2}>
+          {/* Use NavLink for navigation */}
+          <NavLink to="/gametable">
+            <Button variant="contained" color="secondary">
+              View All Games
+            </Button>
+          </NavLink>
+        </Box>
       </Box>
     </Box>
   );
