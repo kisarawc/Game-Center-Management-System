@@ -1,38 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography, TextField, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import SearchIcon from '@mui/icons-material/Search';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const StyledHeader = styled(Typography)(({ theme }) => ({
   textAlign: 'center',
-  padding: theme.spacing(2), 
-  backgroundColor: '#4B0089',
-  color: theme.palette.common.white,
-  fontWeight: 'bold',
+  padding: theme.spacing(2),
+  color: theme.palette.common.black,
+  fontWeight: 'bolder',
   marginBottom: theme.spacing(2),
-  fontFamily: 'Arial', // Change font style
+  fontFamily: 'fantasy',
+  fontSize: '3.0rem',
 }));
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   textAlign: 'center',
-  padding: theme.spacing(2), 
+  padding: theme.spacing(2),
   borderBottom: '1px solid #ccc',
 }));
 
 const StyledTableHead = styled(TableHead)(({ theme }) => ({
-  backgroundColor: '#5A189A', // Adjust color of purple bar
+  backgroundColor: '#494949', // Adjust color of purple bar
 }));
 
 const StyledTableHeaderCell = styled(TableCell)(({ theme }) => ({
   color: theme.palette.common.white,
   backgroundColor: '#7B1FA2', // Adjust color of table header cell
-  fontWeight: 'bold', 
+  fontWeight: 'bold',
   textAlign: 'center', // Center align the text in the header cell
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
-    backgroundColor: '#f0f0f0', // Changed to a lighter shade
+    backgroundColor: '#EEEEEE', // Changed to a lighter shade
   },
 }));
 
@@ -44,10 +47,21 @@ const DeleteButton = styled(Button)(({ theme }) => ({
   },
 }));
 
+const GenerateReportButton = styled(Button)(({ theme }) => ({
+  marginLeft: theme.spacing(92.6), // Add some left margin for spacing
+}));
+
+const HorizontalBar = styled('hr')({
+  margin: '20px 0',
+  border: '0',
+  borderTop: '1px solid #ccc',
+});
+
 const UsersTable = ({ loggedInUserId }) => {
   const [users, setUsers] = useState([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedUserID, setSelectedUserID] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     axios.get(`http://localhost:3000/api/users?userId=${loggedInUserId}`)
@@ -65,7 +79,7 @@ const UsersTable = ({ loggedInUserId }) => {
       .catch(error => {
         console.error('Error fetching users:', error);
       });
-  }, [loggedInUserId]); 
+  }, [loggedInUserId]);
 
   const handleDelete = (userId) => {
     setSelectedUserID(userId);
@@ -89,9 +103,91 @@ const UsersTable = ({ loggedInUserId }) => {
     setDeleteDialogOpen(false);
   };
 
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredUsers = users.filter(user =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.gender.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.joinDate.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  /* Generate user report */
+  const generateUserReport = () => {
+    const doc = new jsPDF()
+
+    doc.setFontSize(30)
+    doc.setFont('helvetica', 'bold')
+    doc.setTextColor(0, 0, 255)
+    doc.text('User Report', 105, 10, 'center')
+
+    autoTable(
+      doc,
+      {
+        head: rtitle,
+        body: rbody
+      }, 40, 100
+    )
+    doc.save('UserReport.pdf')
+  }
+
+  var rtitle = [['Name', 'Username', 'Email', 'Gender', 'Joined Date']]
+
+  var rbody = users && users.map((user) => (
+    [user.name, user.username, user.email, user.gender, user.joinDate]
+  ))
+
   return (
     <>
       <StyledHeader variant="h4">All Users</StyledHeader>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <TextField
+          variant="outlined"
+          label="Search"
+          value={searchTerm}
+          onChange={handleSearch}
+          sx={{
+            marginBottom: '16px', // Add some bottom margin for spacing
+            width: '30%', // Make the search bar span the full width of its container
+            height: '36px', // Set the height of the search bar
+            '& .MuiInputBase-root': {
+              paddingRight: '0', // Remove default padding on the right side
+            },
+            '& .MuiInputLabel-root': {
+              position: 'relative', // Set position to relative for proper centering
+            },
+            '& .MuiInputLabel-formControl': {
+              left: '50%', // Move the label to the left by 50% of its container
+              transform: 'translateX(-50%)', // Translate the label back by 50% of its own width
+            },
+            '& .MuiOutlinedInput-input': {
+              padding: '8px', // Adjust the padding of the input field
+              textAlign: 'center', // Center align the text in the input field
+            },
+            '& .MuiOutlinedInput-adornedEnd': {
+              paddingRight: '8px', // Add padding to the end for the search icon
+            },
+          }}
+          InputProps={{
+            endAdornment: (
+              <IconButton type="submit" aria-label="search">
+                <SearchIcon />
+              </IconButton>
+            ),
+            sx: {
+              borderRadius: '8px', // Rounded corners
+              backgroundColor: '#f0f0f0', // Light gray background color
+            },
+          }}
+        />
+        <GenerateReportButton variant="contained" onClick={generateUserReport}>
+          Generate Report
+        </GenerateReportButton>
+      </div>
+      <HorizontalBar />
       <TableContainer component={Paper}>
         <Table>
           <StyledTableHead>
@@ -105,7 +201,7 @@ const UsersTable = ({ loggedInUserId }) => {
             </TableRow>
           </StyledTableHead>
           <TableBody>
-            {users.map(user => (
+            {filteredUsers.map(user => (
               <StyledTableRow key={user._id}>
                 <StyledTableCell>{user.name}</StyledTableCell>
                 <StyledTableCell>{user.username}</StyledTableCell>
@@ -113,8 +209,8 @@ const UsersTable = ({ loggedInUserId }) => {
                 <StyledTableCell>{user.gender}</StyledTableCell>
                 <StyledTableCell>{user.joinDate}</StyledTableCell>
                 <StyledTableCell>
-                  <DeleteButton 
-                    variant="contained" 
+                  <DeleteButton
+                    variant="contained"
                     onClick={() => handleDelete(user._id)}
                   >
                     Delete
