@@ -37,7 +37,7 @@ const EditBooking = () => {
       .then(response => {
         const bookingData = response.data.data.booking;
         const formattedDate = moment(bookingData.date).format('YYYY-MM-DD');
-        const startTime = moment.utc(bookingData.start_time).format('HH:mm');
+
 
         setBooking(bookingData);
         setEditedBooking({
@@ -86,7 +86,6 @@ const EditBooking = () => {
   const handleClosePopup = () => {
     setOpenPopup(false);
     if (successMessage) {
-      // Redirect to the previous page
       window.location.href = previousPage || '/';
     }
   };
@@ -115,8 +114,8 @@ const EditBooking = () => {
           justifyContent: 'flex-start',
         }}
       >
-        <Paper style={{ padding: '20px', maxWidth: '600px', margin: 'auto' }}>
-          <Typography variant="h5" gutterBottom>Edit Booking</Typography>
+        <Paper style={{ padding: '30px', maxWidth: '600px', margin: 'auto' }}>
+          <Typography variant="h4" sx={{textAlign:'center', mb:'30px'}}>Edit Booking Details</Typography>
           <TextField
             fullWidth
             label="Game Name"
