@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button } from '@mui/material';
 import axios from 'axios';
-import { NavLink } from 'react-router-dom'; // Import NavLink from react-router-dom
+import { NavLink } from 'react-router-dom';
 
 const AddGame = () => {
   const [gameDetails, setGameDetails] = useState({

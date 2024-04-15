@@ -33,7 +33,7 @@ const GameTable = () => {
   useEffect(() => {
     axios.get(`http://localhost:5000/api/games`)
       .then(response => {
-        const formattedGames = response.data.data.games.map(game => ({
+        const formattedGames = response.data.games.map(game => ({
           ...game,
           name: game.name,
           image_path: game.image_path,
