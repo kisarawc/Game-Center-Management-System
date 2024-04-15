@@ -138,8 +138,6 @@ if(existingBookingWithStartTime) {
       setErrorMessage("There's already a booking at the selected start time.");
       return;
     }
-
-    // Continue with the booking creation logic
  
     const selectedDateTimeLocal = new Date(selectedDateTime.getTime() - timezoneOffset * 60000);
     

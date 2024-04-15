@@ -52,7 +52,7 @@ const BookingTable = ({ loggedInUserId }) => {
   }, [loggedInUserId]); 
 
   const handleEdit = (bookingId) => {
-    // Replace this with your edit logic
+    window.location.href = `./bookings/edit/${bookingId}`;
     console.log(`Editing booking with id ${bookingId}`);
   };
 
