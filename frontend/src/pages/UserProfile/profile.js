@@ -43,7 +43,7 @@ const ProfilePage = () => {
 
   const fetchUser = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/users/${userId}`, {
+      const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

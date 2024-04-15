@@ -64,7 +64,7 @@ const UsersTable = ({ loggedInUserId }) => {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/api/users?userId=${loggedInUserId}`)
+    axios.get(`http://localhost:5000/api/users?userId=${loggedInUserId}`)
       .then(response => {
         const formattedUsers = response.data.data.users.map(user => ({
           ...user,
@@ -88,7 +88,7 @@ const UsersTable = ({ loggedInUserId }) => {
 
   const handleConfirmDelete = () => {
     console.log(`Deleting user with id ${selectedUserID}`);
-    axios.delete(`http://localhost:3000/api/users/deleteUser/${selectedUserID}`)
+    axios.delete(`http://localhost:5000/api/users/deleteUser/${selectedUserID}`)
       .then(response => {
         console.log('User deleted successfully');
         setUsers(users.filter(user => user._id !== selectedUserID));

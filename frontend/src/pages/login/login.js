@@ -11,7 +11,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    axios.post('http://localhost:3000/api/users/login', { email, password })
+    axios.post('http://localhost:5000/api/users/login', { email, password })
       .then(result => {
         if (result.status === 200) {
           window.alert('You have successfully logged in!');
