@@ -175,24 +175,24 @@ exports.userLogin = async (req, res) => {
 };
 
 //getUserByID
-exports.getUserById = async (req, res) => {
+// exports.getUserById = async (req, res) => {
 
-  const {userId} = req.params;
+//   const {userId} = req.params;
 
-      //check for valid id
-      if (!Mongoose.Types.ObjectId.isValid(userId)){
-          return res.status(404).json({error:'invalid id'})
-      }
+//       //check for valid id
+//       if (!Mongoose.Types.ObjectId.isValid(userId)){
+//           return res.status(404).json({error:'invalid id'})
+//       }
   
-  const user = await User.findById(userId)
+//   const user = await User.findById(userId)
 
-      //if User not found
-      if(!user){
-          return res.status(400).json({error:'User not found'})
-      }
+//       //if User not found
+//       if(!user){
+//           return res.status(400).json({error:'User not found'})
+//       }
   
-      res.status(200).json(user)
-  }
+//       res.status(200).json(user)
+//   }
 
   // exports.updateUser = async (req, res) => {
 
@@ -212,3 +212,29 @@ exports.getUserById = async (req, res) => {
   //   }
 
   // };
+
+  //getUserById
+  exports.getUserById = async (req, res) => {
+    try{
+      const users = await User.findById(req.params.userId);
+      if(!users){
+        res.status(404).json({
+          status :'fail',
+          message: 'User not found'
+        });
+        return;
+      }
+      res.status(200).jason ({
+        status :'success',
+        data:{
+          users
+        }
+      });
+    }
+    catch(error){
+      res.status(500).json({
+        status: 'error',
+        message:error.message
+      });
+    }
+  };

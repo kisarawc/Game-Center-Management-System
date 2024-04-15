@@ -50,7 +50,7 @@ const ProfilePage = () => {
           'Authorization': `Bearer ${token}`
         }
       });
-      if (response.ok) {
+      if (response.status === 200) {
         const data = await response.json();
         setUser(data);
       } else {
