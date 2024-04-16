@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import PDFHeader from '../../../Components/common/Header/PDFHeader';
-
+import PDFFooter from '../../../Components/common/Footer/PDFFooter';
+import AdminHeader from '../../../Components/common/adminHeader'
 const BookingAdmin = () => {
   const [bookings, setBookings] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -49,7 +50,7 @@ const BookingAdmin = () => {
       },
       tableRow: {
         flexDirection: 'row',
-       //borderBottom: '1px solid black', // Add border bottom to each row
+
       },
       tableCell: {
         border: '1px solid black',
@@ -67,30 +68,31 @@ const BookingAdmin = () => {
           <PDFHeader />
             <Text style={{ marginBottom: 10 }}>Current Booking Details</Text>
             <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-              <Text style={[styles.headerCell, { width: '10%' }]}>Date</Text>
+              <Text style={[styles.headerCell, { width: '15%' }]}>Date</Text>
               <Text style={[styles.headerCell, { width: '10%' }]}>Start Time</Text>
               <Text style={[styles.headerCell, { width: '10%' }]}>End Time</Text>
               <Text style={[styles.headerCell, { width: '10%' }]}>Duration (minutes)</Text>
-              <Text style={[styles.headerCell, { width: '20%' }]}>Message Request</Text>
-              <Text style={[styles.headerCell, { width: '10%' }]}>Game Name</Text>
-              <Text style={[styles.headerCell, { width: '10%' }]}>Status</Text>
+              <Text style={[styles.headerCell, { width: '15%' }]}>Request</Text>
+              <Text style={[styles.headerCell, { width: '15%' }]}>Game Name</Text>
+              <Text style={[styles.headerCell, { width: '15%' }]}>Status</Text>
               <Text style={[styles.headerCell, { width: '10%' }]}>Number of Players</Text>
             </View>
-            {/* Wrap all rows within a single View */}
+
             <View>
               {bookings.map((booking) => (
                 <View key={booking._id} style={styles.tableRow}>
-                  <Text style={[styles.tableCell, { width: '10%' }]}>{new Date(booking.date).toLocaleDateString()}</Text>
+                  <Text style={[styles.tableCell, { width: '15%' }]}>{new Date(booking.date).toLocaleDateString()}</Text>
                   <Text style={[styles.tableCell, { width: '10%' }]}>{formatTime(booking.start_time)}</Text>
                   <Text style={[styles.tableCell, { width: '10%' }]}>{formatTime(booking.end_time)}</Text>
                   <Text style={[styles.tableCell, { width: '10%' }]}>{booking.duration}</Text>
-                  <Text style={[styles.tableCell, { width: '20%' }]}>{booking.message_request}</Text>
-                  <Text style={[styles.tableCell, { width: '10%' }]}>{booking.game_name}</Text>
-                  <Text style={[styles.tableCell, { width: '10%' }]}>{booking.status}</Text>
+                  <Text style={[styles.tableCell, { width: '15%' }]}>{booking.message_request}</Text>
+                  <Text style={[styles.tableCell, { width: '15%' }]}>{booking.game_name}</Text>
+                  <Text style={[styles.tableCell, { width: '15%' }]}>{booking.status}</Text>
                   <Text style={[styles.tableCell, { width: '10%' }]}>{booking.num_players}</Text>
                 </View>
               ))}
             </View>
+            <PDFFooter />
           </View>
         </Page>
       </Document>
@@ -99,18 +101,20 @@ const BookingAdmin = () => {
   
 
   return (
-    <div style={{ margin: '20px auto', padding: '20px', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)', borderRadius: '8px' }}>
+  <div>
+    <AdminHeader />
+    <div style={{ margin: '20px auto', padding: '10px', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)', borderRadius: '8px' }}>
       <h2 style={{ textAlign: 'center', marginTop: '25px' }}>Current Booking Details</h2>
       <input
         type="text"
         placeholder="Search Game Name"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        style={{ marginBottom: '20px', width: '100%', padding: '8px', boxSizing: 'border-box' }}
+        style={{ marginBottom: '20px', width: '40%', padding: '8px', boxSizing: 'border-box'  }}
       />
       <PDFDownloadLink document={<MyDocument bookings={filteredBookings} />} fileName="booking_details.pdf">
         {({ blob, url, loading, error }) =>
-          loading ? 'Generating PDF...' : <button style={{ padding: '10px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px' }}>Generate PDF</button>
+          loading ? 'Generating PDF...' : <button style={{ margin: '20px 80px',padding: '10px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px' }}>Generate PDF</button>
         }
       </PDFDownloadLink>
       <table style={{ borderCollapse: 'collapse', width: '100%', marginTop: '20px' }}>
@@ -143,6 +147,7 @@ const BookingAdmin = () => {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 };
