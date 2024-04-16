@@ -57,14 +57,14 @@ const HorizontalBar = styled('hr')({
   borderTop: '1px solid #ccc',
 });
 
-const UsersTable = ({ loggedInUserId }) => {
+const UsersTable = () => {
   const [users, setUsers] = useState([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedUserID, setSelectedUserID] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/users?userId=${loggedInUserId}`)
+    axios.get(`http://localhost:5000/api/users`)
       .then(response => {
         const formattedUsers = response.data.data.users.map(user => ({
           ...user,
@@ -79,7 +79,7 @@ const UsersTable = ({ loggedInUserId }) => {
       .catch(error => {
         console.error('Error fetching users:', error);
       });
-  }, [loggedInUserId]);
+  }, []);
 
   const handleDelete = (userId) => {
     setSelectedUserID(userId);

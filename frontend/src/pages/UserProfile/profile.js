@@ -6,7 +6,6 @@ import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
 import axios from 'axios';
 
-
 const useStyles = makeStyles((theme) => ({
   profilePage: {
     textAlign: 'center',
@@ -35,6 +34,22 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     gap: theme.spacing(2),
   },
+  // Add styles for the dialog container
+  dialogContainer: {
+    // Add your styles here
+  },
+  // Add styles for the dialog title
+  dialogTitle: {
+    // Add your styles here
+  },
+  // Add styles for the dialog content
+  dialogContent: {
+    // Add your styles here
+  },
+  // Add styles for the dialog actions
+  dialogActions: {
+    // Add your styles here
+  },
 }));
 
 const ProfilePage = () => {
@@ -48,7 +63,6 @@ const ProfilePage = () => {
     console.log("userId:", userId);
     fetchUser();
   }, []);
-
 
   const fetchUser = async () => {
     try {
@@ -69,7 +83,8 @@ const ProfilePage = () => {
   
       if (response.status === 200) {
         setUser(response.data);
-      } else {
+      } 
+      else {
         console.error('Error fetching user data');
       }
     } catch (error) {
@@ -77,11 +92,9 @@ const ProfilePage = () => {
     }
   };
   
-
   const handleLogout = () => {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('userId');
-    window.location.href = '/login';
   };
 
   const handleEditProfileOpen = () => {
@@ -139,9 +152,9 @@ const ProfilePage = () => {
       </Box>
 
       {/* Edit Profile Dialog */}
-      <Dialog open={editProfileOpen} onClose={handleEditProfileClose}>
-        <DialogTitle>Edit Profile</DialogTitle>
-        <DialogContent>
+      <Dialog open={editProfileOpen} onClose={handleEditProfileClose} className={classes.dialogContainer}>
+        <DialogTitle className={classes.dialogTitle}>Edit Profile</DialogTitle>
+        <DialogContent className={classes.dialogContent}>
           {/* Edit Profile Form */}
           <form className={classes.editProfileForm} onSubmit={handleEditProfileSubmit}>
             <TextField label="Username" variant="outlined" />
@@ -151,7 +164,7 @@ const ProfilePage = () => {
             <TextField label="Join Date" variant="outlined" disabled />
           </form>
         </DialogContent>
-        <DialogActions>
+        <DialogActions className={classes.dialogActions}>
           <Button onClick={handleEditProfileClose} color="secondary">Cancel</Button>
           <Button onClick={handleEditProfileSubmit} color="primary">Save</Button>
         </DialogActions>

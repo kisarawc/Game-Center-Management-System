@@ -22,9 +22,21 @@ const Login = () => {
         if (email === 'chathuka@gmail.com' && password === 'chathuka123') {
           window.location.href = '/adminDashboard';
         } 
-        if (email === 'limasha@gmail.com' && password === 'limasha123') {
+        else if (email === 'limasha@gmail.com' && password === 'limasha123') {
           window.location.href = '/adminDashboard';
-        } 
+        }
+        else if (email === 'ravindu@gmail.com' && password === 'ravindu123') {
+          window.location.href = '/adminDashboard';
+        }
+        else if (email === 'radeesa@gmail.com' && password === 'radeesa123') {
+          window.location.href = '/adminDashboard';
+        }   
+        else if (email === 'saniru@gmail.com' && password === 'saniru123') {
+          window.location.href = '/adminDashboard';
+        }
+        else if (email === 'shavindi@gmail.com' && password === 'shavindi123') {
+          window.location.href = '/adminDashboard';
+        }  
         else {
           window.location.href = '/profile';
         }
