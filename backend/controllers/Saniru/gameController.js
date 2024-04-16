@@ -2,9 +2,7 @@ const Game = require('../../models/Saniru/Game');
 
 exports.createGame = async (req, res) => {
   try {
-    const newGame = await Game.create(req.body);
-    console.log(req.body)
-    console.log(newGame)
+    const newGame = await Game.create(req.body);    
     res.status(201).json({
       status: 'success',
       data: {
