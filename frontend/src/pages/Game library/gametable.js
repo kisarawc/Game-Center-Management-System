@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   textAlign: 'center',
   padding: theme.spacing(2), 
@@ -30,7 +29,16 @@ const GameTable = () => {
 
   const [games, setGames] = useState([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedGameId, setSelectedGameId] = useState(null);
+  const [selectedGame, setSelectedGame] = useState(null);
+  const [editedGameDetails, setEditedGameDetails] = useState({
+    name: '',
+    image_path: '',
+    platform: '',
+    hourly_rate: '',
+    game_rating: ''
+  });
   const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
@@ -54,7 +62,42 @@ const GameTable = () => {
   }, []); 
 
   const handleEdit = (gameId) => {
+    const selectedGame = games.find(game => game._id === gameId);
+    setSelectedGame(selectedGame);
+    setEditedGameDetails({
+      name: selectedGame.name,
+      image_path: selectedGame.image_path,
+      platform: selectedGame.platform,
+      hourly_rate: selectedGame.hourly_rate,
+      game_rating: selectedGame.game_rating
+    });
+    setEditDialogOpen(true);
+  };
 
+  const handleEditDialogClose = () => {
+    setEditDialogOpen(false);
+  };
+
+  const handleEditDialogConfirm = () => {
+    axios.put(`http://localhost:5000/api/games/updateGame/${selectedGame._id}`, editedGameDetails)
+      .then(response => {
+        console.log('Game updated successfully');
+        // Update the games state to reflect the changes
+        const updatedGames = games.map(game => {
+          if (game._id === selectedGame._id) {
+            return {
+              ...game,
+              ...editedGameDetails
+            };
+          }
+          return game;
+        });
+        setGames(updatedGames);
+        setEditDialogOpen(false);
+      })
+      .catch(error => {
+        console.error('Error updating game:', error);
+      });
   };
 
   const handleDelete = (gameId) => {
@@ -86,31 +129,6 @@ const GameTable = () => {
     setGames(filteredGames);
   };
 
-  // /* Generate user report */
-  const generateUserReport = () => {
-  //   const doc = new jsPDF()
-
-  //   doc.setFontSize(30)
-  //   doc.setFont('helvetica', 'bold')
-  //   doc.setTextColor(0, 0, 255)
-  //   doc.text('User Report', 105, 10, 'center')
-
-  //   autoTable(
-  //     doc,
-  //     {
-  //       head: rtitle,
-  //       body: rbody
-  //     }, 40, 100
-  //   )
-  //   doc.save('UserReport.pdf')
-  // }
-
-  // var rtitle = [['Name', 'Username', 'Email', 'Gender', 'Joined Date']]
-
-  // var rbody = users && users.map((user) => (
-  //   [user.name, user.username, user.email, user.gender, user.joinDate]
-  // ))
-
   return (
     <>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
@@ -122,9 +140,6 @@ const GameTable = () => {
         />
         <Button variant="outlined" color="primary" onClick={handleSearch}>
           Search
-        </Button>
-        <Button variant="outlined" color="primary" onClick={generateUserReport}>
-          Generate Report
         </Button>
       </Box>
       <TableContainer component={Paper}>
@@ -185,6 +200,58 @@ const GameTable = () => {
           </Button>
           <Button onClick={handleConfirmDelete} color="primary" autoFocus>
             Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={editDialogOpen}
+        onClose={handleEditDialogClose}
+        aria-labelledby="edit-dialog-title"
+      >
+        <DialogTitle id="edit-dialog-title">Edit Game</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Name"
+            value={editedGameDetails.name}
+            onChange={(e) => setEditedGameDetails({ ...editedGameDetails, name: e.target.value })}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Image Path"
+            value={editedGameDetails.image_path}
+            onChange={(e) => setEditedGameDetails({ ...editedGameDetails, image_path: e.target.value })}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Platform"
+            value={editedGameDetails.platform}
+            onChange={(e) => setEditedGameDetails({ ...editedGameDetails, platform: e.target.value })}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Hourly Rate"
+            value={editedGameDetails.hourly_rate}
+            onChange={(e) => setEditedGameDetails({ ...editedGameDetails, hourly_rate: e.target.value })}
+            fullWidth
+            margin="normal"
+          />
+          <TextField
+            label="Game Rating"
+            value={editedGameDetails.game_rating}
+            onChange={(e) => setEditedGameDetails({ ...editedGameDetails, game_rating: e.target.value })}
+            fullWidth
+            margin="normal"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleEditDialogClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleEditDialogConfirm} color="primary" autoFocus>
+            Save
           </Button>
         </DialogActions>
       </Dialog>

@@ -17,6 +17,8 @@ exports.createGame = async (req, res) => {
   }
 };
 
+
+
 exports.getAllGames = async (req, res) => {
   try {
     const games = await Game.find();
@@ -26,21 +28,7 @@ exports.getAllGames = async (req, res) => {
   }
 };
 
-// exports.deleteGame = async (req, res) => {
-//   try {
-//     const { gameId } = req.params;
 
-//     // Delete the game
-//     const deletedGame = await Game.findByIdAndDelete(gameId);
-
-//     if (!deletedGame) {
-//       return res.status(404).json({ error: 'Game not found' });
-//     }
-//   } 
-//   catch (error) {
-//     res.status(500).json({ error: 'Internal server error' });
-//   }
-// };
 
 exports.deleteGame = async (req, res) => {
   try {
