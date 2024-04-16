@@ -4,8 +4,8 @@ import { Typography, Button, Avatar, Grid, Box, TextField, Dialog, DialogTitle, 
 import propic from '../../images/login/profile.png';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
-import Login from '../login/login';
 import axios from 'axios';
+
 
 const useStyles = makeStyles((theme) => ({
   profilePage: {
