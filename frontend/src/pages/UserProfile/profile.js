@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Button, Avatar, Grid, Box } from '@material-ui/core';
+import { Typography, Button, Avatar, Grid, Box, TextField, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import propic from '../../images/login/profile.png';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
@@ -28,14 +28,19 @@ const useStyles = makeStyles((theme) => ({
     height: theme.spacing(15),
     marginBottom: theme.spacing(2),
   },
+  editProfileForm: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+  },
 }));
 
 const ProfilePage = () => {
-  
   const classes = useStyles();
-  const token = localStorage.getItem('token');
-  const userId = localStorage.getItem('userId');
+  const token = sessionStorage.getItem('token');
+  const userId = sessionStorage.getItem('userId');
   const [user, setUser] = useState({});
+  const [editProfileOpen, setEditProfileOpen] = useState(false);
 
   useEffect(() => {
     fetchUser();
@@ -62,9 +67,24 @@ const ProfilePage = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('userId');
     window.location.href = '/login';
+  };
+
+  const handleEditProfileOpen = () => {
+    setEditProfileOpen(true);
+  };
+
+  const handleEditProfileClose = () => {
+    setEditProfileOpen(false);
+  };
+
+  const handleEditProfileSubmit = () => {
+    // Submit edited profile details to backend
+    // ...
+    // Close edit profile dialog
+    handleEditProfileClose();
   };
 
   return (
@@ -80,6 +100,7 @@ const ProfilePage = () => {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'flex-start',
+          padding: '16px',
         }}
       >
         <div className={classes.profilePage}>
@@ -94,16 +115,36 @@ const ProfilePage = () => {
               <Typography variant="body1">Join Date: {user.joinDate || ''}</Typography>
             </div>
           </div>
-          <Grid container spacing={2} justify="center" className={classes.profileActions}>
-            <Grid item>
-              <Button variant="contained" color="primary">Edit Profile</Button>
+          <Grid container spacing={2} justifyContent="center" className={classes.profileActions}>
+            <Grid item xs={12} sm={6}> 
+              <Button fullWidth variant="contained" color="primary" onClick={handleEditProfileOpen}>Edit Profile</Button>
             </Grid>
-            <Grid item>
-              <Button variant="contained" color="secondary" onClick={handleLogout}>Logout</Button>
+            <Grid item xs={12} sm={6}> 
+              <Button fullWidth variant="contained" color="secondary" onClick={handleLogout}>Logout</Button>
             </Grid>
           </Grid>
         </div>
       </Box>
+
+      {/* Edit Profile Dialog */}
+      <Dialog open={editProfileOpen} onClose={handleEditProfileClose}>
+        <DialogTitle>Edit Profile</DialogTitle>
+        <DialogContent>
+          {/* Edit Profile Form */}
+          <form className={classes.editProfileForm} onSubmit={handleEditProfileSubmit}>
+            <TextField label="Username" variant="outlined" />
+            <TextField label="Email" variant="outlined" />
+            <TextField label="Password" type="password" variant="outlined" />
+            <TextField label="Gender" variant="outlined" />
+            <TextField label="Join Date" variant="outlined" disabled />
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleEditProfileClose} color="secondary">Cancel</Button>
+          <Button onClick={handleEditProfileSubmit} color="primary">Save</Button>
+        </DialogActions>
+      </Dialog>
+
       <Footer />
     </Box>
   );

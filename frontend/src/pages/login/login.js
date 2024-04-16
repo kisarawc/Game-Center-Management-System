@@ -12,47 +12,28 @@ const Login = () => {
     e.preventDefault();
 
     axios.post('http://localhost:5000/api/users/login', { email, password })
-      .then(result => {
-        if (result.status === 200) {
-          window.alert('You have successfully logged in!');
-          const token = result.data.token;
-          localStorage.setItem('token', token); // Store token in localStorage
-
-          if (email === 'chathuka@gmail.com' && password === 'chathuka123') 
-          {
-              window.location.href = '/adminDashboard';
-          } 
-          else if (email === 'limasha@gmail.com' && password === 'limasha123')
-          {
-              window.location.href = '/adminDashboard';
-          }
-          else if (email === 'ravindu@gmail.com' && password === 'ravindu123')
-          {
-              window.location.href = '/adminDashboard';
-          }
-          else if (email === 'radeesa@gmail.com' && password === 'radeesa123')
-          {
-              window.location.href = '/adminDashboard';
-          }
-          else if (email === 'saniru@gmail.com' && password === 'saniru123')
-          {
-              window.location.href = '/adminDashboard';
-          }
-          else if (email === 'shavindi@gmail.com' && password === 'shavindi123')
-          {
-              window.location.href = '/adminDashboard';
-          }
-          else 
-          {
-              window.location.href = '/profile';
-          }
-
+    .then(result => {
+      if (result.status === 200) {
+        window.alert('You have successfully logged in!');
+        const { token, userId } = result.data;
+        sessionStorage.setItem('token', token); // Store token in sessionStorage
+        sessionStorage.setItem('userId', userId); // Store userId in sessionStorage
+        // Redirect based on user role or any other condition
+        if (email === 'chathuka@gmail.com' && password === 'chathuka123') {
+          window.location.href = '/adminDashboard';
         } 
         else {
-          window.alert(`Error: ${result.data.message}`);
+          window.location.href = '/profile';
         }
-      })
-      .catch(err => console.error(err));
+      } else {
+        throw new Error(result.data.message || 'Unauthorized'); // Throw an error with a default message
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      const errorMessage = err.response ? err.response.data.message : 'Unauthorized';
+      window.alert(`Error: ${errorMessage}`); // Display the error message in an alert box
+    });
   }
 
   const getButton = () => ({
