@@ -26,14 +26,17 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const BookingTable = ({ loggedInUserId }) => {
+  console.log(loggedInUserId)
+
   const [bookings, setBookings] = useState([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedBookingId, setSelectedBookingId] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/api/bookings?userId=${loggedInUserId}`)
-      .then(response => {
-        const formattedBookings = response.data.data.bookings.map(booking => ({
+    axios.get(`http://localhost:3000/api/bookings/user/${loggedInUserId}`)
+    .then(response => {
+        console.log(response.data);
+        const formattedBookings = response.data.map(booking => ({
           ...booking,
           date: new Date(booking.date).toLocaleDateString('en-US'),
           start_time: new Date(booking.start_time).toLocaleTimeString('en-US', {timeZone: 'UTC'}), // Adjust timezone to UTC

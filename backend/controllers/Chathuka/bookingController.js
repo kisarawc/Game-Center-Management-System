@@ -133,3 +133,21 @@ exports.getBookingDetailsByGameAndDate = async (req, res) => {
 };
 
 
+exports.getBookingsByUserId = async (req, res) => {
+  const userId = req.params.userId; // Assuming userId is passed in the request parameters
+
+  try {
+    // Find all bookings associated with the user ID
+    const bookings = await Booking.find({ user_id: userId }).exec();
+
+    if (bookings.length === 0) {
+      return res.status(404).json({ message: 'No bookings found for the user.' });
+    }
+
+    res.json(bookings);
+  } catch (error) {
+    console.error('Error fetching bookings by user ID:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+

@@ -14,6 +14,8 @@ router.route('/:id')
   .patch(bookingController.updateBooking)
   .delete(bookingController.deleteBooking);
 
+  router.get('/user/:userId', bookingController.getBookingsByUserId);
+
 router.route('/game/:gameName/:date')
   .get(bookingController.getBookingDetailsByGameAndDate);
 
