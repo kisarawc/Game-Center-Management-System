@@ -3,7 +3,11 @@ import { Grid, Typography, Input } from "@mui/material";
 
 const feedbackform = props => {
     return (
-        <Grid component={'center'}
+        <Grid container sx={{
+
+            marginBottom: '30px',
+            display: 'block',
+        }}
 
 
 
