@@ -83,51 +83,47 @@ const BookingPage = () => {
       return;
     }
 
-    setErrorMessage(''); // Clear previous error message
+    setErrorMessage(''); 
+    
 
 
-// Convert selectedStartTime to a Date object
-const startTimeParts = selectedStartTime.split(':');
-const selectedTime = new Date();
-selectedTime.setHours(parseInt(startTimeParts[0], 10));
-selectedTime.setMinutes(parseInt(startTimeParts[1], 10));
+    // Convert selectedStartTime to a Date object
+    const startTimeParts = selectedStartTime.split(':');
+    const selectedTime = new Date();
+    selectedTime.setHours(parseInt(startTimeParts[0], 10));
+    selectedTime.setMinutes(parseInt(startTimeParts[1], 10));
 
-// Add duration to selected start time
-const selectedEndTime = new Date(selectedTime.getTime() + selectedDuration * 60000);
+    // Add duration to selected start time
+    const selectedEndTime = new Date(selectedTime.getTime() + selectedDuration * 60000);
 
-// Format selectedEndTime as "HH:mm"
-const endHours = selectedEndTime.getHours().toString().padStart(2, '0');
-const endMinutes = selectedEndTime.getMinutes().toString().padStart(2, '0');
-const formattedEndTime = new Date(`${selectedDate}T${endHours}:${endMinutes}`);
-
-
-//console.log('End Time:', formattedEndTime);
-const timezoneOffset = selectedDateTime.getTimezoneOffset();
-const selectedDateTimeEnd = new Date(formattedEndTime.getTime()- timezoneOffset * 60000);
+    // Format selectedEndTime as "HH:mm"
+    const endHours = selectedEndTime.getHours().toString().padStart(2, '0');
+    const endMinutes = selectedEndTime.getMinutes().toString().padStart(2, '0');
+    const formattedEndTime = new Date(`${selectedDate}T${endHours}:${endMinutes}`);
 
 
+    //console.log('End Time:', formattedEndTime);
+    const timezoneOffset = selectedDateTime.getTimezoneOffset();
+    const selectedDateTimeEnd = new Date(formattedEndTime.getTime()- timezoneOffset * 60000);
 
+    const existingBookingWithStartTime = bookings.some(booking => {
+        const bookingStartTime = booking.start_time;
+        const bookingEndTime = booking.end_time;
+        //const moment = require('moment');
+        // // Parse the date string into a moment object
+        // const momentDate = moment.utc(bookingEndTime);
 
+        // // Get the formatted time in the UTC time zone
+        // const formattedTime = momentDate.format('HH:mm');
 
+        console.log('bt', bookingStartTime);
+        console.log('be', bookingEndTime);
+        console.log('st', selectedStartTime);
 
-const existingBookingWithStartTime = bookings.some(booking => {
-    const bookingStartTime = booking.start_time;
-    const bookingEndTime = booking.end_time;
-    //const moment = require('moment');
-    // // Parse the date string into a moment object
-    // const momentDate = moment.utc(bookingEndTime);
-
-    // // Get the formatted time in the UTC time zone
-    // const formattedTime = momentDate.format('HH:mm');
-
-    console.log('bt', bookingStartTime);
-    console.log('be', bookingEndTime);
-    console.log('st', selectedStartTime);
-
-    if (selectedStartTime >= bookingStartTime && 
-      selectedStartTime < bookingEndTime) {
-      return true; // Double booking found
-  } return false; // No double booking found
+        if (selectedStartTime >= bookingStartTime && 
+          selectedStartTime < bookingEndTime) {
+          return true; 
+      } return false; 
 });
 if(existingBookingWithStartTime) {
   console.log('Double booking found!');
@@ -157,8 +153,8 @@ if(existingBookingWithStartTime) {
     axios.post('http://localhost:3000/api/bookings', newBooking)
       .then(response => {
         console.log('Booking created successfully:', response.data);
-        setBookingCreated(true); // Set booking creation state to true
-        setOpenModal(true); // Open the modal after successful booking creation
+        setBookingCreated(true); 
+        setOpenModal(true); 
       })
       .catch(error => {
         console.error('Error creating booking:', error);
@@ -166,13 +162,12 @@ if(existingBookingWithStartTime) {
   };
 
   const handlePaymentNow = () => {
-    window.location.href = '/payment'; // Redirect to payment page
+    window.location.href = '/payment'; 
   };
 
   const handlePaymentLater = () => {
-    setBookingCreated(false); // Reset booking creation state
-    setOpenModal(false); // Close the modal
-    // Clear form fields
+    setBookingCreated(false); 
+    setOpenModal(false);
     setSelectedGame('');
     setSelectedDate('');
     setSelectedStartTime('');
@@ -180,7 +175,7 @@ if(existingBookingWithStartTime) {
     setMessageRequest('');
     setLoading(false);
     setBookings([]);
-    window.location.reload(); // Reload the page
+    window.location.reload(); 
   };
 
   const formatDate = (date) => {
@@ -262,7 +257,6 @@ if(existingBookingWithStartTime) {
         <Typography variant="body1" style={{ marginTop: '20px' }}>No bookings found for the selected game and date.</Typography>
       )}
 
-      {/* Modal for displaying booking success */}
       <Modal
         open={openModal}
         onClose={handleCloseModal}
@@ -282,14 +276,12 @@ if(existingBookingWithStartTime) {
         </Paper>
       </Modal>
 
-      {/* Display error message */}
       {errorMessage && (
         <Typography variant="body1" style={{ color: 'red', marginTop: '10px' }}>
           {errorMessage}
         </Typography>
       )}
 
-      {/* Form for creating a new booking */}
       <form onSubmit={handleFormSubmit} style={{ marginTop: '20px' }}>
         <Typography variant="h5" gutterBottom>Create New Booking</Typography>
         <FormControl fullWidth style={{ marginBottom: '10px' }}>

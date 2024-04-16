@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { Button, TextField, Typography, Paper, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { Button, TextField, Typography, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Select, MenuItem } from '@mui/material';
 import moment from 'moment';
 import Box from '@mui/material/Box';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
 
 const EditBooking = () => {
-  const { id } = useParams(); // Get the booking ID from the URL params
+  const { id } = useParams(); 
 
   const [booking, setBooking] = useState(null);
   const [editedBooking, setEditedBooking] = useState({
@@ -21,6 +21,19 @@ const EditBooking = () => {
     game_name: '',
   });
 
+  const renderTimeOptions = () => {
+    const options = [];
+    for (let hour = 9; hour < 21; hour++) {
+      for (let minute = 0; minute < 60; minute += 30) {
+        const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+        options.push(
+          <MenuItem key={time} value={time}>{time}</MenuItem>
+        );
+      }
+    }
+    return options;
+  };
+
   const [openPopup, setOpenPopup] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -30,6 +43,9 @@ const EditBooking = () => {
   const formatTime = (time) => {
     const localTime = new Date(time);
     return localTime.toLocaleTimeString([], { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' });
+  };
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString();
   };
 
   useEffect(() => {
@@ -63,24 +79,62 @@ const EditBooking = () => {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (id) => {
+  console.log('id is',id)
     const startTime = moment.utc(`${editedBooking.date}T${editedBooking.start_time}`);
-
-    // Format the start time as UTC
     const startTimeFormatted = startTime.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
-  const editedBookingFormatted = {
-    ...editedBooking,
-    start_time: startTimeFormatted,
-  };
-    axios.patch(`http://localhost:3000/api/bookings/${id}`, editedBookingFormatted)
+    console.log(startTimeFormatted)
+    axios.get(`http://localhost:3000/api/bookings/game/${editedBooking.game_name}/${editedBooking.date}/${startTimeFormatted}`)
       .then(response => {
-        setSuccessMessage('Booking updated successfully!');
-        setOpenPopup(true);
-      })
-      .catch(error => {
-        setErrorMessage('Error updating booking. Please try again.');
-        setOpenPopup(true);
+        const existingBooking = response.data;
+        console.log(existingBooking)
+        if (existingBooking) {
+          setErrorMessage("There is already a booking for this game on the selected date.");
+          return;
+        } 
+      }).catch(error => {
+        console.error('Error creating booking:', error);
       });
+          
+          const currentDate = new Date();
+          
+          const formattedDate = moment(currentDate).format('YYYY-MM-DD');
+          console.log('s',editedBooking.start_time) 
+
+          const startTimes = moment.utc(`${editedBooking.date}T${editedBooking.start_time}`);
+    
+          // Parse duration from string to number
+          const durationMinutes = parseInt(editedBooking.duration, 10);
+          
+          // Calculate end time by adding duration to start time
+          const endTime = startTimes.clone().add(durationMinutes, 'minutes');
+          
+          // Format end time
+          const endTimeFormatted = endTime.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+          console.log('fo',endTimeFormatted)
+          if (editedBooking.date < formattedDate) {
+            setErrorMessage("You cannot create a booking for a past date.");
+            return;
+          }
+          const editedBookingFormatted = {
+            ...editedBooking,
+            start_time: startTimeFormatted,
+            end_time: endTimeFormatted,
+          };
+          
+          axios.patch(`http://localhost:3000/api/bookings/${id}`, editedBookingFormatted)
+          .then(response => {
+              setSuccessMessage('Booking updated successfully!');
+          })
+          .catch(error => {
+              setErrorMessage('Error updating booking. Please try again.');
+          })
+          .finally(() => {
+              setOpenPopup(!!successMessage);
+          });
+        
+      
+            setErrorMessage(''); 
   };
 
   const handleClosePopup = () => {
@@ -91,7 +145,6 @@ const EditBooking = () => {
   };
 
   useEffect(() => {
-    // Save the previous page URL when the component mounts
     setPreviousPage(document.referrer);
   }, []);
 
@@ -115,7 +168,8 @@ const EditBooking = () => {
         }}
       >
         <Paper style={{ padding: '30px', maxWidth: '600px', margin: 'auto' }}>
-          <Typography variant="h4" sx={{textAlign:'center', mb:'30px'}}>Edit Booking Details</Typography>
+          <Typography variant="h4" sx={{ textAlign: 'center', mb: '30px' }}>Edit Booking Details</Typography>
+          {errorMessage && <Typography color="error" sx={{ marginBottom: '10px' }}>{errorMessage}</Typography>}
           <TextField
             fullWidth
             label="Game Name"
@@ -127,22 +181,24 @@ const EditBooking = () => {
           />
           <TextField
             fullWidth
+            type="date"
             label="Date"
             name="date"
             value={editedBooking.date}
             onChange={handleInputChange}
             style={{ marginBottom: '10px' }}
-            disabled
           />
-          <TextField
+
+          <Select
             fullWidth
             label="Start Time"
             name="start_time"
             value={editedBooking.start_time}
             onChange={handleInputChange}
             style={{ marginBottom: '10px' }}
-            disabled
-          />
+          >
+            {renderTimeOptions()}
+          </Select>
           <TextField
             fullWidth
             label="Duration (minutes)"
@@ -169,7 +225,8 @@ const EditBooking = () => {
             onChange={handleInputChange}
             style={{ marginBottom: '10px' }}
           />
-          <Button variant="contained" onClick={handleSubmit}>Update Booking</Button>
+
+          <Button variant="contained" onClick={() => handleSubmit(id)}>Update Booking</Button>
         </Paper>
       </Box>
       <Footer />

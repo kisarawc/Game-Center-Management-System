@@ -19,4 +19,6 @@ router.route('/:id')
 router.route('/game/:gameName/:date')
   .get(bookingController.getBookingDetailsByGameAndDate);
 
+  router.route('/game/:gameName/:date/:time')
+  .get(bookingController.getBookingDetailsByGameAndDateAndTime);
 module.exports = router;

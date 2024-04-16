@@ -118,11 +118,26 @@ exports.getBookingDetailsByGameAndDate = async (req, res) => {
   const { gameName, date } = req.params;
 
   try {
-    // Find all bookings related to the selected game name and date
     const bookings = await Booking.find({ game_name: gameName, date: date }).exec();
 
     if (bookings.length === 0) {
       return res.status(404).json({ message: 'No bookings found for the game and date.' });
+    }
+    res.json(bookings);
+  } catch (error) {
+    console.error('Error fetching booking details:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.getBookingDetailsByGameAndDateAndTime = async (req, res) => {
+  const { gameName, date ,  time} = req.params;
+
+  try {
+    const bookings = await Booking.find({ game_name: gameName, date: date ,start_time: time }).exec();
+
+    if (bookings.length === 0) {
+      return res.status(404).json({ message: 'No bookings found for the game and date and time.' });
     }
 
     res.json(bookings);
@@ -134,7 +149,7 @@ exports.getBookingDetailsByGameAndDate = async (req, res) => {
 
 
 exports.getBookingsByUserId = async (req, res) => {
-  const userId = req.params.userId; // Assuming userId is passed in the request parameters
+  const userId = req.params.userId; 
 
   try {
     // Find all bookings associated with the user ID
