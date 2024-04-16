@@ -30,7 +30,7 @@ mongoose.connect(process.env.MONGODB_URL, {
     
     // Start the server
     app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
+        console.log(`Server running on prt ${PORT}`);
     });
 })
 .catch(err => {

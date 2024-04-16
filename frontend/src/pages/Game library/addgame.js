@@ -1,149 +1,148 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button } from '@mui/material';
 import axios from 'axios';
+import { TextField, Checkbox, Button, FormControlLabel } from '@mui/material';
+import firebase from 'firebase/compat/app'; // Import the compat version for now
+import 'firebase/compat/storage'; // Import the compat version for now
 
-const AddGame = () => {
-  const [gameDetails, setGameDetails] = useState({
+// Initialize Firebase with your Firebase project configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyD-9fTVA345Q3J9Mrym_me-Omi1mYBS1uw",
+  authDomain: "offer-me-f2528.firebaseapp.com",
+  projectId: "offer-me-f2528",
+  storageBucket: "offer-me-f2528.appspot.com",
+  messagingSenderId: "1065024084271",
+  appId: "1:1065024084271:web:46c417382749633986e9da",
+  measurementId: "G-XDMCBMMFXW"
+};
+firebase.initializeApp(firebaseConfig);
+
+const CreateGameForm = () => {
+  const [image, setImage] = useState(null);
+  const [formData, setFormData] = useState({
     name: '',
-    availability: '',
+    image_path: '', // Will hold the selected image file
+    availability: false,
     platform: '',
-    hourly_rate: '',
-    game_rating: '',
-    image_path: '', // Corrected attribute name
+    hourly_rate: 0,
+    game_rating: 0
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setGameDetails(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setGameDetails(prevState => ({
-      ...prevState,
-      image_path: file // Corrected attribute name
-    }));
-  };
-  
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-
-    formData.append('name', gameDetails.name);
-    formData.append('availability', gameDetails.availability);
-    formData.append('platform', gameDetails.platform);
-    formData.append('hourly_rate', gameDetails.hourly_rate);
-    formData.append('game_rating', gameDetails.game_rating);
-    formData.append('image_path', gameDetails.image_path);
-
-    try {
-      const response = await axios.post('http://localhost:5000/api/games/createGame', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      console.log('New Game created:', response.data);
-
-      if (response.status === 201) {
-        window.alert('New game created!');
-        setGameDetails({
-          name: '',
-          availability: '',
-          platform: '',
-          hourly_rate: '',
-          game_rating: '',
-          image_path: '',
-        });
-      }
-    } catch (error) {
-      console.error('Error creating game:', error);
+    if (e.target.type === 'file') {
+      // If the change is from the file input, update the image_path with the file itself
+      setFormData({ ...formData, [e.target.name]: e.target.files[0] });
+    } else {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
     }
   };
 
+  const handleCheckboxChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.checked });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const storage = firebase.storage(); // Initialize Firebase Storage
+    if (image) {
+      const imageRef = storage.ref().child(`gameImage/${image.name}`);
+      
+      // Upload the selected image to Firebase Storage
+      imageRef.put(image)
+        .then((snapshot) => {
+            console.log("Image uploaded successfully");
+            
+          // Get the download URL for the uploaded image              
+            return snapshot.ref.getDownloadURL();
+        })
+        .then((downloadURL) => {
+          try {
+            formData.image_path = downloadURL
+            const formDataToSend = new FormData();
+            // Append all form data to formDataToSend
+            for (const key in formData) {
+              formDataToSend.append(key, formData[key]);
+            }
+            axios.post('http://localhost:5000/api/games/createGame', formData).then(()=>{
+              alert('Game created successfully!');
+              // You can add more logic here, like redirecting to a different page
+            });
+           
+          } catch (error) {
+            console.error('Error creating game:', error);
+            alert('Error creating game. Please try again.');
+          }
+        })
+        .catch((error) => {
+          console.error("Error uploading image:", error);
+        });
+    }
+    
+  };
+
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      minHeight="100vh"
-      boxShadow={3}
-      p={3}
-    >
-      <Box maxWidth={400} width="100%">
-        <h2>Add New Game</h2>
-        <form onSubmit={handleSubmit}>
-          <TextField
-            name="name"
-            label="Name"
-            variant="outlined"
-            value={gameDetails.name}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
+    <form onSubmit={handleSubmit}>
+      <TextField
+        label="Name"
+        name="name"
+        value={formData.name}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
+      />
+      <input
+        accept="image/*" // Allow only image files
+        style={{ display: 'none' }}
+        id="image-upload"
+        type="file"
+        name="image_path"
+        onChange={(e) => setImage(e.target.files[0])}
+      />
+      <label htmlFor="image-upload">
+        <Button variant="contained" color="primary" component="span">
+          Upload Image
+        </Button>
+      </label>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={formData.availability}
+            onChange={handleCheckboxChange}
             name="availability"
-            label="Availability"
-            variant="outlined"
-            value={gameDetails.availability}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
           />
-          <TextField
-            name="platform"
-            label="Platform"
-            variant="outlined"
-            value={gameDetails.platform}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            name="hourly_rate"
-            label="Hourly Rate"
-            variant="outlined"
-            value={gameDetails.hourly_rate}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            name="game_rating"
-            label="Game Rating"
-            variant="outlined"
-            value={gameDetails.game_rating}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <Box mt={2}>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              style={{ display: 'none' }}
-              id="image-input"
-            />
-            <label htmlFor="image-input">
-              <Button variant="outlined" component="span">
-                Upload Image
-              </Button>
-            </label>
-          </Box>
-          <Box textAlign="center" mt={2}>
-            <Button type="submit" variant="contained" color="primary">
-              Add Game
-            </Button>
-          </Box>
-        </form>
-      </Box>
-    </Box>
+        }
+        label="Availability"
+      />
+      <TextField
+        label="Platform"
+        name="platform"
+        value={formData.platform}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Hourly Rate"
+        name="hourly_rate"
+        value={formData.hourly_rate}
+        onChange={handleChange}
+        type="number"
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Game Rating"
+        name="game_rating"
+        value={formData.game_rating}
+        onChange={handleChange}
+        type="number"
+        fullWidth
+        margin="normal"
+      />
+      <Button type="submit" variant="contained" color="primary">
+        Create Game
+      </Button>
+    </form>
   );
 };
 
-export default AddGame;
+export default CreateGameForm;

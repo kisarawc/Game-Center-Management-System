@@ -1,16 +1,22 @@
 const Game = require('../../models/Saniru/Game');
 
 exports.createGame = async (req, res) => {
-    try {
-        const { name, image_path, availability, platform, hourly_rate, game_rating } = req.body;
-        const newGame = new Game({ name, image_path, availability, platform, hourly_rate, game_rating});
-        console.log(newGame);
-        const savedGame = await newGame.save();
-        res.status(201).json(savedGame);
-    } 
-    catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+  try {
+    const newGame = await Game.create(req.body);
+    console.log(req.body)
+    console.log(newGame)
+    res.status(201).json({
+      status: 'success',
+      data: {
+        game: newGame
+      }
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: 'fail',
+      message: err.message
+    });
+  }
 };
 
 exports.getAllGames = async (req, res) => {
