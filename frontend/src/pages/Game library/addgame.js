@@ -1,26 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { TextField, Checkbox, Button, FormControlLabel } from '@mui/material';
-import firebase from 'firebase/compat/app'; // Import the compat version for now
-import 'firebase/compat/storage'; // Import the compat version for now
-
-// Initialize Firebase with your Firebase project configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyD-9fTVA345Q3J9Mrym_me-Omi1mYBS1uw",
-  authDomain: "offer-me-f2528.firebaseapp.com",
-  projectId: "offer-me-f2528",
-  storageBucket: "offer-me-f2528.appspot.com",
-  messagingSenderId: "1065024084271",
-  appId: "1:1065024084271:web:46c417382749633986e9da",
-  measurementId: "G-XDMCBMMFXW"
-};
-firebase.initializeApp(firebaseConfig);
 
 const CreateGameForm = () => {
-  const [image, setImage] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
-    image_path: '', // Will hold the selected image file
+    image_path: '',
     availability: false,
     platform: '',
     hourly_rate: 0,
@@ -28,12 +13,7 @@ const CreateGameForm = () => {
   });
 
   const handleChange = (e) => {
-    if (e.target.type === 'file') {
-      // If the change is from the file input, update the image_path with the file itself
-      setFormData({ ...formData, [e.target.name]: e.target.files[0] });
-    } else {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
-    }
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleCheckboxChange = (e) => {
@@ -42,41 +22,14 @@ const CreateGameForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const storage = firebase.storage(); // Initialize Firebase Storage
-    if (image) {
-      const imageRef = storage.ref().child(`gameImage/${image.name}`);
-      
-      // Upload the selected image to Firebase Storage
-      imageRef.put(image)
-        .then((snapshot) => {
-            console.log("Image uploaded successfully");
-            
-          // Get the download URL for the uploaded image              
-            return snapshot.ref.getDownloadURL();
-        })
-        .then((downloadURL) => {
-          try {
-            formData.image_path = downloadURL
-            const formDataToSend = new FormData();
-            // Append all form data to formDataToSend
-            for (const key in formData) {
-              formDataToSend.append(key, formData[key]);
-            }
-            axios.post('http://localhost:5000/api/games/createGame', formData).then(()=>{
-              alert('Game created successfully!');
-              // You can add more logic here, like redirecting to a different page
-            });
-           
-          } catch (error) {
-            console.error('Error creating game:', error);
-            alert('Error creating game. Please try again.');
-          }
-        })
-        .catch((error) => {
-          console.error("Error uploading image:", error);
-        });
+    try {
+      await axios.post('http://localhost:5000/api/games/createGame', formData);
+      alert('Game created successfully!');
+      // You can add more logic here, like redirecting to a different page
+    } catch (error) {
+      console.error('Error creating game:', error);
+      alert('Error creating game. Please try again.');
     }
-    
   };
 
   return (
@@ -89,19 +42,14 @@ const CreateGameForm = () => {
         fullWidth
         margin="normal"
       />
-      <input
-        accept="image/*" // Allow only image files
-        style={{ display: 'none' }}
-        id="image-upload"
-        type="file"
+      <TextField
+        label="Image Path"
         name="image_path"
-        onChange={(e) => setImage(e.target.files[0])}
+        value={formData.image_path}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
       />
-      <label htmlFor="image-upload">
-        <Button variant="contained" color="primary" component="span">
-          Upload Image
-        </Button>
-      </label>
       <FormControlLabel
         control={
           <Checkbox
