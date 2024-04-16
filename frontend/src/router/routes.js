@@ -6,7 +6,7 @@ import Game from '../pages/Game library/game';
 import Event from '../pages/events/Event';
 import GameDetailPage from '../pages/Game library/gamedetails';
 import GameTable from '../pages/Game library/gametable';
-import AddGame from '../pages/Game library/addGame';
+import AddGame from '../pages/Game library/addgame';
 
 const MyRouter = () => {
     return (
