@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
 import { Box } from '@mui/material';
@@ -6,21 +6,18 @@ import { styled } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
 import { NavLink } from 'react-router-dom';
-
-import gameImage1 from '../../images/GamesLibrary/pic1.png';
-import gameImage2 from '../../images/GamesLibrary/pic2.jpg';
-import gameImage3 from '../../images/GamesLibrary/unnamed.png';
+import axios from 'axios'; // Import Axios
 
 const ImageButton = styled(ButtonBase)(({ theme }) => ({
   position: 'relative',
   height: 200,
-  width: 200, 
-  margin: '30px', 
+  width: 200,
+  margin: '30px',
   border: '1px solid #FB41FF',
   borderBottom: 'none',
-  variant: "outlined",
+  variant: 'outlined',
   [theme.breakpoints.down('sm')]: {
-    width: '100% !important', 
+    width: '100% !important',
     height: 100,
   },
   '&:hover, &.Mui-focusVisible': {
@@ -33,8 +30,8 @@ const ImageButton = styled(ButtonBase)(({ theme }) => ({
     },
     '& .MuiTypography-root': {
       border: '3px solid #FFFF',
-      variant: "outlined",
-      color: '#FFFFFF', 
+      variant: 'outlined',
+      color: '#FFFFFF',
     },
   },
 }));
@@ -83,88 +80,19 @@ const ImageMarked = styled('span')(({ theme }) => ({
 }));
 
 const Game = () => {
-  const games = [
-    {
-      gameId: 1,
-      title: 'See More',
-      description: 'Description of Game 1',
-      image: gameImage1, // Path to the image for Game 1
-      rating: 4.5,
-      genre: 'Adventure',
-    },
-    { 
-      gameId: 2,
-      title: 'See More',
-      description: 'Description of Game 2',
-      image: gameImage2, // Path to the image for Game 2
-      rating: 3.8,
-      genre: 'Action'
-    },
-    { 
-      gameId: 3,
-      title: 'See More',
-      description: 'Description of Game 3',
-      image: gameImage3, // Path to the image for Game 3
-      rating: 4.2,
-      genre: 'Strategy'
-    },
-    { 
-      gameId: 3,
-      title: 'See More',
-      description: 'Description of Game 3',
-      image: gameImage3, // Path to the image for Game 3
-      rating: 4.2,
-      genre: 'Strategy'
-    },
-    { 
-      gameId: 3,
-      title: 'See More',
-      description: 'Description of Game 3',
-      image: gameImage3, // Path to the image for Game 3
-      rating: 4.2,
-      genre: 'Strategy'
-    },
-    { 
-      gameId: 3,
-      title: 'See More',
-      description: 'Description of Game 3',
-      image: gameImage3, // Path to the image for Game 3
-      rating: 4.2,
-      genre: 'Strategy'
-    },
-    { 
-      gameId: 3,
-      title: 'See More',
-      description: 'Description of Game 3',
-      image: gameImage3, // Path to the image for Game 3
-      rating: 4.2,
-      genre: 'Strategy'
-    },
-    { 
-      gameId: 3,
-      title: 'See More',
-      description: 'Description of Game 3',
-      image: gameImage3, // Path to the image for Game 3
-      rating: 4.2,
-      genre: 'Strategy'
-    },
-    { 
-      gameId: 3,
-      title: 'See More',
-      description: 'Description of Game 3',
-      image: gameImage3, // Path to the image for Game 3
-      rating: 4.2,
-      genre: 'Strategy'
-    },
-     { 
-      gameId: 3,
-      title: 'See More',
-      description: 'Description of Game 3',
-      image: gameImage3, // Path to the image for Game 3
-      rating: 4.2,
-      genre: 'Strategy'
-    },
-  ];
+  // State to hold the games data
+  const [games, setGames] = useState([]);
+
+  useEffect(() => {
+    // Fetch games data from backend using Axios
+    axios.get('http://localhost:5000/api/games')
+      .then((response) => {
+        setGames(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching games:', error);
+      });
+  }, []);
 
   return (
     <Box>
@@ -190,7 +118,7 @@ const Game = () => {
             justifyContent: 'center',
           }}
         >
-          {games.map(game => (
+          {games.map((game) => (
             <NavLink key={game.gameId} to={`/gamedetails/${game.gameId}`} style={{ textDecoration: 'none' }}>
               <ImageButton focusRipple>
                 <ImageSrc style={{ backgroundImage: `url(${game.image})` }} />
@@ -201,13 +129,13 @@ const Game = () => {
                     variant="subtitle1"
                     sx={{
                       position: 'absolute',
-                      bottom: '10px', // Align to the bottom
-                      fontSize: '12px', // Decrease font size
-                      color: 'rgba(107, 107, 107, 0.5)', // Decrease visibility
+                      bottom: '10px',
+                      fontSize: '12px',
+                      color: 'rgba(107, 107, 107, 0.5)',
                       p: 4,
                       pt: 2,
                       pb: (theme) => `calc(${theme.spacing(1)} + 6px)`,
-                      textDecoration: 'none', // Remove underline
+                      textDecoration: 'none',
                     }}
                   >
                     {game.title}

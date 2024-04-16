@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   textAlign: 'center',
@@ -26,15 +27,17 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const GameTable = () => {
+
   const [games, setGames] = useState([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedGameId, setSelectedGameId] = useState(null);
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     axios.get(`http://localhost:5000/api/games`)
-      .then(response => {
-        console.log(response); // Log the response
-        const formattedGames = response.data?.data?.games?.map(game => ({
+    .then(response => {
+        console.log(response.data);
+        const formattedGames = response.data.map(game => ({
           ...game,
           name: game.name,
           image_path: game.image_path,
@@ -43,17 +46,15 @@ const GameTable = () => {
           hourly_rate: game.hourly_rate,
           game_rating: game.game_rating
         }));
-        setGames(formattedGames || []); // Handle potential undefined response
+        setGames(formattedGames);
       })
       .catch(error => {
         console.error('Error fetching games:', error);
       });
-  }, []);
-  
+  }, []); 
 
   const handleEdit = (gameId) => {
-    // Replace this with your edit logic
-    console.log(`Editing game with id ${gameId}`);
+
   };
 
   const handleDelete = (gameId) => {
@@ -65,7 +66,7 @@ const GameTable = () => {
     console.log(`Deleting game with id ${selectedGameId}`);
     axios.delete(`http://localhost:5000/api/games/deleteGame/${selectedGameId}`)
       .then(response => {
-        console.log('Game deleted successfully');
+        console.log('game deleted successfully');
         setGames(games.filter(game => game._id !== selectedGameId));
       })
       .catch(error => {
@@ -78,15 +79,60 @@ const GameTable = () => {
     setDeleteDialogOpen(false);
   };
 
+  const handleSearch = () => {
+    const filteredGames = games.filter(game =>
+      game.name.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setGames(filteredGames);
+  };
+
+  // /* Generate user report */
+  const generateUserReport = () => {
+  //   const doc = new jsPDF()
+
+  //   doc.setFontSize(30)
+  //   doc.setFont('helvetica', 'bold')
+  //   doc.setTextColor(0, 0, 255)
+  //   doc.text('User Report', 105, 10, 'center')
+
+  //   autoTable(
+  //     doc,
+  //     {
+  //       head: rtitle,
+  //       body: rbody
+  //     }, 40, 100
+  //   )
+  //   doc.save('UserReport.pdf')
+  // }
+
+  // var rtitle = [['Name', 'Username', 'Email', 'Gender', 'Joined Date']]
+
+  // var rbody = users && users.map((user) => (
+  //   [user.name, user.username, user.email, user.gender, user.joinDate]
+  // ))
+
   return (
     <>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <TextField
+          label="Search"
+          variant="outlined"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
+        <Button variant="outlined" color="primary" onClick={handleSearch}>
+          Search
+        </Button>
+        <Button variant="outlined" color="primary" onClick={generateUserReport}>
+          Generate Report
+        </Button>
+      </Box>
       <TableContainer component={Paper}>
         <Table>
           <StyledTableHead>
             <TableRow>
               <StyledTableHeaderCell>Name</StyledTableHeaderCell>
               <StyledTableHeaderCell>Image Path</StyledTableHeaderCell>
-              <StyledTableHeaderCell>Availability</StyledTableHeaderCell>
               <StyledTableHeaderCell>Platform</StyledTableHeaderCell>
               <StyledTableHeaderCell>Hourly Rate</StyledTableHeaderCell>
               <StyledTableHeaderCell>Game Rating</StyledTableHeaderCell>
@@ -98,11 +144,9 @@ const GameTable = () => {
               <StyledTableRow key={game._id}>
                 <StyledTableCell>{game.name}</StyledTableCell>
                 <StyledTableCell>{game.image_path}</StyledTableCell>
-                <StyledTableCell>{game.availability}</StyledTableCell>
                 <StyledTableCell>{game.platform}</StyledTableCell>
                 <StyledTableCell>{game.hourly_rate}</StyledTableCell>
                 <StyledTableCell>{game.game_rating}</StyledTableCell>
-
                 <StyledTableCell>
                   <Button 
                     variant="outlined" 
