@@ -31,7 +31,6 @@ const SignUp = () => {
       } 
       else {
         window.alert(`Error : ${response.data.message}`);
-
       }
 
     } catch (error) {

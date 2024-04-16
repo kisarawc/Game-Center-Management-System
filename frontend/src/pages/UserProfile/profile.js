@@ -4,6 +4,8 @@ import { Typography, Button, Avatar, Grid, Box, TextField, Dialog, DialogTitle, 
 import propic from '../../images/login/profile.png';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
+import Login from '../login/login';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   profilePage: {
@@ -43,21 +45,30 @@ const ProfilePage = () => {
   const [editProfileOpen, setEditProfileOpen] = useState(false);
 
   useEffect(() => {
+    console.log("userId:", userId);
     fetchUser();
   }, []);
 
+
   const fetchUser = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
-        method: 'GET',
+      const token = sessionStorage.getItem('token');
+      const userId = sessionStorage.getItem('userId');
+  
+      if (!userId) {
+        console.error('User ID not found in sessionStorage');
+        return;
+      }
+  
+      const response = await axios.get(`http://localhost:5000/api/users/${userId}`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         }
       });
+  
       if (response.status === 200) {
-        const data = await response.json();
-        setUser(data);
+        setUser(response.data);
       } else {
         console.error('Error fetching user data');
       }
@@ -65,6 +76,7 @@ const ProfilePage = () => {
       console.error('Error fetching user data:', error);
     }
   };
+  
 
   const handleLogout = () => {
     sessionStorage.removeItem('token');

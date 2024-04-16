@@ -22,6 +22,9 @@ const Login = () => {
         if (email === 'chathuka@gmail.com' && password === 'chathuka123') {
           window.location.href = '/adminDashboard';
         } 
+        if (email === 'limasha@gmail.com' && password === 'limasha123') {
+          window.location.href = '/adminDashboard';
+        } 
         else {
           window.location.href = '/profile';
         }

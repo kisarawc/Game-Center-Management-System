@@ -50,17 +50,6 @@ exports.createUser = async (req, res) => {
   }
 };
 
-//update user
-// exports.updateUser = async (req, res) => {
-//   const { userId } = req.params;
-//   try {
-//     const updatedUser = await User.findByIdAndUpdate(userId, req.body, { new: true });
-//     res.status(200).json(updatedUser);
-//   } 
-//   catch (error) {
-//     res.status(400).json({ message: error.message });
-//   }
-// };
 
 //delete a user
 exports.deleteUser = async (req, res) => {
@@ -78,74 +67,7 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
-// //login 
-// exports.userLogin = async (req, res) => {
-//   const { email, password } = req.body;
 
-//   try {
-//     const user = await User.findOne({ email });
-
-//     if (!user) {
-//       return res.status(401).json({ message: 'Invalid email or password' });
-//     }
-
-//     const passwordMatch = await bcrypt.compare(password, user.password);
-
-//     if (!passwordMatch) {
-//       return res.status(401).json({ message: 'Invalid email or password' });
-//     }
-
-//     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET);
-
-//     return res.status(200).json({ token, userId: user._id });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ message: 'Internal server error' });
-//   }
-// };
-
-
-// //login
-// exports.userLogin = async (req, res) => {
-//   const { email, password } = req.body;
-
-//   // Basic validation (improve based on your requirements)
-//   if (!email || !password) {
-//     return res.status(400).json({ message: 'Email and password are required.' });
-//   }
-
-//   try {
-//     // Find user by email
-//     const user = await User.findOne({ email });
-
-//     if (!user) {
-//       return res.status(401).json({ message: 'Invalid email .' });
-//     }
-
-//     // Compare password hashes (using bcrypt)
-//     const isMatch = await bcrypt.compare(password, user.password);
-
-//     if (!isMatch) {
-//       return res.status(401).json({ message: 'Invalid password.' });
-//     }
-
-//     // Login successful (replace with appropriate token generation and handling)
-//     const token = 'your_jwt_token'; // Replace with actual token generation logic
-
-//     res.json({
-//       message: 'Login successful!',
-//       token,
-//       user: { // Send relevant user data after successful login
-//         userId: user._id,
-//         email: user.email,
-//         // Other user data you want to send to the frontend
-//       }
-//     });
-//   } catch (error) {
-//     console.error(error); // Log the error for debugging
-//     res.status(500).json({ message: 'Internal server error.' }); // Send generic error to user
-//   }
-// };
 
 exports.userLogin = async (req, res) => {
   const { email, password } = req.body;
@@ -194,47 +116,53 @@ exports.getUserById = async (req, res) => {
       res.status(200).json(user)
   }
 
-  // exports.updateUser = async (req, res) => {
+//updateUser
+exports.updateUser = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const updatedUser = await User.findByIdAndUpdate(userId, req.body, { new: true });
+    res.status(200).json(updatedUser);
+  } 
+  catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
 
-  //   try{
-  //     const userId = req.params.userId
-  //     const updatedUser = await User.findByIdAndUpdate(userId.req.body,
-  //       {new:true})
+// //login
+// exports.login = async(req, res, next) => {
+//   try{
+//     const {email, password} = req.body;
 
-  //       if(!updatedUser){
-  //         return res.status(404).json({success:false, message:'user not found'})
-  //       }
-  //       res.status(200).json({success:true, message:'Userupdated successfully', updatedUser})
-  //   }
-  //   catch(error){
-  //     console.log(error)
-  //     return res.status(500).json({success: false, message: 'internal server error'})
-  //   }
+//     const user = await User.findOne({email});
 
-  // };
+//     if(!user) return next(new createError ("User not found", 404));
 
-  // //getUserById
-  // exports.getUserById = async (req, res) => {
-  //   try{
-  //     const users = await User.findById(req.params.userId);
-  //     if(!users){
-  //       res.status(404).json({
-  //         status :'fail',
-  //         message: 'User not found'
-  //       });
-  //       return;
-  //     }
-  //     res.status(200).jason ({
-  //       status :'success',
-  //       data:{
-  //         users
-  //       }
-  //     });
-  //   }
-  //   catch(error){
-  //     res.status(500).json({
-  //       status: 'error',
-  //       message:error.message
-  //     });
-  //   }
-  // };
+//     const isPasswordValid = await bcrypt.compare(password, user.password);
+
+//     if(!isPasswordValid){
+//       return next (new createError ("Incorrect password", 401));
+
+//     }
+
+//     const token = jwt.sign({id: newUser._id}, 'secretkey123', {
+//       expiresIn : '90d',
+//     });
+
+//     res.status(200).json ({
+//       status :'succes',
+//       token,
+//       message : 'logged in successfully',
+//       user:{
+//         _id:user._id,
+//         name:user.name,
+//         email:user.email,
+//         username:user.username,
+//         gender : user.gender,
+//         joinDate :user.joinDate,
+//       },
+//     });
+
+//   }catch(error) {
+//     next(error);
+//   }
+// };
