@@ -4,6 +4,7 @@ exports.createGame = async (req, res) => {
     try {
         const { name, image_path, availability, platform, hourly_rate, game_rating } = req.body;
         const newGame = new Game({ name, image_path, availability, platform, hourly_rate, game_rating});
+        console.log(newGame);
         const savedGame = await newGame.save();
         res.status(201).json(savedGame);
     } 

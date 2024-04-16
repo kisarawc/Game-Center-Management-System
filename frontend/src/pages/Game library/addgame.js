@@ -1,19 +1,16 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button } from '@mui/material';
 import axios from 'axios';
-import { NavLink } from 'react-router-dom';
 
 const AddGame = () => {
   const [gameDetails, setGameDetails] = useState({
     name: '',
-    image_path: null,
     availability: '',
     platform: '',
     hourly_rate: '',
     game_rating: '',
+    image_path: '', // Corrected attribute name
   });
-
-  const [formData, setFormData] = useState(new FormData());
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,25 +22,23 @@ const AddGame = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const blob = new Blob([reader.result], { type: file.type });
-        formData.append('image_path', blob, file.name);
-        setFormData(formData);
-      };
-      reader.readAsArrayBuffer(file);
-    }
+    setGameDetails(prevState => ({
+      ...prevState,
+      image_path: file // Corrected attribute name
+    }));
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
 
     formData.append('name', gameDetails.name);
     formData.append('availability', gameDetails.availability);
     formData.append('platform', gameDetails.platform);
     formData.append('hourly_rate', gameDetails.hourly_rate);
     formData.append('game_rating', gameDetails.game_rating);
+    formData.append('image_path', gameDetails.image_path);
 
     try {
       const response = await axios.post('http://localhost:5000/api/games/createGame', formData, {
@@ -57,11 +52,11 @@ const AddGame = () => {
         window.alert('New game created!');
         setGameDetails({
           name: '',
-          image_path: null,
           availability: '',
           platform: '',
           hourly_rate: '',
           game_rating: '',
+          image_path: '',
         });
       }
     } catch (error) {
@@ -139,9 +134,6 @@ const AddGame = () => {
                 Upload Image
               </Button>
             </label>
-            {gameDetails.image_path && (
-              <p>Selected Image: {gameDetails.image_path.name}</p>
-            )}
           </Box>
           <Box textAlign="center" mt={2}>
             <Button type="submit" variant="contained" color="primary">
@@ -149,14 +141,6 @@ const AddGame = () => {
             </Button>
           </Box>
         </form>
-        <Box textAlign="center" mt={2}>
-          {/* Use NavLink for navigation */}
-          <NavLink to="/gametable">
-            <Button variant="contained" color="secondary">
-              View All Games
-            </Button>
-          </NavLink>
-        </Box>
       </Box>
     </Box>
   );

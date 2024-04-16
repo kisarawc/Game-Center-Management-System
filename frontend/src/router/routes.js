@@ -16,7 +16,7 @@ const MyRouter = () => {
             <Route path='/games' element={<Game />} />
             <Route path='/events' element={<Event />} />
             <Route path='/gamedetails/:gameId' element={<GameDetailPage />} />
-            <Route path='/addGame' element={<AddGame />} />
+            <Route path='/addgame' element={<AddGame />} />
             <Route path='/gametable' element={<GameTable />} />
             <Route path='/Events' element={<Event/>} />
             {/* <Route path='/game' element={<Game/>} /> */}
