@@ -43,12 +43,12 @@ const DeleteButton = styled(Button)(({ theme }) => ({
   color: theme.palette.common.white,
   backgroundColor: '#ff0000',
   '&:hover': {
-    backgroundColor: '#cc0000', // Darkened the hover color
+    backgroundColor: '#cc0000',
   },
 }));
 
 const GenerateReportButton = styled(Button)(({ theme }) => ({
-  marginLeft: theme.spacing(92.6), // Add some left margin for spacing
+  marginLeft: theme.spacing(92.6),
 }));
 
 const HorizontalBar = styled('hr')({

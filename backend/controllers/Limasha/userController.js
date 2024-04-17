@@ -70,7 +70,7 @@ exports.deleteUser = async (req, res) => {
 
 //login
 exports.userLogin = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password} = req.body;
 
   try {
     // Find the user by email
@@ -83,12 +83,13 @@ exports.userLogin = async (req, res) => {
     // Compare the user-provided password with the hashed password stored in the database
     const passwordMatch = await bcrypt.compare(password, user.password);
 
+    const id = user._id;
     if (!passwordMatch) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
     // If the passwords match, return success
-    return res.status(200).json({ message: "Success login" });
+    return res.status(200).json({ message: "Success test login", userId: user.id});
   } 
   catch (error) {
     console.error(error);

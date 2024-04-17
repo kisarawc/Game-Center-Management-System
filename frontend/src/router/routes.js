@@ -17,7 +17,7 @@ const MyRouter = () => {
                 <Route path='/book' Component={Book}></Route>
                 <Route path='/login' Component={Login}></Route>
                 <Route path='/signup' Component={SignUp}></Route>
-                <Route path='/profile/:userId' Component={ProfilePage}></Route>
+                <Route path='/profile' Component={ProfilePage}></Route>
                 <Route path='/Event' Component={Event}></Route>
                 <Route path='/usersTable' Component={UsersTable}></Route>
                 <Route path='/adminDashboard' Component={Dashboard}></Route>

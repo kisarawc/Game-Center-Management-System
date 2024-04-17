@@ -12,10 +12,13 @@ const Login = () => {
     e.preventDefault();
 
     axios.post('http://localhost:5000/api/users/login', { email, password })
-    .then(result => {
-      if (result.status === 200) {
-        window.alert('You have successfully logged in!');
-        const { token, userId } = result.data;
+    .then(response => {
+      // console.log('Response Data:', response.data); 
+      if (response.status === 200) {
+          
+        const {  userId, message, token } = response.data;
+        console.log('message', message);
+        console.log('userId', userId);
         sessionStorage.setItem('token', token); // Store token in sessionStorage
         sessionStorage.setItem('userId', userId); // Store userId in sessionStorage
         window.location.href = `/profile/${userId}`;
@@ -42,7 +45,7 @@ const Login = () => {
           window.location.href = '/profile';
         }
       } else {
-        throw new Error(result.data.message || 'Unauthorized'); // Throw an error with a default message
+        throw new Error(response.data.message || 'Unauthorized'); // Throw an error with a default message
       }
     })
     .catch(err => {

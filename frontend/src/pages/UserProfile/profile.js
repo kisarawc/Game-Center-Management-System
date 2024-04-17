@@ -5,7 +5,6 @@ import propic from '../../images/login/profile.png';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   profilePage: {
@@ -54,10 +53,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ProfilePage = () => {
-  const { userId } = useParams();
   const classes = useStyles();
+  const token = sessionStorage.getItem('token');
+  const userId = sessionStorage.getItem('userId');
   const [user, setUser] = useState({});
   const [editProfileOpen, setEditProfileOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+    gender: ''
+  });
 
   useEffect(() => {
     fetchUser();
@@ -65,33 +71,33 @@ const ProfilePage = () => {
 
   const fetchUser = async () => {
     try {
-      const token = sessionStorage.getItem('token');
-      const userId = sessionStorage.getItem('userId');
-      console.log('userId:', userId);
-  
-      if (!userId) {
-        console.error('User ID not found in sessionStorage');
-        return;
-      }
-  
       const response = await axios.get(`http://localhost:5000/api/users/${userId}`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
+           
         }
       });
-  
+      console.log(response)
       if (response.status === 200) {
+        const storedUserId = sessionStorage.getItem('userId');
+        console.log(storedUserId);
         setUser(response.data);
-      } 
-      else {
+        // Populate form fields with fetched user data
+        setFormData({
+          username: response.data.username,
+          email: response.data.email,
+          password: '', // Assuming you don't fetch password for security reasons
+          gender: response.data.gender
+        });
+      } else {
         console.error('Error fetching user data');
       }
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
   };
-  
+
   const handleLogout = () => {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('userId');
@@ -105,11 +111,35 @@ const ProfilePage = () => {
     setEditProfileOpen(false);
   };
 
-  const handleEditProfileSubmit = () => {
-    // Submit edited profile details to backend
-    // ...
-    // Close edit profile dialog
-    handleEditProfileClose();
+  const handleEditProfileSubmit = async (e) => {
+    e.preventDefault(); // Prevent default form submission
+    try {
+      const response = await axios.patch(`http://localhost:5000/api/users/updateUser/${userId}`, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.status === 200) {
+        // If the update is successful, fetch user data again to update the displayed info
+        fetchUser();
+        // Close the edit profile dialog
+        handleEditProfileClose();
+      } else {
+        console.error('Error updating user data');
+      }
+    } catch (error) {
+      console.error('Error updating user data:', error);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
   };
 
   return (
@@ -135,7 +165,6 @@ const ProfilePage = () => {
             <div className={classes.userDetails}>
               <Typography variant="body1">Username: {user.username || ''}</Typography>
               <Typography variant="body1">Email: {user.email || ''}</Typography>
-              <Typography variant="body1">Password: {user.password || ''}</Typography>
               <Typography variant="body1">Gender: {user.gender || ''}</Typography>
               <Typography variant="body1">Join Date: {user.joinDate || ''}</Typography>
             </div>
@@ -153,21 +182,23 @@ const ProfilePage = () => {
 
       {/* Edit Profile Dialog */}
       <Dialog open={editProfileOpen} onClose={handleEditProfileClose} className={classes.dialogContainer}>
-        <DialogTitle className={classes.dialogTitle}>Edit Profile</DialogTitle>
-        <DialogContent className={classes.dialogContent}>
-          {/* Edit Profile Form */}
-          <form className={classes.editProfileForm} onSubmit={handleEditProfileSubmit}>
-            <TextField label="Username" variant="outlined" />
-            <TextField label="Email" variant="outlined" />
-            <TextField label="Password" type="password" variant="outlined" />
-            <TextField label="Gender" variant="outlined" />
-            <TextField label="Join Date" variant="outlined" disabled />
-          </form>
-        </DialogContent>
-        <DialogActions className={classes.dialogActions}>
-          <Button onClick={handleEditProfileClose} color="secondary">Cancel</Button>
-          <Button onClick={handleEditProfileSubmit} color="primary">Save</Button>
-        </DialogActions>
+        <form onSubmit={handleEditProfileSubmit}> {/* Move onSubmit handler to the form */}
+          <DialogTitle className={classes.dialogTitle}>Edit Profile</DialogTitle>
+          <DialogContent className={classes.dialogContent}>
+            {/* Edit Profile Form */}
+            <div className={classes.editProfileForm}>
+              <TextField name="username" label="Username" variant="outlined" value={formData.username} onChange={handleInputChange} />
+              <TextField name="email" label="Email" variant="outlined" value={formData.email} onChange={handleInputChange} />
+              <TextField name="password" label="Password" type="password" variant="outlined" value={formData.password} onChange={handleInputChange} />
+              <TextField name="gender" label="Gender" variant="outlined" value={formData.gender} onChange={handleInputChange} />
+              <TextField label="Join Date" variant="outlined" disabled />
+            </div>
+          </DialogContent>
+          <DialogActions className={classes.dialogActions}>
+            <Button onClick={handleEditProfileClose} color="secondary">Cancel</Button>
+            <Button type="submit" color="primary">Save</Button> {/* Remove onClick from Save button */}
+          </DialogActions>
+        </form>
       </Dialog>
 
       <Footer />
