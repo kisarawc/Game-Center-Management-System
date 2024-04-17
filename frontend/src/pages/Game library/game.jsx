@@ -15,9 +15,11 @@ const ImageButton = styled(ButtonBase)(({ theme }) => ({
   margin: '30px',
   border: '1px solid #FB41FF',
   borderBottom: 'none',
+  borderRadius: '10px', // Add this line to set the border radius
   [theme.breakpoints.down('sm')]: {
     width: '100% !important',
     height: 100,
+    borderRadius: '5px', // Smaller radius for small screens
   },
   '&:hover, &.Mui-focusVisible': {
     zIndex: 1,
@@ -42,6 +44,7 @@ const ImageSrc = styled('span')({
   bottom: 0,
   backgroundSize: 'cover',
   backgroundPosition: 'center 40%',
+  borderRadius: '10px', // Add this line to match the border radius
 });
 
 const Image = styled('span')(({ theme }) => ({
@@ -65,6 +68,7 @@ const ImageBackdrop = styled('span')(({ theme }) => ({
   backgroundColor: theme.palette.common.black,
   opacity: 0.1,
   transition: theme.transitions.create('opacity'),
+  borderRadius: '10px', // Add this line to match the border radius
 }));
 
 const ImageMarked = styled('span')(({ theme }) => ({
@@ -76,6 +80,15 @@ const ImageMarked = styled('span')(({ theme }) => ({
   left: 'calc(50% - 9px)',
   transition: theme.transitions.create('opacity'),
 }));
+
+// Styled header for the "Game Library" title
+const StyledHeader = styled('h1')({
+  color: '#FFC0CB',
+  fontSize: '3rem',
+  fontWeight: 'bold',
+  marginBottom: '3px',
+  textShadow: '1px 1px px #000',
+});
 
 const Game = () => {
   const [games, setGames] = useState([]);
@@ -111,13 +124,13 @@ const Game = () => {
           justifyContent: 'flex-start',
         }}
       >
-        <h1>Game Library</h1>
+        <StyledHeader>Game Library</StyledHeader>
         {/* Container for the search bar */}
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'row',
-            justifyContent: 'flex-end', // Align search bar to the right side
+            justifyContent: 'flex-end',
             width: '100%',
             paddingBottom: '20px',
             paddingRight: '20px',
