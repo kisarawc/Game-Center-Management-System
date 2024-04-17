@@ -4,11 +4,14 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const eventRoutes = require('./routes/Ravindu/eventRoutes'); 
 const commentRoutes = require('./routes/Ravindu/commentRoutes');
+
+const userRoutes = require('./routes/Limasha/userRoutes');
+
 const bookingRouter = require('./routes/Chathuka/bookingRoutes');
 const game = require('./routes/Chathuka/game');
 
-require('dotenv').config();
 
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -28,11 +31,15 @@ mongoose.connect(process.env.MONGODB_URL, {
     // Use event routes
     app.use('/api/events', eventRoutes);
     app.use('/api/events', commentRoutes);// Using '/api' as the base URL for event routes
+    app.use('/api/users', userRoutes);
+
+
 
     //booking routes
     app.use('/api/bookings', bookingRouter);
     app.use('/api/game', game);
     
+
     // Start the server
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
