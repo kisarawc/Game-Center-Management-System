@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FormControl, InputLabel, MenuItem, Select, Button, Table, TableHead, TableBody, TableRow, TableCell, Typography, Paper, TextField, Modal } from '@mui/material';
-
+const userId = sessionStorage.getItem('userId');
 const BookingPage = () => {
+  
   const [games, setGames] = useState([]);
   const [selectedGame, setSelectedGame] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
@@ -147,9 +148,9 @@ if(existingBookingWithStartTime) {
       num_players: numPlayers,
       status: 'pending',
       message_request: messageRequest,
-      user_id: '609d97334529cd465ab5c8a0'
+      user_id: userId
     };
-
+    console.log(newBooking)
     axios.post('http://localhost:3000/api/bookings', newBooking)
       .then(response => {
         console.log('Booking created successfully:', response.data);
@@ -201,7 +202,7 @@ if(existingBookingWithStartTime) {
   };
 
   return (
-    <Paper style={{ padding: '40px', maxWidth: '600px', margin: 'auto' }}>
+    <Paper style={{ padding: '40px', maxWidth: '600px', margin: 'auto', borderRadius:'40px' }}>
       <Typography variant="h5" gutterBottom>Select Game & Date</Typography>
       <FormControl fullWidth style={{ marginBottom: '10px' }}>
         <InputLabel>Select a game</InputLabel>

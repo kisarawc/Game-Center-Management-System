@@ -6,6 +6,7 @@ import Footer from '../../Components/common/Footer/footer';
 import {Typography } from '@mui/material';
 import BookingForm from './CreateBookingForm'
 
+const userId = sessionStorage.getItem('userId');
 const Booking = () => {
   return (
     <Box>
@@ -23,13 +24,15 @@ const Booking = () => {
         }}
       >
         <Box>
-          <Box sx={{backgroundColor:'#ffffffa4', mt:'10px'}}>
-          <Typography variant='h4' sx={{color:'#050404', textAlign:'center'}}>Create a new Booking</Typography>
+          <Box sx={{backgroundColor:'#ffffffa4', mt:'20px', padding:'25px', borderRadius:'80px'}}>
+          <Typography variant='h4' sx={{color:'#050404', textAlign:'center', mb:'20px'}}>Create a new Booking</Typography>
           <BookingForm />
           
           </Box>
-          <Typography variant='h4' sx={{color:'#ffffff'}}>My Bookings</Typography>
-          <BookingTable loggedInUserId={'609d97334529cd465ab5c8a0'}/>
+          <Typography variant='h4' sx={{color:'#ffffff', padding:'20px'}}>My Bookings</Typography>
+          <Box mb={4}>
+          <BookingTable loggedInUserId={userId}/>
+          </Box>
         </Box>
       </Box>
       <Footer /> 

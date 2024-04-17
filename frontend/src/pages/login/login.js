@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Container, Typography, TextField, Button, Grid, Link, Paper, CssBaseline } from '@mui/material';
+import { Container, Typography, TextField, Button, Grid, Link, Paper, CssBaseline, Box } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import loginBackground from '../../images/login/login.jpg';
 import axios from 'axios';
+import Header from '../../Components/common/Header/header';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -11,7 +12,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    axios.post('http://localhost:5000/api/users/login', { email, password })
+    axios.post('http://localhost:3000/api/users/login', { email, password })
     .then(response => {
       // console.log('Response Data:', response.data); 
       if (response.status === 200) {
@@ -24,7 +25,7 @@ const Login = () => {
         window.location.href = `/profile/${userId}`;
         // Redirect based on user role or any other condition
         if (email === 'chathuka@gmail.com' && password === 'chathuka123') {
-          window.location.href = '/adminDashboard';
+          window.location.href = '/admin';
         } 
         else if (email === 'limasha@gmail.com' && password === 'limasha123') {
           window.location.href = '/adminDashboard';
@@ -61,7 +62,9 @@ const Login = () => {
   });
 
   return (
-    <div style={{ backgroundImage: `url(${loginBackground})`, backgroundSize: 'cover', height: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: -24 }}>
+    <Box>
+    <Header />
+    <div style={{ backgroundImage: `url(${loginBackground})`, backgroundSize: 'cover', height:'100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
 
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -126,6 +129,7 @@ const Login = () => {
         </div>
       </Container>
     </div>
+    </Box>
   );
 };
 

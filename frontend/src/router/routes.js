@@ -8,6 +8,9 @@ import ProfilePage from '../pages/UserProfile/profile';
 import UsersTable from '../pages/UserProfile/usersTable'; 
 import Event from '../pages/events/Event';
 import Dashboard from '../pages/UserProfile/adminDashboard';
+import BookingAdmin from '../pages/admin/booking/bookingAdmin';
+import Admin from '../pages/admin/home/admin';
+import EditBooking from '../pages/Bookings/editBooking'; 
 
 const MyRouter = () => {
     return (
@@ -21,6 +24,9 @@ const MyRouter = () => {
                 <Route path='/Event' Component={Event}></Route>
                 <Route path='/usersTable' Component={UsersTable}></Route>
                 <Route path='/adminDashboard' Component={Dashboard}></Route>
+                <Route path='/bookingAdmin' element={<BookingAdmin/>} /> 
+                <Route path='/admin' element={<Admin/>} /> 
+                <Route path='/bookings/edit/:id' element={<EditBooking />} /> 
             </Routes>
 
         

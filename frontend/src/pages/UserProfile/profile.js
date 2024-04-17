@@ -71,7 +71,7 @@ const ProfilePage = () => {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/users/${userId}`, {
+      const response = await axios.get(`http://localhost:3000/api/users/${userId}`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
@@ -101,6 +101,7 @@ const ProfilePage = () => {
   const handleLogout = () => {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('userId');
+    window.location.href = '/login';
   };
 
   const handleEditProfileOpen = () => {
@@ -114,7 +115,7 @@ const ProfilePage = () => {
   const handleEditProfileSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
     try {
-      const response = await axios.patch(`http://localhost:5000/api/users/updateUser/${userId}`, formData, {
+      const response = await axios.patch(`http://localhost:3000/api/users/updateUser/${userId}`, formData, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
@@ -158,7 +159,8 @@ const ProfilePage = () => {
           padding: '16px',
         }}
       >
-        <div className={classes.profilePage}>
+        <Box sx={{maxHeight: '500vh'}}>
+        <div className={classes.profilePage} >
           <Typography variant="h4" gutterBottom>{`Hi, ${user.name || ''} 👋`}</Typography>
           <div className={classes.profileInfo}>
             <Avatar alt="Profile" src={propic} className={classes.largeAvatar} />
@@ -202,7 +204,7 @@ const ProfilePage = () => {
       </Dialog>
 
       <Footer />
-    </Box>
+    </Box></Box>
   );
 };
 

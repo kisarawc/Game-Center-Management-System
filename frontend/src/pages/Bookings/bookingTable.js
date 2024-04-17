@@ -94,7 +94,7 @@ const BookingTable = ({ loggedInUserId }) => {
               <StyledTableHeaderCell>Start Time</StyledTableHeaderCell>
               <StyledTableHeaderCell>Duration (minutes)</StyledTableHeaderCell> {/* Update header */}
               <StyledTableHeaderCell>Message Request</StyledTableHeaderCell>
-              <StyledTableHeaderCell>User ID</StyledTableHeaderCell>
+              
               <StyledTableHeaderCell>Game Name</StyledTableHeaderCell>
               <StyledTableHeaderCell>Status</StyledTableHeaderCell>
               <StyledTableHeaderCell>Number of Players</StyledTableHeaderCell>
@@ -108,7 +108,7 @@ const BookingTable = ({ loggedInUserId }) => {
                 <StyledTableCell>{booking.start_time}</StyledTableCell>
                 <StyledTableCell>{booking.duration}</StyledTableCell>
                 <StyledTableCell>{booking.message_request}</StyledTableCell>
-                <StyledTableCell>{booking.user_id}</StyledTableCell>
+                
                 <StyledTableCell>{booking.game_name}</StyledTableCell>
                 <StyledTableCell>{booking.status}</StyledTableCell>
                 <StyledTableCell>{booking.num_players}</StyledTableCell>
