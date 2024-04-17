@@ -8,13 +8,14 @@ const commentRoutes = require('./routes/Ravindu/commentRoutes');
 const userRoutes = require('./routes/Limasha/userRoutes');
 
 const bookingRouter = require('./routes/Chathuka/bookingRoutes');
+const userRouter = require('./routes/Ravindu/userRoutes');
 const game = require('./routes/Chathuka/game');
 
 
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json()); // Middleware to parse JSON request bodies
@@ -38,6 +39,7 @@ mongoose.connect(process.env.MONGODB_URL, {
     //booking routes
     app.use('/api/bookings', bookingRouter);
     app.use('/api/game', game);
+    app.use('/api/users', userRouter);
     
 
     // Start the server

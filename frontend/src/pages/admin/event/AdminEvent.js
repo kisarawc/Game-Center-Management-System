@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Button, TextField, Typography, Paper, Grid, Container, Snackbar, Dialog, DialogTitle, DialogContent, DialogActions, MenuItem } from '@mui/material';
+import { Button, TextField, Typography, Paper, Grid, Container, Snackbar, Dialog, DialogTitle, Box,DialogContent, DialogActions, MenuItem } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import jsPDF from 'jspdf';
-import logo from '../../images/header/logo.jpeg';
+import 'jspdf-autotable';
+import AdminHeader from '../../../Components/common/adminHeader'
+import logo from '../../../images/header/logo.jpeg';
+
+
 
 const AdminEvent = () => {
   const [newEvent, setNewEvent] = useState({ title: '', description: '', date: '', imagePath: '' });
@@ -70,22 +74,60 @@ const AdminEvent = () => {
     }
   
     const doc = new jsPDF();
-
-    doc.addImage(logo, 'JPEG', 10, 10, 40, 40);
   
-    // Add event details
-    let y = 40; // Initial y position for event details
-    selectedMonthEvents.forEach(event => {
-      doc.text(`Event Title: ${event.title}`, 10, y);
-      y += 10;
-      doc.text(`Event Date: ${event.date}`, 10, y);
-      y += 10;
+    // Function to add the header
+    const addHeaderToPdf = (doc) => {
+      // Load the logo image
+      const logoImage = logo; // Update path to your logo image
+      const imgWidth = 20;
+      const imgHeight = 20;
+  
+      // Add the title and date
+      doc.setFontSize(20);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(255, 255, 255);
+      doc.setFillColor(0, 0, 0);
+      doc.rect(0, 0, doc.internal.pageSize.width, 30, 'F'); // Draw black background
+      doc.addImage(logoImage, 'JPEG', 10, 5, imgWidth, imgHeight);
+      doc.text('GG LOUNGE GAME CENTER', 50, 18); // Positioning the title
+      doc.setFontSize(10); // Font size for the date
+      doc.text(`Report generated: ${new Date().toLocaleDateString('en-US', { timeZone: 'UTC' })}`, 150, 25); // Positioning the date
+    };
+  
+    // Function to add the footer
+    const addFooterToPdf = (doc) => {
+      const footerText = 'GG LOUNGE\n165/A, New Kandy Rd, Welivita Junction, Malabe';
+      doc.setFontSize(10);
+      doc.setTextColor('#555');
+      doc.text(footerText, doc.internal.pageSize.width / 2, doc.internal.pageSize.height - 10, { align: 'center' });
+    };
+  
+    // Add the header to the PDF
+    addHeaderToPdf(doc);
+  
+    // Add the footer to the PDF
+    addFooterToPdf(doc);
+  
+    // Define the data for the autoTable
+    const tableData = selectedMonthEvents.map(event => [
+      event.title,
+      new Date(event.date).toLocaleDateString('en-US', { timeZone: 'UTC' })
       // Add more event details if needed
+    ]);
+  
+    // Draw the autoTable
+    doc.autoTable({
+      head: [['Event Title', 'Event Date']],
+      body: tableData,
+      startY: 40 // Starting Y position for the autoTable
     });
   
     // Save the PDF
     doc.save(`${selectedMonth}_report.pdf`);
   };
+  
+  
+  
 
   const deleteEvent = async (eventId) => {
     try {
@@ -167,7 +209,9 @@ const AdminEvent = () => {
   };
 
   return (
-    <Container maxWidth="lg">
+    <Box>
+      <AdminHeader/>
+      <Container maxWidth="lg">
       <Typography variant="h4" gutterBottom style={{ marginBottom: '20px', textAlign: 'center' }}>Create New Event</Typography>
       <Grid container spacing={2} style={{ marginBottom: '20px' }}>
         <Grid item xs={12}>
@@ -328,14 +372,14 @@ const AdminEvent = () => {
       Yes
     </Button>
   </DialogActions>
-</Dialog>
+ </Dialog>
 
 
-      <Grid container spacing={2}>
+ <Grid container spacing={2}>
   {events.length > 0 ? (
     events.map(event => (
       <Grid item xs={12} key={event._id}>
-        
+        {/* Your JSX content for each grid item */}
       </Grid>
     ))
   ) : (
@@ -345,9 +389,11 @@ const AdminEvent = () => {
       </Paper>
     </Grid>
   )}
-</Grid>
+ </Grid>
+
       
-    </Container>
+ </Container>
+    </Box>
   );
 };
 
