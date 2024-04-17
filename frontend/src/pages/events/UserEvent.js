@@ -2,30 +2,36 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
-import { Box, Typography, TextField, Button, Grid, InputAdornment, IconButton } from '@mui/material';
+import { Box, Typography, TextField, Button, Grid, InputAdornment, IconButton, Snackbar } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 const ClientEvent = () => {
   const [events, setEvents] = useState([]);
   const [comments, setComments] = useState({});
-  const [searchQuery, setSearchQuery] = useState(''); // State for search query
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showMore, setShowMore] = useState({});
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   useEffect(() => {
     fetchEventsAndComments();
-  }, []); // Fetch events and comments when component mounts
+  }, []);
 
   const fetchEventsAndComments = async () => {
     try {
       const eventsResponse = await axios.get('http://localhost:5000/api/events');
       const eventsWithComments = await Promise.all(eventsResponse.data.map(async event => {
         const commentsResponse = await axios.get(`http://localhost:5000/api/events/${event._id}/comments`);
-        return { ...event, comments: commentsResponse.data };
+        const commentsWithUserNames = await Promise.all(commentsResponse.data.map(async comment => {
+          const userResponse = await axios.get(`http://localhost:5000/api/users/${comment.userId}`);
+          return { ...comment, userName: userResponse.data.name };
+        }));
+        return { ...event, comments: commentsWithUserNames };
       }));
       setEvents(eventsWithComments);
-      // Initialize comment state with empty strings for each event
       const initialComments = {};
       eventsWithComments.forEach(event => {
         initialComments[event._id] = '';
+        setShowMore({ ...showMore, [event._id]: false });
       });
       setComments(initialComments);
     } catch (error) {
@@ -33,13 +39,10 @@ const ClientEvent = () => {
     }
   };
 
-  // Function to filter events based on search query
   const filteredEvents = events.filter(event => event.title.toLowerCase().includes(searchQuery.toLowerCase()));
-  
-  // Function to add a comment
+
   const addComment = async (eventId, userId) => {
     try {
-      // Check if a user is logged in
       if (!userId) {
         console.error('User not logged in');
         return;
@@ -48,25 +51,33 @@ const ClientEvent = () => {
       const response = await axios.post(`http://localhost:5000/api/events/${eventId}/comments`, {
         comment: comments[eventId],
         eventId,
-        userId // Pass the userId to the server
+        userId
       });
       console.log('New comment added:', response.data);
-      // After adding a new comment, refetch the events to update the list
       fetchEventsAndComments();
-      // Clear the input field for this event
       setComments({ ...comments, [eventId]: '' });
+      setSnackbarOpen(true); // Open the snackbar to indicate comment added successfully
     } catch (error) {
       console.error('Error adding comment:', error);
     }
   };
-
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
   };
 
-  
+  const handleSeeMore = (eventId) => {
+    setShowMore({ ...showMore, [eventId]: true });
+  };
+
+  const handleShowLess = (eventId) => {
+    setShowMore({ ...showMore, [eventId]: false });
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false); // Close the snackbar
+  };
 
   return (
     <Box>
@@ -81,33 +92,25 @@ const ClientEvent = () => {
         }}
       >
         <div>
-          {/* Search bar */}
-          <TextField
-            type="text"
-            placeholder="Search by event title"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            fullWidth
-            margin="normal"
-            InputProps={{
-              endAdornment: searchQuery ? (
-                <InputAdornment position="end">
-                  <IconButton size="small">
-                    <SearchIcon />
-                  </IconButton>
-                </InputAdornment>
-              ) : null,
-              sx: {
-                borderRadius: '25px', // Rounded corners
-                paddingRight: '0', // Remove default padding
-              },
-            }}
-            sx={{ width: '25%', float: 'right' }} // Adjusting the width and alignment of the search bar
-          />
-          {/* Event cards */}
-          <Grid container spacing={2}>
+        <TextField
+  type="text"
+  placeholder="Search by event title"
+  value={searchQuery}
+  onChange={(e) => setSearchQuery(e.target.value)}
+  fullWidth
+  margin="normal"
+  InputProps={{
+    sx: {
+      borderRadius: '25px',
+      paddingRight: '0',
+    },
+  }}
+  sx={{ width: '20%', float: 'right' }}
+/>
+
+          <Grid container spacing={2} sx={{ justifyContent: 'center' }}>
             {filteredEvents.map(event => (
-              <Grid item xs={12} key={event._id}>
+              <Grid item xs={7} key={event._id} >
                 <Box
                   sx={{
                     backgroundColor: '#fff',
@@ -140,15 +143,32 @@ const ClientEvent = () => {
                   <Typography variant="body1" gutterBottom>
                     Description: {event.description}
                   </Typography>
-                  {/* Display comments for this event */}
                   <h3>Comments</h3>
-{event.comments.map(comment => (
-  <div key={comment._id} style={{ marginBottom: '10px' }}>
-    <Typography variant="body2" color="primary" style={{ fontWeight: 'bold' }}>{comment.userId.name}</Typography>
-    <Typography variant="body1" gutterBottom style={{ marginLeft: '10px' }}>{comment.comment}</Typography>
-  </div>
-))}
-                  {/* Input field and submit button for adding comments */}
+                  {event.comments.map((comment, index) => {
+                    if (!showMore[event._id] && index >= 3) {
+                      return null; // Hide comments beyond the third one if "See More" is not clicked
+                    }
+                    return (
+                      <div key={comment._id}>
+                        {comment.userId && (
+                          <Typography variant="body2" sx={{ fontWeight: 'bold' }}>{comment.userName}</Typography>
+                        )}
+                        
+                        <Typography variant="body1" color="textSecondary" gutterBottom marginLeft={5} sx={{ marginBottom: '8px' }}>
+                          {comment.comment}
+                        </Typography>
+                      </div>
+                    );
+                  })}
+                  {event.comments.length > 3 && (
+                    <div>
+                      {showMore[event._id] ? (
+                        <Button onClick={() => handleShowLess(event._id)}>Show Less</Button>
+                      ) : (
+                        <Button onClick={() => handleSeeMore(event._id)}>See More</Button>
+                      )}
+                    </div>
+                  )}
                   <TextField
                     type="text"
                     placeholder="Add a comment"
@@ -158,7 +178,6 @@ const ClientEvent = () => {
                     margin="normal"
                   />
                   <Button variant="contained" color="primary" onClick={() => addComment(event._id, '66181e723c2dc6dc00c58a05')}>Submit</Button>
-                  {/* Pass the user ID to the addComment function */}
                 </Box>
               </Grid>
             ))}
@@ -166,6 +185,13 @@ const ClientEvent = () => {
         </div>
       </Box>
       <Footer />
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+        open={snackbarOpen}
+        autoHideDuration={6000} // Adjust as needed
+        onClose={handleSnackbarClose}
+        message="Comment added successfully"
+      />
     </Box>
   );
 };
