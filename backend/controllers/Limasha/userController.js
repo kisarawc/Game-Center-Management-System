@@ -89,7 +89,7 @@ exports.userLogin = async (req, res) => {
     }
 
     // If the passwords match, return success
-    return res.status(200).json({ message: "Success test login", userId: user.id});
+    return res.status(200).json({ message: "Success  login", userId: user.id});
   } 
   catch (error) {
     console.error(error);

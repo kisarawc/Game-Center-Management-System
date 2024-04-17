@@ -1,8 +1,9 @@
-//SIGNUP
 import React, { useState } from 'react';
 import { Typography, Button, Container, CssBaseline, Paper, TextField, Grid, RadioGroup, Radio, FormControlLabel, Checkbox, FormLabel } from '@mui/material'; 
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify'; // Import React Toastify
+import 'react-toastify/dist/ReactToastify.css'; // Import React Toastify CSS
 import signupBackground from '../../images/login/signup.jpg';
 
 const SignUp = () => {
@@ -26,7 +27,7 @@ const SignUp = () => {
       console.log('New user created:', response.data);
 
       if(response.status === 201){
-        window.alert('You have successfully registered!');
+        toast.success('You have successfully registered!'); // Display success message using React Toastify
         window.location.href = '/login';
       } 
       else {
@@ -35,7 +36,7 @@ const SignUp = () => {
 
     } catch (error) {
       console.error('Error creating user:', error);
-      window.alert('An error occurred while submitting the registration form. Please try again later');
+      toast.error('An error occurred while submitting the registration form. Please try again later'); // Display error message using React Toastify
     }
   };
 
@@ -163,6 +164,8 @@ const SignUp = () => {
           </Paper>
         </div>
       </Container>
+
+      <ToastContainer /> {/* Display React Toastify container */}
     </div>
   );
 };

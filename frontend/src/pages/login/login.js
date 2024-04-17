@@ -3,6 +3,8 @@ import { Container, Typography, TextField, Button, Grid, Link, Paper, CssBaselin
 import { NavLink } from 'react-router-dom';
 import loginBackground from '../../images/login/login.jpg';
 import axios from 'axios';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify'; 
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -13,46 +15,38 @@ const Login = () => {
 
     axios.post('http://localhost:5000/api/users/login', { email, password })
     .then(response => {
-      // console.log('Response Data:', response.data); 
       if (response.status === 200) {
-          
-        const {  userId, message, token } = response.data;
-        console.log('message', message);
-        console.log('userId', userId);
-        sessionStorage.setItem('token', token); // Store token in sessionStorage
-        sessionStorage.setItem('userId', userId); // Store userId in sessionStorage
-        window.location.href = `/profile/${userId}`;
+        window.alert('You have successfully logged in!');
+        const { userId, token } = response.data;
+        sessionStorage.setItem('token', token);
+        sessionStorage.setItem('userId', userId);
+  
         // Redirect based on user role or any other condition
         if (email === 'chathuka@gmail.com' && password === 'chathuka123') {
           window.location.href = '/adminDashboard';
-        } 
-        else if (email === 'limasha@gmail.com' && password === 'limasha123') {
+        } else if (email === 'limasha@gmail.com' && password === 'limasha123') {
           window.location.href = '/adminDashboard';
-        }
-        else if (email === 'ravindu@gmail.com' && password === 'ravindu123') {
+        } else if (email === 'ravindu@gmail.com' && password === 'ravindu123') {
           window.location.href = '/adminDashboard';
-        }
-        else if (email === 'radeesa@gmail.com' && password === 'radeesa123') {
+        } else if (email === 'radeesa@gmail.com' && password === 'radeesa123') {
           window.location.href = '/adminDashboard';
-        }   
-        else if (email === 'saniru@gmail.com' && password === 'saniru123') {
+        } else if (email === 'saniru@gmail.com' && password === 'saniru123') {
           window.location.href = '/adminDashboard';
-        }
-        else if (email === 'shavindi@gmail.com' && password === 'shavindi123') {
+        } else if (email === 'shavindi@gmail.com' && password === 'shavindi123') {
           window.location.href = '/adminDashboard';
-        }  
-        else {
-          window.location.href = '/profile';
+        } else {
+          window.location.href = `/profile/${userId}`;
         }
       } else {
-        throw new Error(response.data.message || 'Unauthorized'); // Throw an error with a default message
+        throw new Error(response.data.message || 'Unauthorized');
       }
     })
     .catch(err => {
       console.error(err);
       const errorMessage = err.response ? err.response.data.message : 'Unauthorized';
-      window.alert(`Error: ${errorMessage}`); // Display the error message in an alert box
+      toast.error(errorMessage); // Display error message using toast
     });
+  
   }
 
   const getButton = () => ({
@@ -125,6 +119,7 @@ const Login = () => {
           </Paper>
         </div>
       </Container>
+      <ToastContainer /> {/* Toast container to display toast messages */}
     </div>
   );
 };

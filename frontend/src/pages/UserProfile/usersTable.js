@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import AdminHeader from '../../../Components/common/adminHeader'
 
 const StyledHeader = styled(Typography)(({ theme }) => ({
   textAlign: 'center',
@@ -90,7 +91,7 @@ const UsersTable = () => {
     console.log(`Deleting user with id ${selectedUserID}`);
     axios.delete(`http://localhost:5000/api/users/deleteUser/${selectedUserID}`)
       .then(response => {
-        console.log('User deleted successfully');
+        window.alert('User deleted successfully');
         setUsers(users.filter(user => user._id !== selectedUserID));
       })
       .catch(error => {
