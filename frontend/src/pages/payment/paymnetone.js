@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
 import { Box, Button, Card, CardContent, TextField, Typography, MenuItem, Select } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const Paymentone = () => {
     const [errorMessage, setErrorMessage] = useState(''); // Define errorMessage state
@@ -9,12 +10,12 @@ const Paymentone = () => {
     // Handler for handling form submission
     const handleSubmit = () => {
         // Get the values of the form fields
-        const cardNumber = document.getElementById('card-number').value;
-        const cardHolderName = document.getElementById('card-holder-name').value;
-        const expDate = document.getElementById('exp-date').value;
+        const Amount = document.getElementById('Amount').value;
+        const Time = document.getElementById('Time').value;
+        const date = document.getElementById('date').value;
 
         // Check if any of the fields is empty
-        if (!cardNumber || !cardHolderName || !expDate) {
+        if (!Amount || !Time || !date) {
             setErrorMessage('Please fill out all required fields.');
             return;
         }
@@ -41,8 +42,12 @@ const Paymentone = () => {
                 <Card sx={{ maxWidth: 400 }}>
                     <CardContent>
                         <Typography variant="h5" gutterBottom>
-                            Card Details
+                            Payment Details
                         </Typography>
+                        
+                        <TextField id="Amount" label="Amount" variant="outlined" margin="normal" fullWidth type='Number'/>
+                        <TextField id="Time" label="Time" variant="outlined" margin="normal" fullWidth type='time' />
+                        <TextField id="date" label="Date" variant="outlined" margin="normal" fullWidth type='date' />
                         <Select
                             sx={{
                                 marginTop: 5,
@@ -53,17 +58,17 @@ const Paymentone = () => {
                             <MenuItem value={1}>Debit</MenuItem>
                             <MenuItem value={2}>Credit</MenuItem>
                         </Select>
-                        <TextField id="card-number" label="Card Number" variant="outlined" margin="normal" fullWidth />
-                        <TextField id="card-holder-name" label="Card Holder's Name" variant="outlined" margin="normal" fullWidth />
-                        <TextField id="exp-date" label="Exp-Date" variant="outlined" margin="normal" fullWidth />
+                        
                         {errorMessage && <Typography color="error">{errorMessage}</Typography>}
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
                             <Button variant="contained" color="primary" onClick={handleSubmit}>
                                 Confirm Details
                             </Button>
+                            <Link to="/paymentfour">
                             <Button variant="contained" color="secondary">
-                                Pay $25
+                               Add Card Details
                             </Button>
+                            </Link>
                         </Box>
                     </CardContent>
                 </Card>
@@ -72,5 +77,5 @@ const Paymentone = () => {
         </Box>
     );
 };
-
+    
 export default Paymentone;

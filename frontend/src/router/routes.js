@@ -6,6 +6,7 @@ import Payment from '../pages/payment/payment';
 import PaymentOne from '../pages/payment/paymnetone';
 import PaymentTwo from '../pages/payment/paymnettwo';
 import PaymentThree from '../pages/payment/paymentthree';
+import PaymentFour from '../pages/payment/paymentfour';
 
 import Event from '../pages/events/Event';
 
@@ -19,6 +20,7 @@ const MyRouter = () => {
             <Route path='/paymentone' element={<PaymentOne />} />
             <Route path='/paymenttwo' element={<PaymentTwo />} />
             <Route path='/paymentthree' element={<PaymentThree />} />
+            <Route path='/paymentfour' element={<PaymentFour />} />
 
             
             

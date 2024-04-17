@@ -39,7 +39,7 @@ const PaymentThree = () => { // Rename function to start with an uppercase lette
       >
         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr auto', alignItems: 'start' }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left', marginLeft: '50px', marginRight: '250px', marginTop: '80px' }}>
-            <Typography>Wanna play more!</Typography>
+            <Typography sx={{fontSize:30,marginTop:0.5,marginBottom:5}}>Wanna play more!</Typography>
             <Card sx={{ maxWidth: 400 }}>
               <CardContent>
                 <Typography variant="h5" gutterBottom>
@@ -61,17 +61,17 @@ const PaymentThree = () => { // Rename function to start with an uppercase lette
                 {errorMessage && <Typography color="error">{errorMessage}</Typography>}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
                   <Button variant="contained" color="primary" onClick={handleSubmit}>
-                    Confirm Details
+                    Update
                   </Button>
                   <Button variant="contained" color="secondary">
-                    Pay $25
+                    Delete
                   </Button>
                 </Box>
               </CardContent>
             </Card>
           </Box>
           <Box sx={{ width: '550px', height: '400px', marginRight: '10px', mt: '100px' }}>
-            <img src={'https://previews.123rf.com/images/papatonic/papatonic2303/papatonic230300043/199579790-young-gamer-sitting-at-desk-and-playing-online-video-games-ai-generated.jpg'} alt="Image description" style={{ maxWidth: '100%', maxHeight: '100%', width: 'auto', height: 'auto', objectFit: 'cover' }} />
+            <img src={'https://previews.123rf.com/images/papatonic/papatonic2303/papatonic230300043/199579790-young-gamer-sitting-at-desk-and-playing-online-video-games-ai-generated.jpg'} alt="Image description" style={{ maxWidth: '130%', maxHeight: '130%', width: '150', height: '150', objectFit: 'cover' }} />
           </Box>
         </Box>
       </Box>
