@@ -1,7 +1,7 @@
 // CreateGameForm.js
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import AdminHeader from '../../Components/common/adminHeader'
 import { TextField, Checkbox, Button, FormControlLabel, Box } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
@@ -36,6 +36,9 @@ const CreateGameForm = () => {
   };
 
   return (
+    <Box>
+      <AdminHeader />
+      
     <Box display="flex" justifyContent="center">
       <Box boxShadow={2} p={2} maxWidth={500}>
         <form onSubmit={handleSubmit}>
@@ -101,6 +104,8 @@ const CreateGameForm = () => {
           </NavLink>
         </form>
       </Box>
+    </Box>
+
     </Box>
   );
 };

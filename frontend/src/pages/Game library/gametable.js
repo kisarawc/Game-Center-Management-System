@@ -4,6 +4,8 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { styled } from '@mui/material/styles';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import AdminHeader from '../../Components/common/adminHeader'
+import logo from '../../images/header/logo.jpeg'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   textAlign: 'center',
@@ -134,43 +136,70 @@ const GameTable = () => {
   /* Generate user report */
   const generateUserReport = () => {
     const doc = new jsPDF();
+  
+    // Function to add the header
+    const addHeaderToPdf = (doc) => {
+      // Load the logo image
+      const logoImage = logo; // Update path to your logo image
+      const imgWidth = 20;
+      const imgHeight = 20;
+      
+  
+      // Add the title and date
+      doc.setFontSize(20);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(255, 255, 255);
+      doc.setFillColor(0, 0, 0);
+      doc.rect(0, 0, doc.internal.pageSize.width, 30, 'F'); // Draw black background
+      doc.addImage(logoImage, 'JPEG', 10, 5, imgWidth, imgHeight);
+      doc.text('GG LOUNGE GAME CENTER', 50, 18); // Positioning the title
+      doc.setFontSize(10); // Font size for the date
+      doc.text(`Report generated: ${new Date().toLocaleDateString()}`, 150, 25); // Positioning the date
 
-    doc.setFontSize(30);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(0, 0, 255);
-    doc.text('User Report', 105, 10, 'center');
-
-    autoTable(
-      doc,
-      {
-        head: rtitle,
-        body: rbody,
-      },
-      40,
-      100
-    );
-
+    };
+  
+    // Add the header to the PDF
+    addHeaderToPdf(doc);
+  
+    // Define the data for the table
+    const tableData = games.map((game) => [
+      game.name,
+      game.platform,
+      game.hourly_rate,
+      game.game_rating,
+    ]);
+  
+    // Draw the table
+    autoTable(doc, {
+      head: [['Name', 'Platform', 'Hourly Rate', 'Game Rating']],
+      body: tableData,
+      startY: 40, // Starting Y position to avoid overlap with the header
+    });
+  
+    // Save the PDF document
     doc.save('UserReport.pdf');
   };
+  
 
-  var rtitle = [['Name', 'Image Path', 'Platform', 'Hourly Rate', 'Game Rating']];
+  var rtitle = [['Name', 'Platform', 'Hourly Rate', 'Game Rating']];
 
   var rbody = games && games.map((game) => (
-    [game.name, game.image_path, game.platform, game.hourly_rate, game.game_rating]
+    [game.name, game.platform, game.hourly_rate, game.game_rating]
   ));
 
   return (
     <>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+    <AdminHeader />
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2} mt={3}>
         <TextField
           label="Search"
           variant="outlined"
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
-        <Button variant="outlined" color="primary" onClick={handleSearch}>
+        <Box mr={110}><Button variant="outlined" color="primary" onClick={handleSearch} >
           Search
-        </Button>
+        </Button></Box>
         <Button variant="contained" color="primary" onClick={generateUserReport}>
           Generate Report
         </Button>

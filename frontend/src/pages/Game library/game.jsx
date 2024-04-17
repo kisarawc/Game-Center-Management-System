@@ -96,7 +96,7 @@ const Game = () => {
       .catch((error) => {
         console.error('Error fetching games:', error);
       });
-  }, []);
+  }, [games]);
 
   return (
     <Box>

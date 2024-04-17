@@ -45,7 +45,7 @@ const Admin = () => {
                 <Typography gutterBottom variant="h5" component="div" style={{ color: '#fff' }}>
                   Games
                 </Typography>
-                <Button onClick={() => handleButtonClick('/adminGames')} variant="contained" sx={buttonStyles}>Go to Games</Button>
+                <Button onClick={() => handleButtonClick('/addgame')} variant="contained" sx={buttonStyles}>Go to Games</Button>
               </CardContent>
             </CardActionArea>
           </Card>
