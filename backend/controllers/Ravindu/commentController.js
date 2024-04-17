@@ -12,21 +12,17 @@ exports.getCommentsByEventId = async (req, res) => {
 
 exports.addComment = async (req, res) => {
   try {
-    const { comment } = req.body;
-    const { eventId } = req.params; // Assuming eventId is in the URL params
+    const { comment, userId } = req.body; // Extract userId from request body
+    const { eventId } = req.params;
 
-    // Create a new comment and set the eventId field
-    const newComment = new Comment({ comment, eventId });
-
+    // Create a new comment and set the eventId and userId fields
+    const newComment = new Comment({ comment, eventId, userId });
+    console.log(userId);
     // Save the new comment to the database
-    await newComment.save();
+    const savedComment = await newComment.save(); // Save the comment and capture the result
 
-    res.status(201).json(newComment);
+    res.status(201).json(savedComment); // Return the saved comment including the userId
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 };
-
-
-
-
