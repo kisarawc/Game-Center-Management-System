@@ -120,29 +120,27 @@ const BookingAdmin = () => {
       <table style={{ borderCollapse: 'collapse', width: '100%', marginTop: '20px' }}>
         <thead style={{ backgroundColor: '#f5f5f5' }}>
           <tr>
-            <th style={{ padding: '12px', textAlign: 'left' }}>Date</th>
-            <th style={{ padding: '12px', textAlign: 'left' }}>Start Time</th>
-            <th style={{ padding: '12px', textAlign: 'left' }}>End Time</th>
-            <th style={{ padding: '12px', textAlign: 'left' }}>Duration (minutes)</th>
-            <th style={{ padding: '12px', textAlign: 'left' }}>Message Request</th>
-            <th style={{ padding: '12px', textAlign: 'left' }}>User ID</th>
-            <th style={{ padding: '12px', textAlign: 'left' }}>Game Name</th>
-            <th style={{ padding: '12px', textAlign: 'left' }}>Status</th>
-            <th style={{ padding: '12px', textAlign: 'left' }}>Number of Players</th>
+            <th style={{ padding: '12px', textAlign: 'center' }}>Date</th>
+            <th style={{ padding: '12px', textAlign: 'center' }}>Start Time</th>
+            <th style={{ padding: '12px', textAlign: 'center' }}>End Time</th>
+            <th style={{ padding: '12px', textAlign: 'center' }}>Duration (minutes)</th>
+            <th style={{ padding: '12px', textAlign: 'center' }}>Message Request</th>
+            <th style={{ padding: '12px', textAlign: 'center' }}>Game Name</th>
+            <th style={{ padding: '12px', textAlign: 'center' }}>Status</th>
+            <th style={{ padding: '12px', textAlign: 'center' }}>Number of Players</th>
           </tr>
         </thead>
         <tbody>
           {filteredBookings.map((booking) => (
             <tr key={booking._id} style={{ borderBottom: '1px solid #ddd' }}>
-              <td style={{ padding: '12px' }}>{new Date(booking.date).toLocaleDateString()}</td>
-              <td style={{ padding: '12px' }}>{formatTime(booking.start_time)}</td>
-              <td style={{ padding: '12px' }}>{formatTime(booking.end_time)}</td>
-              <td style={{ padding: '12px' }}>{booking.duration}</td>
-              <td style={{ padding: '12px' }}>{booking.message_request}</td>
-              <td style={{ padding: '12px' }}>{booking.user_id}</td>
-              <td style={{ padding: '12px' }}>{booking.game_name}</td>
-              <td style={{ padding: '12px' }}>{booking.status}</td>
-              <td style={{ padding: '12px' }}>{booking.num_players}</td>
+              <td style={{ padding: '12px' ,textAlign: 'center' }}>{new Date(booking.date).toLocaleDateString()}</td>
+              <td style={{ padding: '12px',textAlign: 'center' }}>{formatTime(booking.start_time)}</td>
+              <td style={{ padding: '12px' ,textAlign: 'center'}}>{formatTime(booking.end_time)}</td>
+              <td style={{ padding: '12px' ,textAlign: 'center'}}>{booking.duration}</td>
+              <td style={{ padding: '12px' ,textAlign: 'center'}}>{booking.message_request}</td>
+              <td style={{ padding: '12px' ,textAlign: 'center'}}>{booking.game_name}</td>
+              <td style={{ padding: '12px' ,textAlign: 'center'}}>{booking.status}</td>
+              <td style={{ padding: '12px' ,textAlign: 'center'}}>{booking.num_players}</td>
             </tr>
           ))}
         </tbody>
