@@ -1,6 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Box } from '@mui/material';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  Box,
+  Grid,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -9,10 +26,14 @@ import logo from '../../images/header/logo.jpeg';
 import { NavLink } from 'react-router-dom';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  textAlign: 'center',
   padding: theme.spacing(2),
   borderBottom: '1px solid #ccc',
+  textAlign: 'center', // Center-align text in each cell
+  whiteSpace: 'nowrap', // Ensure that the text stays on a single line
+  overflow: 'hidden', // Hide any overflow content
+  textOverflow: 'ellipsis', // Add an ellipsis (...) if content overflows
 }));
+
 
 const StyledTableHead = styled(TableHead)(({ theme }) => ({
   backgroundColor: '#011276',
@@ -22,6 +43,7 @@ const StyledTableHeaderCell = styled(TableCell)(({ theme }) => ({
   color: theme.palette.common.white,
   backgroundColor: '#011276',
   fontWeight: 'bold',
+  textAlign: 'center', // Center-align text in header cells
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -29,6 +51,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     backgroundColor: theme.palette.action.hover,
   },
 }));
+
+const renderStarRating = (rating) => {
+  const wholeNumberRating = Math.round(rating);
+  const maxRating = 5;
+  let stars = '⭐'.repeat(wholeNumberRating);
+  stars += '☆'.repeat(maxRating - wholeNumberRating);
+  return stars;
+};
 
 const GameTable = () => {
   const [games, setGames] = useState([]);
@@ -47,27 +77,25 @@ const GameTable = () => {
   const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/games`)
-      .then(response => {
-        const formattedGames = response.data.map(game => ({
-          ...game,
-          name: game.name,
-          image_path: game.image_path,
-          availability: game.availability,
-          platform: game.platform,
-          hourly_rate: game.hourly_rate,
-          game_rating: game.game_rating,
-          description: game.description,
-        }));
-        setGames(formattedGames);
-      })
-      .catch(error => {
-        console.error('Error fetching games:', error);
-      });
+    axios.get(`http://localhost:5000/api/games`).then((response) => {
+      const formattedGames = response.data.map((game) => ({
+        ...game,
+        name: game.name,
+        image_path: game.image_path,
+        availability: game.availability,
+        platform: game.platform,
+        hourly_rate: game.hourly_rate,
+        game_rating: game.game_rating,
+        description: game.description,
+      }));
+      setGames(formattedGames);
+    }).catch((error) => {
+      console.error('Error fetching games:', error);
+    });
   }, []);
 
   const handleEdit = (gameId) => {
-    const selectedGame = games.find(game => game._id === gameId);
+    const selectedGame = games.find((game) => game._id === gameId);
     setSelectedGame(selectedGame);
     setEditedGameDetails({
       name: selectedGame.name,
@@ -86,9 +114,9 @@ const GameTable = () => {
 
   const handleEditDialogConfirm = () => {
     axios.put(`http://localhost:5000/api/games/updateGame/${selectedGame._id}`, editedGameDetails)
-      .then(response => {
+      .then(() => {
         console.log('Game updated successfully');
-        const updatedGames = games.map(game => {
+        const updatedGames = games.map((game) => {
           if (game._id === selectedGame._id) {
             return {
               ...game,
@@ -99,8 +127,7 @@ const GameTable = () => {
         });
         setGames(updatedGames);
         setEditDialogOpen(false);
-      })
-      .catch(error => {
+      }).catch((error) => {
         console.error('Error updating game:', error);
       });
   };
@@ -114,9 +141,8 @@ const GameTable = () => {
     axios.delete(`http://localhost:5000/api/games/deleteGame/${selectedGameId}`)
       .then(() => {
         console.log('Game deleted successfully');
-        setGames(games.filter(game => game._id !== selectedGameId));
-      })
-      .catch(error => {
+        setGames(games.filter((game) => game._id !== selectedGameId));
+      }).catch((error) => {
         console.error('Error deleting game:', error);
       });
     setDeleteDialogOpen(false);
@@ -164,7 +190,7 @@ const GameTable = () => {
     ]);
 
     autoTable(doc, {
-      head: [['Name', 'Platform', 'Hourly Rate', 'Game Rating']],
+      head: [['Name', 'Platform', 'Hourly Rate', 'Game Rating', 'Description']],
       body: tableData,
       startY: 40,
     });
@@ -176,73 +202,94 @@ const GameTable = () => {
     setSearchText(e.target.value);
   };
 
-  const filteredGames = games.filter(game => 
-    game.name.toLowerCase().includes(searchText.toLowerCase())
-  );
+  const filteredGames = games.filter((game) => game.name.toLowerCase().includes(searchText.toLowerCase()));
 
   return (
     <>
       <AdminHeader />
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2} mt={3}  >
-        {/* Search bar */}
-        <TextField
-          label="Search"
-          variant="outlined"
-          value={searchText}
-          onChange={handleSearch}
-          fullWidth
-          margin="normal"
-        />
-        {/* "Add Games" button */}
-        <NavLink to="/addgame" style={{ textDecoration: 'none' }}>
-          <Button variant="contained" color="primary">
-            Add Games
-          </Button>
-        </NavLink>
-        {/* Generate Report button */}
-        <Button variant="contained" color="primary" onClick={generateUserReport}>
-          Generate Report
-        </Button>
+      <Box display="flex" justifyContent="center" alignItems="center" mb={2} mt={3} width="100%">
+        <Grid container justifyContent="center" spacing={3}>
+          {/* Search bar */}
+          <Grid item xs={12} sm={6} md={4}>
+            <TextField
+              label="Search"
+              variant="outlined"
+              value={searchText}
+              onChange={handleSearch}
+              fullWidth
+            />
+          </Grid>
+          {/* "Add Games" button */}
+          <Grid item>
+            <NavLink to="/addgame" style={{ textDecoration: 'none' }}>
+              <Button variant="contained" color="primary" size="small">
+                Add Games
+              </Button>
+            </NavLink>
+          </Grid>
+          {/* Generate Report button */}
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              size="small"
+              onClick={generateUserReport}
+            >
+              Generate Report
+            </Button>
+          </Grid>
+        </Grid>
       </Box>
-      <TableContainer component={Paper}>
-        <Table>
-          <StyledTableHead>
-            <TableRow>
-              <StyledTableHeaderCell>Name</StyledTableHeaderCell>
-              <StyledTableHeaderCell>Image Path</StyledTableHeaderCell>
-              <StyledTableHeaderCell>Platform</StyledTableHeaderCell>
-              <StyledTableHeaderCell>Hourly Rate</StyledTableHeaderCell>
-              <StyledTableHeaderCell>Game Rating</StyledTableHeaderCell>
-              <StyledTableHeaderCell>Description</StyledTableHeaderCell>
-              <StyledTableHeaderCell>Actions</StyledTableHeaderCell>
-            </TableRow>
-          </StyledTableHead>
-          <TableBody>
-            {filteredGames.map(game => (
-              <StyledTableRow key={game._id}>
-                <StyledTableCell>{game.name}</StyledTableCell>
-                <StyledTableCell>{game.image_path}</StyledTableCell>
-                <StyledTableCell>{game.platform}</StyledTableCell>
-                <StyledTableCell>{game.hourly_rate}</StyledTableCell>
-                <StyledTableCell>{game.game_rating}</StyledTableCell>
-                <StyledTableCell>{game.description}</StyledTableCell>
-                <StyledTableCell>
-                  <Button
-                    variant="outlined"
-                    sx={{ marginRight: '10px' }}
-                    onClick={() => handleEdit(game._id)}
-                  >
-                    Edit
-                  </Button>
-                  <Button variant="outlined" onClick={() => handleDelete(game._id)}>
-                    Delete
-                  </Button>
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Box display="flex" justifyContent="center" alignItems="center">
+        <TableContainer component={Paper} style={{ width: '100%' }}>
+          <Table  style={{ tableLayout: 'fixed' }}>
+            <StyledTableHead>
+              <TableRow>
+                <StyledTableHeaderCell style={{ width: '10%' }}>Name</StyledTableHeaderCell>
+                <StyledTableHeaderCell style={{ width: '20%' }}>Image Path</StyledTableHeaderCell>
+                <StyledTableHeaderCell style={{ width: '10%' }}>Platform</StyledTableHeaderCell>
+                <StyledTableHeaderCell style={{ width: '10%' }}>Hourly Rate</StyledTableHeaderCell>
+                <StyledTableHeaderCell style={{ width: '10%' }}>Game Rating</StyledTableHeaderCell>
+                <StyledTableHeaderCell style={{ width: '20%' }}>Description</StyledTableHeaderCell>
+                <StyledTableHeaderCell style={{ width: '20%' }}>Actions</StyledTableHeaderCell>
+              </TableRow>
+            </StyledTableHead>
+            <TableBody>
+              {filteredGames.map((game) => (
+                <StyledTableRow key={game._id}>
+                  <StyledTableCell style={{ width: '20%' }}>{game.name}</StyledTableCell>
+                  <StyledTableCell style={{ width: '20%' }}>{game.image_path}</StyledTableCell>
+                  <StyledTableCell style={{ width: '10%' }}>{game.platform}</StyledTableCell>
+                  <StyledTableCell style={{ width: '10%' }}>{game.hourly_rate}</StyledTableCell>
+                  <StyledTableCell style={{ width: '10%' }}>{renderStarRating(game.game_rating)}</StyledTableCell>
+                  <StyledTableCell style={{ width: '20%' }}>{game.description}</StyledTableCell>
+                  <StyledTableCell style={{ width: '10%' }}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="small"
+                      onClick={() => handleEdit(game._id)}
+                      sx={{ marginRight: '5px', marginBottom: '5px' }}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      size="small"
+                      onClick={() => handleDelete(game._id)}
+                      sx={{ marginBottom: '5px' }}
+                    >
+                      Delete
+                    </Button>
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+      {/* Delete confirmation dialog */}
       <Dialog
         open={deleteDialogOpen}
         onClose={handleCloseDeleteDialog}
@@ -256,14 +303,15 @@ const GameTable = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDeleteDialog} color="primary">
+          <Button onClick={handleCloseDeleteDialog} color="primary" size="small">
             Cancel
           </Button>
-          <Button onClick={handleConfirmDelete} color="primary" autoFocus>
+          <Button onClick={handleConfirmDelete} color="error" size="small" autoFocus>
             Delete
           </Button>
         </DialogActions>
       </Dialog>
+      {/* Edit game dialog */}
       <Dialog
         open={editDialogOpen}
         onClose={handleEditDialogClose}
@@ -315,10 +363,10 @@ const GameTable = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleEditDialogClose} color="primary">
+          <Button onClick={handleEditDialogClose} color="primary" size="small">
             Cancel
           </Button>
-          <Button onClick={handleEditDialogConfirm} color="primary" autoFocus>
+          <Button onClick={handleEditDialogConfirm} color="primary" size="small" autoFocus>
             Save
           </Button>
         </DialogActions>

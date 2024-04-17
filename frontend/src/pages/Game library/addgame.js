@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import AdminHeader from '../../Components/common/adminHeader';
-import { TextField, Checkbox, Button, FormControlLabel, Box } from '@mui/material';
+import { TextField, Checkbox, Button, FormControlLabel, Box, Rating, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
 const CreateGameForm = () => {
-  // Updated formData state with description field
   const [formData, setFormData] = useState({
     name: '',
     image_path: '',
@@ -13,28 +12,27 @@ const CreateGameForm = () => {
     platform: '',
     hourly_rate: 0,
     game_rating: 0,
-    description: '', // Added description field
+    description: ''
   });
 
-  // Handle change events for form inputs
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle change events for checkbox input
   const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
-    setFormData({ ...formData, [name]: checked });
+    setFormData({ ...formData, [e.target.name]: e.target.checked });
   };
 
-  // Handle form submission
+  const handleRatingChange = (e, value) => {
+    setFormData({ ...formData, game_rating: value });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.post('http://localhost:5000/api/games/createGame', formData);
       alert('Game created successfully!');
-      // You can add more logic here, like redirecting to a different page
+      // Add more logic here, like redirecting to a different page if desired
     } catch (error) {
       console.error('Error creating game:', error);
       alert('Error creating game. Please try again.');
@@ -44,9 +42,18 @@ const CreateGameForm = () => {
   return (
     <Box>
       <AdminHeader />
-
-      <Box display="flex" justifyContent="center">
-        <Box boxShadow={2} p={2} maxWidth={500}>
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="90vh"
+      >
+        <Box boxShadow={2} p={3} width={400}>
+          {/* Add New Game title */}
+          <Typography variant="h4" align="center" color="primary" gutterBottom>
+            Add New Game
+          </Typography>
+          {/* Form */}
           <form onSubmit={handleSubmit}>
             <TextField
               label="Name"
@@ -92,25 +99,23 @@ const CreateGameForm = () => {
               margin="normal"
             />
             <TextField
-              label="Game Rating"
-              name="game_rating"
-              value={formData.game_rating}
-              onChange={handleChange}
-              type="number"
-              fullWidth
-              margin="normal"
-            />
-            {/* Added description field */}
-            <TextField
-              label="Description"
+              label="description"
               name="description"
               value={formData.description}
               onChange={handleChange}
               fullWidth
               margin="normal"
-              multiline
-              rows={4}
             />
+            {/* Star rating with margin top and bottom */}
+            <Box marginTop={2} marginBottom={2}>
+              <Rating
+                value={formData.game_rating}
+                onChange={handleRatingChange}
+                name="game_rating"
+                precision={0.5}
+                color="primary"
+              />
+            </Box>
             <Button type="submit" variant="contained" color="primary">
               Create Game
             </Button>
