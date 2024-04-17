@@ -1,34 +1,46 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Typography, Button } from '@mui/material';
-import gameImage1 from '../../images/GamesLibrary/pic1.png';
+import axios from 'axios';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
-import gameImage2 from '../../images/GamesLibrary/pic2.jpg';
 
 const GameDetailPage = () => {
   const { gameId } = useParams();
+  const [game, setGame] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const games = [
-    {
-      gameId: '1',
-      title: 'Example Game 1',
-      description: 'Description of Example Game 1. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      rating: '4.5',
-      genre: 'Adventure',
-      image: gameImage1, 
-    },
-    {
-      gameId: '2',
-      title: 'Example Game 2',
-      description: 'Description of Example Game 2. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      rating: '4.7',
-      genre: 'Action',
-      image: gameImage2, 
-    },
-  ];
+  useEffect(() => {
+    const fetchGame = async () => {
+      setLoading(true);  // Ensure loading is set at the beginning of the fetch
+      try {
+        const response = await axios.get(`http://localhost:5000/api/games/${gameId}`);
+        if (response.data) {
+          setGame(response.data);
+        } else {
+          throw new Error('No game data available');
+        }
+      } catch (err) {
+        console.error('Error fetching game details:', err);
+        setError('Error fetching game details');
+      } finally {
+        setLoading(false);  // Ensure loading is set false in both success and failure cases
+      }
+    };
 
-  const game = games.find(game => game.gameId === gameId);
+    fetchGame();
+  }, [gameId]);
+
+  // Debugging the updated game state
+  useEffect(() => {
+    if (game) {
+      console.log('Updated game name:', game.name);
+    }
+  }, [game]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <Box>
@@ -47,12 +59,11 @@ const GameDetailPage = () => {
       >
         {game ? (
           <Box>
-            <Typography variant="h2">{game.title}</Typography>
-            <img src={game.image} alt={game.title} style={{ maxWidth: '100%' }} />
+            <Typography variant="h2">{game.name}</Typography>
+            <img src={game.image_path} alt={game.title || "Game Image"} style={{ maxWidth: '100%' }} />
             <Typography variant="body1">Description: {game.description}</Typography>
             <Typography variant="body1">Rating: {game.rating}/5</Typography>
             <Typography variant="body1">Genre: {game.genre}</Typography>
-
             <Button variant="contained" color="primary">
               Book Now
             </Button>

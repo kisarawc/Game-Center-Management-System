@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   textAlign: 'center',
@@ -129,6 +131,34 @@ const GameTable = () => {
     setGames(filteredGames);
   };
 
+  /* Generate user report */
+  const generateUserReport = () => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(30);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0, 0, 255);
+    doc.text('User Report', 105, 10, 'center');
+
+    autoTable(
+      doc,
+      {
+        head: rtitle,
+        body: rbody,
+      },
+      40,
+      100
+    );
+
+    doc.save('UserReport.pdf');
+  };
+
+  var rtitle = [['Name', 'Image Path', 'Platform', 'Hourly Rate', 'Game Rating']];
+
+  var rbody = games && games.map((game) => (
+    [game.name, game.image_path, game.platform, game.hourly_rate, game.game_rating]
+  ));
+
   return (
     <>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
@@ -140,6 +170,9 @@ const GameTable = () => {
         />
         <Button variant="outlined" color="primary" onClick={handleSearch}>
           Search
+        </Button>
+        <Button variant="contained" color="primary" onClick={generateUserReport}>
+          Generate Report
         </Button>
       </Box>
       <TableContainer component={Paper}>

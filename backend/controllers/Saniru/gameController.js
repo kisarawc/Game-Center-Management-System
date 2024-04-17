@@ -28,6 +28,22 @@ exports.getAllGames = async (req, res) => {
   }
 };
 
+exports.getGameById = async (req, res) => {
+  const { gameId } = req.params;
+  try {
+    const game = await Game.findById(gameId);
+    if (!game) {
+      res.status(404).json({
+        status: 'fail',
+        message: 'Game not found'
+      });
+      return;
+    }
+    res.status(200).json(game);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 
 exports.deleteGame = async (req, res) => {
