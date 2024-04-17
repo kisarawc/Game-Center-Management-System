@@ -7,6 +7,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   textAlign: 'center',
   padding: theme.spacing(2), 
   borderBottom: '1px solid #ccc',
+  fontSize:'15px',
 }));
 
 const StyledTableHead = styled(TableHead)(({ theme }) => ({
@@ -17,6 +18,8 @@ const StyledTableHeaderCell = styled(TableCell)(({ theme }) => ({
   color: theme.palette.common.white,
   backgroundColor: '#011276',
   fontWeight: 'bold', 
+  fontSize:'18px',
+  textAlign:'center'
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -111,14 +114,15 @@ const BookingTable = ({ loggedInUserId }) => {
                 <StyledTableCell>{booking.num_players}</StyledTableCell>
                 <StyledTableCell>
                   <Button 
-                    variant="outlined" 
-                    sx={{mr:'10px'}}
+                    variant="contained" 
+                    sx={{mr:'10px' , backgroundColor:'#45d0b9'}}
                     onClick={() => handleEdit(booking._id)}
                   >
                     Edit
                   </Button>
                   <Button 
-                    variant="outlined" 
+                    variant="contained" 
+                    sx={{backgroundColor:'#d02727'}}
                     onClick={() => handleDelete(booking._id)}
                   >
                     Delete

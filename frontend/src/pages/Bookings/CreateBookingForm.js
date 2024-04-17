@@ -201,7 +201,7 @@ if(existingBookingWithStartTime) {
   };
 
   return (
-    <Paper style={{ padding: '20px', maxWidth: '600px', margin: 'auto' }}>
+    <Paper style={{ padding: '40px', maxWidth: '600px', margin: 'auto' }}>
       <Typography variant="h5" gutterBottom>Select Game & Date</Typography>
       <FormControl fullWidth style={{ marginBottom: '10px' }}>
         <InputLabel>Select a game</InputLabel>
