@@ -8,6 +8,11 @@ import PaymentTwo from '../pages/payment/paymnettwo';
 import PaymentThree from '../pages/payment/paymentthree';
 import PaymentFour from '../pages/payment/paymentfour';
 
+
+import BookingAdmin from '../pages/admin/booking/bookingAdmin';
+import Admin from '../pages/admin/home/admin';
+import EditBooking from '../pages/Bookings/editBooking'; 
+
 import Event from '../pages/events/Event';
 
 const MyRouter = () => {
@@ -26,8 +31,14 @@ const MyRouter = () => {
             
 
             <Route path='/Events' element={<Event/>} />
+ 
+            <Route path='/bookingAdmin' element={<BookingAdmin/>} /> 
+            <Route path='/admin' element={<Admin/>} /> 
+            <Route path='/bookings/edit/:id' element={<EditBooking />} /> 
 
             
+            <Route path='/Events' element={<Event/>} />
+
         </Routes>
     );
 }
