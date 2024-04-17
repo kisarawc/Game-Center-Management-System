@@ -260,7 +260,7 @@ const AdminEvent = () => {
                     style={{ marginBottom: '10px' }}
                   />
                   {previewImages[event._id] && (
-                    <img src={previewImages[event._id]} alt="Preview" style={{ maxWidth: '100%', height: 'auto', marginTop: '10px' }} />
+                    <img src={previewImages[event._id]} alt="Preview" style={{ maxWidth: '20%', height: '50%', marginTop: '10px', }} />
                   )}
                   <div style={{ position: 'absolute', bottom: '10px', left: '20px' }}>
                   <Button variant="contained" color="primary" onClick={() => handleUpdateConfirmation(event._id)} style={{ marginRight: '10px' }}>Update</Button>
@@ -271,7 +271,16 @@ const AdminEvent = () => {
                 <div>
   <Typography variant="h6" style={{ marginBottom: '5px' }}>{event.title}</Typography>
   <Typography style={{ marginBottom: '10px' }}>{event.description}</Typography>
-  <img src={event.imagePath} alt='' style={{ maxWidth: '100%', height: 'auto', marginTop: '10px' }} />
+  <img
+  src={event.imagePath}
+  alt=""
+  style={{
+    width: '100%', // Take full width of the container
+    height: '50%', // Maintain aspect ratio
+    maxHeight: '150px', // Set maximum height to control size
+    objectFit: 'cover', // Maintain aspect ratio and cover the container
+  }}
+/>
   <div style={{ position: 'absolute', bottom: '10px', left: '20px' }}>
     <Button variant="contained" color="secondary" onClick={() => handleDeleteConfirmation(event._id)} style={{ marginRight: '10px' }}>Delete</Button>
     <Button variant="contained" onClick={() => setEditEventIds({ ...editEventIds, [event._id]: { ...event } })}>Edit</Button>

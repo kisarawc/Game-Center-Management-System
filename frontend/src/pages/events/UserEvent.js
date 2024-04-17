@@ -2,13 +2,18 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
-import { Box, Typography, TextField, Button, Grid } from '@mui/material';
+import { Box, Typography, TextField, Button, Grid, InputAdornment, IconButton } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
 const ClientEvent = () => {
   const [events, setEvents] = useState([]);
   const [comments, setComments] = useState({});
+  const [searchQuery, setSearchQuery] = useState(''); // State for search query
 
-  // Function to fetch events and comments
+  useEffect(() => {
+    fetchEventsAndComments();
+  }, []); // Fetch events and comments when component mounts
+
   const fetchEventsAndComments = async () => {
     try {
       const eventsResponse = await axios.get('http://localhost:5000/api/events');
@@ -28,13 +33,23 @@ const ClientEvent = () => {
     }
   };
 
-  useEffect(() => {
-    fetchEventsAndComments();
-  }, []); // Fetch events and comments when component mounts
-
-  const addComment = async (eventId) => {
+  // Function to filter events based on search query
+  const filteredEvents = events.filter(event => event.title.toLowerCase().includes(searchQuery.toLowerCase()));
+  
+  // Function to add a comment
+  const addComment = async (eventId, userId) => {
     try {
-      const response = await axios.post(`http://localhost:5000/api/events/${eventId}/comments`, { comment: comments[eventId], eventId });
+      // Check if a user is logged in
+      if (!userId) {
+        console.error('User not logged in');
+        return;
+      }
+      
+      const response = await axios.post(`http://localhost:5000/api/events/${eventId}/comments`, {
+        comment: comments[eventId],
+        eventId,
+        userId // Pass the userId to the server
+      });
       console.log('New comment added:', response.data);
       // After adding a new comment, refetch the events to update the list
       fetchEventsAndComments();
@@ -45,11 +60,14 @@ const ClientEvent = () => {
     }
   };
 
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
   };
+
   
+
   return (
     <Box>
       <Header />
@@ -63,9 +81,32 @@ const ClientEvent = () => {
         }}
       >
         <div>
-          {/* <h3>Events</h3> */}
+          {/* Search bar */}
+          <TextField
+            type="text"
+            placeholder="Search by event title"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            fullWidth
+            margin="normal"
+            InputProps={{
+              endAdornment: searchQuery ? (
+                <InputAdornment position="end">
+                  <IconButton size="small">
+                    <SearchIcon />
+                  </IconButton>
+                </InputAdornment>
+              ) : null,
+              sx: {
+                borderRadius: '25px', // Rounded corners
+                paddingRight: '0', // Remove default padding
+              },
+            }}
+            sx={{ width: '25%', float: 'right' }} // Adjusting the width and alignment of the search bar
+          />
+          {/* Event cards */}
           <Grid container spacing={2}>
-            {events.map(event => (
+            {filteredEvents.map(event => (
               <Grid item xs={12} key={event._id}>
                 <Box
                   sx={{
@@ -101,9 +142,12 @@ const ClientEvent = () => {
                   </Typography>
                   {/* Display comments for this event */}
                   <h3>Comments</h3>
-                  {event.comments.map(comment => (
-                    <Typography variant="body1" key={comment._id} gutterBottom>{comment.comment}</Typography>
-                  ))}
+{event.comments.map(comment => (
+  <div key={comment._id} style={{ marginBottom: '10px' }}>
+    <Typography variant="body2" color="primary" style={{ fontWeight: 'bold' }}>{comment.userId.name}</Typography>
+    <Typography variant="body1" gutterBottom style={{ marginLeft: '10px' }}>{comment.comment}</Typography>
+  </div>
+))}
                   {/* Input field and submit button for adding comments */}
                   <TextField
                     type="text"
@@ -113,7 +157,8 @@ const ClientEvent = () => {
                     fullWidth
                     margin="normal"
                   />
-                  <Button variant="contained" color="primary" onClick={() => addComment(event._id)}>Submit</Button>
+                  <Button variant="contained" color="primary" onClick={() => addComment(event._id, '66181e723c2dc6dc00c58a05')}>Submit</Button>
+                  {/* Pass the user ID to the addComment function */}
                 </Box>
               </Grid>
             ))}
