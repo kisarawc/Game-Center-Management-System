@@ -7,12 +7,12 @@ import Box from '@mui/material/Box';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
 
+
 const EditBooking = () => {
   const { id } = useParams(); 
 
   const [booking, setBooking] = useState(null);
   const [editedBooking, setEditedBooking] = useState({
-    // Initial state for edited booking fields
     date: '',
     start_time: '',
     duration: '',
@@ -44,9 +44,7 @@ const EditBooking = () => {
     const localTime = new Date(time);
     return localTime.toLocaleTimeString([], { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' });
   };
-  const formatDate = (date) => {
-    return new Date(date).toLocaleDateString();
-  };
+
 
   useEffect(() => {
     axios.get(`http://localhost:3000/api/bookings/${id}`)
@@ -65,6 +63,8 @@ const EditBooking = () => {
           num_players: bookingData.num_players,
           game_name: bookingData.game_name,
         });
+
+      
       })
       .catch(error => {
         console.error('Error fetching booking details:', error);
@@ -78,64 +78,61 @@ const EditBooking = () => {
       [name]: value,
     }));
   };
+  
 
-  const handleSubmit = (id) => {
-  console.log('id is',id)
+  const handleSubmit = () => {
     const startTime = moment.utc(`${editedBooking.date}T${editedBooking.start_time}`);
     const startTimeFormatted = startTime.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
-    console.log(startTimeFormatted)
+  
     axios.get(`http://localhost:3000/api/bookings/game/${editedBooking.game_name}/${editedBooking.date}/${startTimeFormatted}`)
       .then(response => {
-        const existingBooking = response.data;
+        const existingBooking = response.data.exists;
         console.log(existingBooking)
         if (existingBooking) {
           setErrorMessage("There is already a booking for this game on the selected date.");
-          return;
-        } 
-      }).catch(error => {
-        console.error('Error creating booking:', error);
-      });
-          
+        } else {
           const currentDate = new Date();
-          
           const formattedDate = moment(currentDate).format('YYYY-MM-DD');
-          console.log('s',editedBooking.start_time) 
-
-          const startTimes = moment.utc(`${editedBooking.date}T${editedBooking.start_time}`);
-    
-          // Parse duration from string to number
-          const durationMinutes = parseInt(editedBooking.duration, 10);
-          
-          // Calculate end time by adding duration to start time
-          const endTime = startTimes.clone().add(durationMinutes, 'minutes');
-          
-          // Format end time
-          const endTimeFormatted = endTime.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
-          console.log('fo',endTimeFormatted)
+  
           if (editedBooking.date < formattedDate) {
             setErrorMessage("You cannot create a booking for a past date.");
             return;
           }
+  
+          const startTimes = moment.utc(`${editedBooking.date}T${editedBooking.start_time}`);
+          const durationMinutes = parseInt(editedBooking.duration, 10);
+          const endTime = startTimes.clone().add(durationMinutes, 'minutes');
+          const endTimeFormatted = endTime.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+  
           const editedBookingFormatted = {
             ...editedBooking,
             start_time: startTimeFormatted,
             end_time: endTimeFormatted,
           };
+
           
-          axios.patch(`http://localhost:3000/api/bookings/${id}`, editedBookingFormatted)
-          .then(response => {
-              setSuccessMessage('Booking updated successfully!');
-          })
-          .catch(error => {
-              setErrorMessage('Error updating booking. Please try again.');
-          })
-          .finally(() => {
-              setOpenPopup(!!successMessage);
-          });
+          console.log('new',editedBookingFormatted)
         
-      
-            setErrorMessage(''); 
+          axios.patch(`http://localhost:3000/api/bookings/${id}`, editedBookingFormatted)
+            .then(response => {
+              setSuccessMessage('Booking updated successfully!');
+            })
+            .catch(error => {
+              setErrorMessage('Error updating booking. Please try again.');
+            })
+            .finally(() => {
+              setOpenPopup(true);
+            });
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching existing booking:', error);
+        setErrorMessage('Error fetching existing booking. Please try again.');
+      });
   };
+  
+  
+  
 
   const handleClosePopup = () => {
     setOpenPopup(false);
@@ -226,6 +223,7 @@ const EditBooking = () => {
             style={{ marginBottom: '10px' }}
           />
 
+
           <Button variant="contained" onClick={() => handleSubmit(id)}>Update Booking</Button>
         </Paper>
       </Box>
@@ -242,5 +240,4 @@ const EditBooking = () => {
     </Box>
   );
 };
-
 export default EditBooking;

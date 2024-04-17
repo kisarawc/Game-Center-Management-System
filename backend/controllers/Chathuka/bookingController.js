@@ -1,7 +1,6 @@
 const Booking = require('../../models/Chathuka/Booking');
 const Game = require('../../models/Saniru/Game');
 
-// Controller function to get all bookings
 exports.getAllBookings = async (req, res) => {
   try {
     const bookings = await Booking.find();
@@ -19,7 +18,6 @@ exports.getAllBookings = async (req, res) => {
   }
 };
 
-// Controller function to create a new booking
 exports.createBooking = async (req, res) => {
   try {
     const newBooking = await Booking.create(req.body);
@@ -37,7 +35,6 @@ exports.createBooking = async (req, res) => {
   }
 };
 
-// Controller function to get a single booking
 exports.getBooking = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);
@@ -62,7 +59,6 @@ exports.getBooking = async (req, res) => {
   }
 };
 
-// Controller function to update a booking
 exports.updateBooking = async (req, res) => {
   try {
     const booking = await Booking.findByIdAndUpdate(req.params.id, req.body, {
@@ -90,7 +86,6 @@ exports.updateBooking = async (req, res) => {
   }
 };
 
-// Controller function to delete a booking
 exports.deleteBooking = async (req, res) => {
   try {
     const booking = await Booking.findByIdAndDelete(req.params.id);
@@ -131,21 +126,22 @@ exports.getBookingDetailsByGameAndDate = async (req, res) => {
 };
 
 exports.getBookingDetailsByGameAndDateAndTime = async (req, res) => {
-  const { gameName, date ,  time} = req.params;
+  const { gameName, date, time } = req.params;
 
   try {
-    const bookings = await Booking.find({ game_name: gameName, date: date ,start_time: time }).exec();
+    const bookings = await Booking.find({ game_name: gameName, date: date, start_time: time }).exec();
 
-    if (bookings.length === 0) {
-      return res.status(404).json({ message: 'No bookings found for the game and date and time.' });
+    if (bookings.length > 0) {
+      return res.json({ exists: true });
+    } else {
+      return res.json({ exists: false });
     }
-
-    res.json(bookings);
   } catch (error) {
     console.error('Error fetching booking details:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 
 
 exports.getBookingsByUserId = async (req, res) => {

@@ -29,7 +29,7 @@ const Booking = () => {
           
           </Box>
           <Typography variant='h4' sx={{color:'#ffffff'}}>My Bookings</Typography>
-          <BookingTable loggedInUserId={'609d97334529cd465ab5c8c0'}/>
+          <BookingTable loggedInUserId={'609d97334529cd465ab5c8a0'}/>
         </Box>
       </Box>
       <Footer /> 
