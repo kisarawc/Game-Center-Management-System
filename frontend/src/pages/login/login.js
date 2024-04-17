@@ -18,6 +18,7 @@ const Login = () => {
         const { token, userId } = result.data;
         sessionStorage.setItem('token', token); // Store token in sessionStorage
         sessionStorage.setItem('userId', userId); // Store userId in sessionStorage
+        window.location.href = `/profile/${userId}`;
         // Redirect based on user role or any other condition
         if (email === 'chathuka@gmail.com' && password === 'chathuka123') {
           window.location.href = '/adminDashboard';

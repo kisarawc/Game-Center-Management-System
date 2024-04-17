@@ -5,6 +5,7 @@ import propic from '../../images/login/profile.png';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   profilePage: {
@@ -53,14 +54,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ProfilePage = () => {
+  const { userId } = useParams();
   const classes = useStyles();
-  const token = sessionStorage.getItem('token');
-  const userId = sessionStorage.getItem('userId');
   const [user, setUser] = useState({});
   const [editProfileOpen, setEditProfileOpen] = useState(false);
 
   useEffect(() => {
-    console.log("userId:", userId);
     fetchUser();
   }, []);
 
@@ -68,6 +67,7 @@ const ProfilePage = () => {
     try {
       const token = sessionStorage.getItem('token');
       const userId = sessionStorage.getItem('userId');
+      console.log('userId:', userId);
   
       if (!userId) {
         console.error('User ID not found in sessionStorage');
