@@ -7,7 +7,8 @@ import SignUp from '../pages/UserProfile/signup';
 import ProfilePage from '../pages/UserProfile/profile'; 
 import UsersTable from '../pages/UserProfile/usersTable'; 
 import Event from '../pages/events/Event';
-import Dashboard from '../pages/UserProfile/adminDashboard';
+import Dashboard from '../pages/admin/home/admin';
+
 
 const MyRouter = () => {
     return (
@@ -20,7 +21,7 @@ const MyRouter = () => {
                 <Route path='/profile' Component={ProfilePage}></Route>
                 <Route path='/Event' Component={Event}></Route>
                 <Route path='/usersTable' Component={UsersTable}></Route>
-                <Route path='/adminDashboard' Component={Dashboard}></Route>
+                <Route path='/admin' Component={Dashboard}></Route>
             </Routes>
 
         

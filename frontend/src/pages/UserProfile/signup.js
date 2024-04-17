@@ -50,7 +50,7 @@ const SignUp = () => {
   };
 
   return (
-    <div style={{ backgroundImage: `url(${signupBackground})`, backgroundSize: 'cover', height: '150vh', width:'219vh', display: 'flex', justifyContent: 'center', alignItems: 'center' ,  marginLeft: -24}}>
+    <div style={{ backgroundImage: `url(${signupBackground})`, backgroundSize: 'cover', height: '150vh', width:'194vh', display: 'flex', justifyContent: 'center', alignItems: 'center' ,  marginLeft: -24}}>
       <Container component="main" maxWidth="sm">
         <CssBaseline />
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>

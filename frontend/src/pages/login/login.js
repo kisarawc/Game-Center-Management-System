@@ -24,13 +24,13 @@ const Login = () => {
         window.location.href = `/profile/${userId}`;
         // Redirect based on user role or any other condition
         if (email === 'chathuka@gmail.com' && password === 'chathuka123') {
-          window.location.href = '/adminDashboard';
+          window.location.href = '/admin';
         } 
         else if (email === 'limasha@gmail.com' && password === 'limasha123') {
-          window.location.href = '/adminDashboard';
+          window.location.href = '/admin';
         }
         else if (email === 'ravindu@gmail.com' && password === 'ravindu123') {
-          window.location.href = '/adminDashboard';
+          window.location.href = '/admin';
         }
         else if (email === 'radeesa@gmail.com' && password === 'radeesa123') {
           window.location.href = '/adminDashboard';
