@@ -12,14 +12,12 @@ const BookingPage = () => {
   const [bookingCreated,setBookingCreated] = useState(false);
   const [openModal, setOpenModal] = useState(false); 
   const [errorMessage, setErrorMessage] = useState(''); 
-  // Additional state for form fields
   const [numPlayers, setNumPlayers] = useState('');
   const [messageRequest, setMessageRequest] = useState('');
   const [selectedStartTime, setSelectedStartTime] = useState('');
   const [selectedDuration, setSelectedDuration] = useState(30);
 
   useEffect(() => {
-    // Fetch game names when the component mounts
     axios.get('http://localhost:3000/api/game/names')
       .then(response => {
         setGames(response.data);
@@ -42,10 +40,8 @@ const BookingPage = () => {
   };
 
   const handleSubmit = () => {
-    // Clear previous bookings
     setBookings([]);
     setLoading(true);
-    // Fetch bookings for the selected game and date
     axios.get(`http://localhost:3000/api/bookings/game/${selectedGame}/${selectedDate}`)
       .then(response => {
         const formattedBookings = response.data.map(booking => ({
@@ -88,22 +84,18 @@ const BookingPage = () => {
     
 
 
-    // Convert selectedStartTime to a Date object
     const startTimeParts = selectedStartTime.split(':');
     const selectedTime = new Date();
     selectedTime.setHours(parseInt(startTimeParts[0], 10));
     selectedTime.setMinutes(parseInt(startTimeParts[1], 10));
 
-    // Add duration to selected start time
     const selectedEndTime = new Date(selectedTime.getTime() + selectedDuration * 60000);
 
-    // Format selectedEndTime as "HH:mm"
     const endHours = selectedEndTime.getHours().toString().padStart(2, '0');
     const endMinutes = selectedEndTime.getMinutes().toString().padStart(2, '0');
     const formattedEndTime = new Date(`${selectedDate}T${endHours}:${endMinutes}`);
 
 
-    //console.log('End Time:', formattedEndTime);
     const timezoneOffset = selectedDateTime.getTimezoneOffset();
     const selectedDateTimeEnd = new Date(formattedEndTime.getTime()- timezoneOffset * 60000);
 
@@ -140,9 +132,9 @@ if(existingBookingWithStartTime) {
     
     //console.log('et',selectedDateTimeEnd)
     const newBooking = {
-      date: selectedDateTimeLocal.toISOString().split('T')[0], // Convert date to ISO string format
+      date: selectedDateTimeLocal.toISOString().split('T')[0], 
       game_name: selectedGame,
-      start_time: selectedDateTimeLocal.toISOString(), // Convert start time to ISO string format
+      start_time: selectedDateTimeLocal.toISOString(), 
       end_time: selectedDateTimeEnd.toISOString(),
       duration: selectedDuration,
       num_players: numPlayers,

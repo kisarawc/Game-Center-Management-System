@@ -5,7 +5,7 @@ import { AppBar, Toolbar, Typography, IconButton, Button } from '@mui/material';
 const handleLogout = () => {
   sessionStorage.removeItem('token');
   sessionStorage.removeItem('userId');
- 
+  window.location.href = '/login';
 };
 
 const AdminAppBar = () => {
