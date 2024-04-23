@@ -2,14 +2,14 @@
 const Feedback = require('../../models/Radeesa/Feedback');
 
 exports.createFeedback = async (req, res) => {
-    try {
-        const { comment, rating, image_path, date, admin_feedback, user_id,  game_id} = req.body;
-        const newFeedback = new Feedback({ comment, rating, image_path, date, admin_feedback, user_id,  game_id });
-        const savedFeedback = await newFeedback.save();
-        res.status(201).json(savedFeedback);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
+  try {
+    const { comment, rating, image_path, date, admin_feedback, user_id, game_id } = req.body;
+    const newFeedback = new Feedback({ comment, rating, image_path, date, admin_feedback, user_id, game_id });
+    const savedFeedback = await newFeedback.save();
+    res.status(201).json(savedFeedback);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };
 
 exports.getAllFeedback = async (req, res) => {
@@ -26,7 +26,7 @@ exports.deleteFeedback = async (req, res) => {
     const { feedbackId } = req.params;
 
     // Delete the event
-    const deletedFeedback= await Feedback.findByIdAndDelete(feedbackId);
+    const deletedFeedback = await Feedback.findByIdAndDelete(feedbackId);
 
     if (!deletedFeedback) {
       return res.status(404).json({ error: 'Feedback not found' });

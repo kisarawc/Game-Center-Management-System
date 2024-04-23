@@ -1,56 +1,82 @@
-import { Table } from "@mui/material";
-import { Paper, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-const feedbackTable = ({ rows }) => {
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Box, Table, TableHead, TableBody, TableRow, TableCell, Button, Grid, Typography } from '@mui/material';
+import Header from '../../Components/common/Header/header';
+import Footer from '../../Components/common/Footer/footer';
+
+
+const FeedbackTable = () => {
+    const [feedbacks, setFeedbacks] = useState([]);
+
+    useEffect(() => {
+        async function fetchFeedbacks() {
+            try {
+                const response = await axios.get('http://localhost:5000/api/feedbacks');
+                setFeedbacks(response.data);
+            } catch (error) {
+                console.error('Error fetching feedbacks:', error);
+            }
+        }
+
+        fetchFeedbacks();
+    }, []);
+
+    const handleDelete = async (id) => {
+        try {
+            await axios.delete(`http://localhost:5000/api/feedbacks/deleteFeedback/${id}`);
+            setFeedbacks(feedbacks.filter((feedback) => feedback._id !== id));
+        } catch (error) {
+            console.error('Error deleting feedback:', error);
+        }
+    };
+
     return (
-        <TableContainer component={Paper}>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Game Name</TableCell>
-                        <TableCell>Your review</TableCell>
-                        <TableCell>upload Pictures</TableCell>
-                        <TableCell>Name</TableCell>
-                        <TableCell>Email</TableCell>
-                        <TableCell>Actions</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {
-                        rows.length > 0 ? rows.map(row => (
-                            <TableRow key={row.GameName} sx={{ '&:last-child td, &:last-child th, &:last-child th, &:last-child th, &:last-child th': { border: 0 } }}>
-                                <TableCell component='th' scope="row"  >{row.GameName}</TableCell>
-                                <TableCell component='th' scope="row"  >{row.yourReview}</TableCell>
-                                <TableCell component='th' scope="row"  >{row.pictures}</TableCell>
-                                <TableCell component='th' scope="row"  >{row.Name}</TableCell>
-                                <TableCell component='th' scope="row"  >{row.Email}</TableCell>
-                                <TableCell>
-                                    <button
-                                        sx={{ margin: '0px 10px' }}
-                                        onClick={() => { }}>
-                                        Update
+        <Box>
+            <Header />
+            <Box
+                sx={{
+                    backgroundImage: `url('https://images.saymedia-content.com/.image/t_share/MTkzNzg4MTIxMjM2NjQ1MzE1/aesthetic-website-backgrounds.gif')`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    minHeight: '100vh',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
 
-                                    </button>
-                                    <button
-                                        sx={{ margin: '0px 10px' }}
-                                        onClick={() => { }}>
-                                        Delete
-
-                                    </button>
-                                </TableCell>
-                            </TableRow>
-
-                        )) : (
-                            <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                <TableCell component='th' scope="row"  >No data</TableCell>
-                            </TableRow>
-                        )
-                    }
-                </TableBody>
-            </Table>
-
-        </TableContainer>
+                }}
+            >
+                <Grid container sx={{ marginBottom: '30px', display: 'block' }}>
+                    <Typography component={'center'} sx={{ fontSize: '25px', textAlign: 'center' }} >Feedback Form(Admin view)</Typography>
+                    <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>Comment</TableCell>
+                                    <TableCell>Rating</TableCell>
+                                    <TableCell>Date</TableCell>
+                                    <TableCell>Actions</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {feedbacks.map((feedback) => (
+                                    <TableRow key={feedback._id}>
+                                        <TableCell>{feedback.comment}</TableCell>
+                                        <TableCell>{feedback.rating}</TableCell>
+                                        <TableCell>{new Date(feedback.date).toLocaleDateString()}</TableCell>
+                                        <TableCell>
+                                            <Button onClick={() => handleDelete(feedback._id)} variant="contained" color="secondary">Delete</Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </Grid>
+                </Grid>
+            </Box>
+            <Footer />
+        </Box>
     );
+};
 
-}
-
-export default feedbackTable;
+export default FeedbackTable;

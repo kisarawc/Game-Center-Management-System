@@ -5,7 +5,7 @@ const feedbackSchema = new mongoose.Schema({
   rating: { type: Number },
   image_path: { type: String },
   date: { type: Date },
-  admin_feedback: { type: String },
+  // admin_feedback: { type: String },
   user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   game_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Game' }
 });
