@@ -1,2 +1,13 @@
 GN4fSx3KU7MUClXb
 admin
+
+<Select
+                            sx={{
+                                marginTop: 5,
+                                width: 250,
+                                height: 50,
+                            }}
+                        >
+                            <MenuItem value={1}>Debit</MenuItem>
+                            <MenuItem value={2}>Credit</MenuItem>
+                        </Select>

@@ -2,11 +2,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const bodyParser = require("body-parser");
+
 const eventRoutes = require('./routes/Ravindu/eventRoutes'); 
 const commentRoutes = require('./routes/Ravindu/commentRoutes');
 
 const paymentRoutes = require('./routes/Shavindi/paymentRoutes');
 const cardRoutes = require('./routes/Shavindi/cardRoutes');
+const cookieParser = require("cookie-parser")
+
 
 const bookingRouter = require('./routes/Chathuka/bookingRoutes');
 const game = require('./routes/Chathuka/game');
@@ -17,8 +21,18 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.use(cookieParser());
+app.use(express.urlencoded({extended:false}));
+app.use(bodyParser.json());
 
-app.use(cors());
+
+
+app.use(cors(
+    {
+        origin: ["http://localhost:3001","https://Game-app.vercel.app"],
+        credentials: true,
+    }
+));
 app.use(express.json()); // Middleware to parse JSON request bodies
 
 // Connect to MongoDB Atlas

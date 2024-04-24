@@ -27,7 +27,7 @@ const Payment = () => {
         {/* Action Buttons */}
         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr auto', alignItems: 'start' }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left' , ml:'50px',mr:'250px', mt:'80px'}}>
-          <Link to="/paymentone">
+          <Link to="/paymentfive">
               <Button variant="contained" sx={{ backgroundColor: '#663399', color: 'white', width: '150px', height: '50px', borderRadius: '30px', marginTop: '70px' }}>
                 Do payments
               </Button>

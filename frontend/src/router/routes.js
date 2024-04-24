@@ -14,6 +14,7 @@ import Admin from '../pages/admin/home/admin';
 import EditBooking from '../pages/Bookings/editBooking'; 
 
 import Event from '../pages/events/Event';
+import Paymentfive from '../pages/payment/paymnetfive';
 
 const MyRouter = () => {
     return (
@@ -22,13 +23,11 @@ const MyRouter = () => {
             <Route path='/book' element={<Book />} />
 
             <Route path='/payment' element={<Payment />} />
-            <Route path='/paymentone' element={<PaymentOne />} />
+            <Route path='/paymentone/:userid/:bookid' element={<PaymentOne />} />
             <Route path='/paymenttwo' element={<PaymentTwo />} />
             <Route path='/paymentthree' element={<PaymentThree />} />
             <Route path='/paymentfour' element={<PaymentFour />} />
-
-            
-            
+            <Route path='/paymentfive' element={<Paymentfive />} />
 
             <Route path='/Events' element={<Event/>} />
  

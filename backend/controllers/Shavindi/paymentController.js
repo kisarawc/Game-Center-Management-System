@@ -3,20 +3,21 @@ const Card = require('../../models/Shavindi/Card');
 
 exports.createPayment = async (req, res) => {
     try {
-        const { amount, time, date, payment_method, booking_id, user_id} = req.body;
+        const { amount, time, date, payment_method,userID,bookID} = req.body;
+        const payment = await Payment.create({
+            amount:amount,
+            time:time,
+            date:date,
+            payment_method:payment_method,
+            booking_id:bookID,
+            user_id:userID,
+        })
+
+        console.log(payment);
+
+        res.status(201).json(payment);
         
-        // Create new payment
-        const newPayment = new Payment({ amount, time, date, payment_method, booking_id, user_id });
-
-        // Save payment
-        const savedPayment = await newPayment.save();
-
-        // // Save card details
-        // const { card_no, name, cvv , expire_date, card_type} = card_details;
-        // const newCard = new Card({ card_no, name, cvv, expire_date, card_type: savedPayment.user_id });
-        // await newCard.save();
-
-        res.status(201).json(savedPayment);
+        
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

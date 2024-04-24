@@ -4,12 +4,7 @@ const Game = require('../../models/Saniru/Game');
 exports.getAllBookings = async (req, res) => {
   try {
     const bookings = await Booking.find();
-    res.status(200).json({
-      status: 'success',
-      data: {
-        bookings
-      }
-    });
+    res.status(200).json(bookings);
   } catch (err) {
     res.status(500).json({
       status: 'error',

@@ -1,27 +1,63 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
 import { Box, Button, Card, CardContent, MenuItem, Select, TextField, Typography } from '@mui/material'; // Import Card from '@mui/material'
+import axios from 'axios';
 
-const PaymentThree = () => { // Rename function to start with an uppercase letter
-  const [errorMessage, setErrorMessage] = useState(''); // Define errorMessage state
-    
-  // Handler for handling form submission
-  const handleSubmit = () => {
-      // Get the values of the form fields
-      const cardNumber = document.getElementById('card-number').value;
-      const cardHolderName = document.getElementById('card-holder-name').value;
-      const expDate = document.getElementById('exp-date').value;
+const PaymentThree = () => {
+  const [errorMessage, setErrorMessage] = useState('');
+  const [card, setCard] = useState([]);
+  const [formattedDate, setFormattedDate] = useState('');
 
-      // Check if any of the fields is empty
-      if (!cardNumber || !cardHolderName || !expDate) {
-          setErrorMessage('Please fill out all required fields.');
-          return;
+  useEffect(() => {
+    async function fetchDetails() {
+      try {
+        const response = await axios.get(`http://localhost:3000/api/card-payments`);
+        console.log(response.data);
+        setCard(response.data);
+
+        // Format the date
+        const date = new Date(response.data.expire_date);
+        const formattedDate = date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        });
+        setFormattedDate(formattedDate);
+      } catch (error) {
+        console.error(error);
       }
+    }
 
-      // Proceed with form submission logic
+    fetchDetails();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCard({ ...card, [name]: value });
   };
-  
+
+  const CardSave = async (e) => {
+    e.preventDefault();
+
+    try {
+      console.log(card);
+      const data = await axios.patch(`http://localhost:3000/api/card-payments`, card);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:3000/api/card-payments`);
+      setCard([]); 
+      setFormattedDate('');
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <Box>
       <Header />
@@ -39,34 +75,32 @@ const PaymentThree = () => { // Rename function to start with an uppercase lette
       >
         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr auto', alignItems: 'start' }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'left', marginLeft: '50px', marginRight: '250px', marginTop: '80px' }}>
-            <Typography sx={{fontSize:30,marginTop:0.5,marginBottom:5}}>Wanna play more!</Typography>
+            <Typography sx={{ fontSize: 30, marginTop: 0.5, marginBottom: 5 }}>Wanna play more!</Typography>
             <Card sx={{ maxWidth: 400 }}>
               <CardContent>
                 <Typography variant="h5" gutterBottom>
                   Card Details
                 </Typography>
-                <Select
-                  sx={{
-                    marginTop: 5,
-                    width: 250,
-                    height: 50,
-                  }}
-                >
-                  <MenuItem value={1}>Debit</MenuItem>
-                  <MenuItem value={2}>Credit</MenuItem>
-                </Select>
-                <TextField id="card-number" label="Card Number" variant="outlined" margin="normal" fullWidth />
-                <TextField id="card-holder-name" label="Card Holder's Name" variant="outlined" margin="normal" fullWidth />
-                <TextField id="exp-date" label="Exp-Date" variant="outlined" margin="normal" fullWidth />
-                {errorMessage && <Typography color="error">{errorMessage}</Typography>}
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
-                  <Button variant="contained" color="primary" onClick={handleSubmit}>
-                    Update
-                  </Button>
-                  <Button variant="contained" color="secondary">
-                    Delete
-                  </Button>
-                </Box>
+                <form onSubmit={CardSave}>
+                <Typography variant="subtitle1" gutterBottom>
+                                Card Number
+                  </Typography>
+                  <TextField id="card-number"  variant="outlined" margin="normal" fullWidth name="card_no" value={card.card_no} onChange={handleInputChange} />
+                  <Typography variant="subtitle1" gutterBottom>
+                                Card Holder's Name:
+                  </Typography>
+                  <TextField id="card-holder-name"  variant="outlined" margin="normal" fullWidth name="name" value={card.name} onChange={handleInputChange} />
+                  <TextField id="exp-date" label="Exp-Date" variant="outlined" margin="normal" fullWidth name="expire_date" value={formattedDate} onChange={handleInputChange} />
+                  {errorMessage && <Typography color="error">{errorMessage}</Typography>}
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
+                    <Button variant="contained" color="primary" type="submit" >
+                      Update
+                    </Button>
+                    <Button variant="contained" color="secondary" onClick={handleDelete}>
+                      Delete
+                    </Button>
+                  </Box>
+                </form>
               </CardContent>
             </Card>
           </Box>
@@ -78,6 +112,6 @@ const PaymentThree = () => { // Rename function to start with an uppercase lette
       <Footer />
     </Box>
   );
-}
+};
 
 export default PaymentThree;
