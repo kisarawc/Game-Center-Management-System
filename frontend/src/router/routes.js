@@ -26,6 +26,7 @@ const MyRouter = () => {
 
 
 
+
                 <Route exact path='/' Component={HomePage}></Route>
                 <Route path='/book' Component={Book}></Route>
                 <Route path='/login' Component={Login}></Route>
@@ -33,7 +34,7 @@ const MyRouter = () => {
                 <Route path='/profile' Component={ProfilePage}></Route>
                 <Route path='/Event' Component={Event}></Route>
                 <Route path='/usersTable' Component={UsersTable}></Route>
-                <Route path='/adminDashboard' Component={Dashboard}></Route>
+                <Route path='/admin' Component={Dashboard}></Route>
             </Routes>
 
         

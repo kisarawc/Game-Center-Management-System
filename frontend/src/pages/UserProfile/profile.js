@@ -34,21 +34,43 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     gap: theme.spacing(2),
   },
-  // Add styles for the dialog container
   dialogContainer: {
-    // Add your styles here
+    '& .MuiDialog-paper': {
+      minWidth: '300px', 
+      padding: theme.spacing(3), 
+    },
   },
-  // Add styles for the dialog title
+
   dialogTitle: {
-    // Add your styles here
+    color: 'darkblue',
+    padding: theme.spacing(2), 
+    textAlign: 'center', 
+    fontSize: '5rem',
   },
-  // Add styles for the dialog content
+
   dialogContent: {
-    // Add your styles here
+    padding: theme.spacing(2), 
   },
-  // Add styles for the dialog actions
+
   dialogActions: {
-    // Add your styles here
+    justifyContent: 'center', 
+    padding: theme.spacing(1),
+    backgroundColor: theme.palette.background.default, 
+  },
+
+  profileBox: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(3),
+    borderRadius: theme.shape.borderRadius,
+    boxShadow: theme.shadows[3],
+    maxWidth: 600,
+    width: '100%',
+    margin: '0 auto', 
+  },
+
+  profileButton: {
+    width: '50%', // Decrease button width
+    marginBottom: theme.spacing(1), // Add some space between buttons
   },
 }));
 
@@ -59,6 +81,7 @@ const ProfilePage = () => {
   const [user, setUser] = useState({});
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [formData, setFormData] = useState({
+    name: '',
     username: '',
     email: '',
     password: '',
@@ -74,8 +97,7 @@ const ProfilePage = () => {
       const response = await axios.get(`http://localhost:5000/api/users/${userId}`, {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-           
+          'Authorization': `Bearer ${token}`           
         }
       });
       console.log(response)
@@ -83,11 +105,11 @@ const ProfilePage = () => {
         const storedUserId = sessionStorage.getItem('userId');
         console.log(storedUserId);
         setUser(response.data);
-        // Populate form fields with fetched user data
         setFormData({
+          name: response.data.name,
           username: response.data.username,
           email: response.data.email,
-          password: '', // Assuming you don't fetch password for security reasons
+          password: '',
           gender: response.data.gender
         });
       } else {
@@ -113,7 +135,7 @@ const ProfilePage = () => {
   };
 
   const handleEditProfileSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
     try {
       const response = await axios.patch(`http://localhost:5000/api/users/updateUser/${userId}`, formData, {
         headers: {
@@ -123,9 +145,7 @@ const ProfilePage = () => {
       });
 
       if (response.status === 200) {
-        // If the update is successful, fetch user data again to update the displayed info
         fetchUser();
-        // Close the edit profile dialog
         handleEditProfileClose();
       } else {
         console.error('Error updating user data');
@@ -160,44 +180,44 @@ const ProfilePage = () => {
         }}
       >
         <div className={classes.profilePage}>
-          <Typography variant="h4" gutterBottom>{`Hi, ${user.name || ''} 👋`}</Typography>
-          <div className={classes.profileInfo}>
-            <Avatar alt="Profile" src={propic} className={classes.largeAvatar} />
-            <div className={classes.userDetails}>
-              <Typography variant="body1">Username: {user.username || ''}</Typography>
-              <Typography variant="body1">Email: {user.email || ''}</Typography>
-              <Typography variant="body1">Gender: {user.gender || ''}</Typography>
-              <Typography variant="body1">Join Date: {user.joinDate || ''}</Typography>
+          <Box className={classes.profileBox}>
+            <Typography variant="h4" gutterBottom>{`Hi   ${user.username ? user.username.toUpperCase() : ''} 👋`}</Typography>
+            <div className={classes.profileInfo}>
+              <Avatar alt="Profile" src={propic} className={classes.largeAvatar} />
+              <div className={classes.userDetails}>
+                <Typography variant="body1">Name: {user.name || ''}</Typography>
+                <Typography variant="body1">Username: {user.username || ''}</Typography>
+                <Typography variant="body1">Email: {user.email || ''}</Typography>
+                <Typography variant="body1">Gender: {user.gender || ''}</Typography>
+                <Typography variant="body1">Join Date: {user.joinDate || ''}</Typography>
+              </div>
             </div>
-          </div>
-          <Grid container spacing={2} justifyContent="center" className={classes.profileActions}>
-            <Grid item xs={12} sm={6}> 
-              <Button fullWidth variant="contained" color="primary" onClick={handleEditProfileOpen}>Edit Profile</Button>
+            <Grid container spacing={2} justifyContent="center" className={classes.profileActions}>
+              <Grid item xs={12} sm={6}> 
+                <Button fullWidth variant="contained" color="primary" onClick={handleEditProfileOpen} className={classes.profileButton}>Edit Profile</Button>
+              </Grid>
+              <Grid item xs={12} sm={6}> 
+                <Button fullWidth variant="contained" color="secondary" onClick={handleLogout} className={classes.profileButton}>Logout</Button>
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6}> 
-              <Button fullWidth variant="contained" color="secondary" onClick={handleLogout}>Logout</Button>
-            </Grid>
-          </Grid>
+          </Box>
         </div>
       </Box>
 
-      {/* Edit Profile Dialog */}
       <Dialog open={editProfileOpen} onClose={handleEditProfileClose} className={classes.dialogContainer}>
-        <form onSubmit={handleEditProfileSubmit}> {/* Move onSubmit handler to the form */}
+        <form onSubmit={handleEditProfileSubmit}>
           <DialogTitle className={classes.dialogTitle}>Edit Profile</DialogTitle>
           <DialogContent className={classes.dialogContent}>
-            {/* Edit Profile Form */}
             <div className={classes.editProfileForm}>
-              <TextField name="username" label="Username" variant="outlined" value={formData.username} onChange={handleInputChange} />
+              <TextField name="name" label="Name" variant="outlined" value={formData.name} onChange={handleInputChange} />
+              <TextField name="username" label="Username" variant="outlined" value={formData.username} onChange={handleInputChange} />  
               <TextField name="email" label="Email" variant="outlined" value={formData.email} onChange={handleInputChange} />
-              <TextField name="password" label="Password" type="password" variant="outlined" value={formData.password} onChange={handleInputChange} />
               <TextField name="gender" label="Gender" variant="outlined" value={formData.gender} onChange={handleInputChange} />
-              <TextField label="Join Date" variant="outlined" disabled />
             </div>
           </DialogContent>
           <DialogActions className={classes.dialogActions}>
             <Button onClick={handleEditProfileClose} color="secondary">Cancel</Button>
-            <Button type="submit" color="primary">Save</Button> {/* Remove onClick from Save button */}
+            <Button type="submit" color="primary">Save</Button>
           </DialogActions>
         </form>
       </Dialog>
