@@ -4,8 +4,11 @@ import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
 import { Box, Button, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 const Payment = () => {
+  const { id } = useParams(); 
+  console.log("user id is : ",id)
   return (
     <Box>
       <Header />
