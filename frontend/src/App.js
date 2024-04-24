@@ -10,11 +10,10 @@ axios.defaults.withCredentials = true;
 function App() {
   return (
       <>
-            <Container maxWidth="xl">
-      <ToastContainer/>
+            {/* <Container maxWidth="xl"> */}
 
               <MyRouter />
-            </Container>
+            {/* </Container> */}
             
       </>
   );

@@ -123,6 +123,7 @@ const ProfilePage = () => {
   const handleLogout = () => {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('userId');
+    window.location.href='/login';
   };
 
   const handleEditProfileOpen = () => {

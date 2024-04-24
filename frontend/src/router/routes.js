@@ -35,6 +35,7 @@ const MyRouter = () => {
             <Route path='/book' element={<Book />} />
 
 
+
             <Route path='/payment' element={<Payment />} />
             <Route path='/paymentone/:userid/:bookid' element={<PaymentOne />} />
             <Route path='/paymenttwo' element={<PaymentTwo />} />
@@ -49,6 +50,18 @@ const MyRouter = () => {
             <Route path='/bookings/edit/:id' element={<EditBooking />} /> 
 
             <Route exact path='/' Component={HomePage}></Route>
+
+            <Route path='/Events' element={<UserEvent/>} />
+            <Route path='/adminEvents' element={<AdminEvent/>} />
+            <Route path='/admin' element={<Admin/>}/>
+   
+
+
+
+
+
+                <Route exact path='/' Component={HomePage}></Route>
+
                 <Route path='/book' Component={Book}></Route>
                 <Route path='/login' Component={Login}></Route>
                 <Route path='/signup' Component={SignUp}></Route>
