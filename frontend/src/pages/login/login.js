@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Container, Typography, TextField, Button, Grid, Link, Paper, CssBaseline } from '@mui/material';
+import { Container, Typography, TextField, Button, Grid, Link, Paper, CssBaseline, Box } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import loginBackground from '../../images/login/login.jpg';
 import axios from 'axios';
+import Header from '../../Components/common/Header/header';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -51,7 +52,7 @@ const Login = () => {
     .catch(err => {
       console.error(err);
       const errorMessage = err.response ? err.response.data.message : 'Unauthorized';
-      window.alert(`Error: ${errorMessage}`); // Display the error message in an alert box
+      window.alert('Error: ' + errorMessage); // Display the error message in an alert box
     });
   }
 
@@ -61,7 +62,9 @@ const Login = () => {
   });
 
   return (
-    <div style={{ backgroundImage: `url(${loginBackground})`, backgroundSize: 'cover', height: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: -24 }}>
+    <Box>
+    <Header />
+    <div style={{ backgroundImage: `url(${loginBackground})`, backgroundSize: 'cover', height:'100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
 
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -126,6 +129,7 @@ const Login = () => {
         </div>
       </Container>
     </div>
+    </Box>
   );
 };
 
