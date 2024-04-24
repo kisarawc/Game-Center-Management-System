@@ -19,7 +19,7 @@ const BookingPage = () => {
 
   useEffect(() => {
     // Fetch game names when the component mounts
-    axios.get('http://localhost:3000/api/game/names')
+    axios.get('http://localhost:5000/api/game/names')
       .then(response => {
         setGames(response.data);
       })

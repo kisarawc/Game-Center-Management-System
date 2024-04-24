@@ -7,23 +7,30 @@ const bodyParser = require("body-parser");
 const eventRoutes = require('./routes/Ravindu/eventRoutes'); 
 const commentRoutes = require('./routes/Ravindu/commentRoutes');
 
+
 const paymentRoutes = require('./routes/Shavindi/paymentRoutes');
 const cardRoutes = require('./routes/Shavindi/cardRoutes');
 const cookieParser = require("cookie-parser")
 
 
+const userRoutes = require('./routes/Limasha/userRoutes');
+
+
 const bookingRouter = require('./routes/Chathuka/bookingRoutes');
+const userRouter = require('./routes/Ravindu/userRoutes');
 const game = require('./routes/Chathuka/game');
 
 
 require('dotenv').config();
 
-
 const app = express();
+
 const PORT = process.env.PORT || 3000;
 app.use(cookieParser());
 app.use(express.urlencoded({extended:false}));
 app.use(bodyParser.json());
+
+
 
 
 
@@ -47,6 +54,9 @@ mongoose.connect(process.env.MONGODB_URL, {
     // Use event routes
     app.use('/api/events', eventRoutes);
     app.use('/api/events', commentRoutes);// Using '/api' as the base URL for event routes
+    app.use('/api/users', userRoutes);
+
+
 
     app.use('/api/payments', paymentRoutes);
     app.use('/api/card-payments', cardRoutes);
@@ -56,7 +66,10 @@ mongoose.connect(process.env.MONGODB_URL, {
     app.use('/api/bookings', bookingRouter);
     app.use('/api/game', game);
 
+    app.use('/api/users', userRouter);
+
     
+
     // Start the server
     app.listen(PORT, () => {
         console.log(`Server running on port ${PORT}`);
