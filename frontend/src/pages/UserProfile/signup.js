@@ -22,7 +22,7 @@ const SignUp = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:5000/api/users/createUser', formData);
+      const response = await axios.post('http://localhost:3000/api/users/createUser', formData);
       console.log('New user created:', response.data);
 
       if(response.status === 201){

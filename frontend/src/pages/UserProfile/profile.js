@@ -94,7 +94,7 @@ const ProfilePage = () => {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/users/${userId}`, {
+      const response = await axios.get(`http://localhost:3000/api/users/${userId}`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`           
@@ -136,7 +136,7 @@ const ProfilePage = () => {
   const handleEditProfileSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.patch(`http://localhost:5000/api/users/updateUser/${userId}`, formData, {
+      const response = await axios.patch(`http://localhost:3000/api/users/updateUser/${userId}`, formData, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
