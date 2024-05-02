@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import MenuItem from '@mui/material/MenuItem';
+
 import {
   Table,
   TableBody,
@@ -32,8 +34,8 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   whiteSpace: 'nowrap', // Ensure that the text stays on a single line
   overflow: 'hidden', // Hide any overflow content
   textOverflow: 'ellipsis', // Add an ellipsis (...) if content overflows
+  position: 'relative', // To position the sort icons
 }));
-
 
 const StyledTableHead = styled(TableHead)(({ theme }) => ({
   backgroundColor: '#011276',
@@ -44,6 +46,15 @@ const StyledTableHeaderCell = styled(TableCell)(({ theme }) => ({
   backgroundColor: '#011276',
   fontWeight: 'bold',
   textAlign: 'center', // Center-align text in header cells
+  position: 'relative', // To position the sort icons
+  cursor: 'pointer',
+}));
+
+const StyledSortIcon = styled('div')(({ theme }) => ({
+  position: 'absolute',
+  top: '50%',
+  right: '4px',
+  transform: 'translateY(-50%)',
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -73,8 +84,11 @@ const GameTable = () => {
     hourly_rate: '',
     game_rating: '',
     description: '',
+    availability: false, // Updated to boolean
   });
   const [searchText, setSearchText] = useState('');
+  const [sortBy, setSortBy] = useState('');
+  const [sortOrder, setSortOrder] = useState('asc');
 
   useEffect(() => {
     axios.get(`http://localhost:5000/api/games`).then((response) => {
@@ -104,6 +118,7 @@ const GameTable = () => {
       hourly_rate: selectedGame.hourly_rate,
       game_rating: selectedGame.game_rating,
       description: selectedGame.description,
+      availability: selectedGame.availability,
     });
     setEditDialogOpen(true);
   };
@@ -187,10 +202,11 @@ const GameTable = () => {
       game.hourly_rate,
       game.game_rating,
       game.description,
+      game.availability ? 'Available' : 'Not Available', // Modified to display 'Available' or 'Not Available'
     ]);
 
     autoTable(doc, {
-      head: [['Name', 'Platform', 'Hourly Rate', 'Game Rating', 'Description']],
+      head: [['Name', 'Platform', 'Hourly Rate', 'Game Rating', 'Description', 'Availability']],
       body: tableData,
       startY: 40,
     });
@@ -202,7 +218,32 @@ const GameTable = () => {
     setSearchText(e.target.value);
   };
 
-  const filteredGames = games.filter((game) => game.name.toLowerCase().includes(searchText.toLowerCase()));
+  const handleSort = (columnName) => {
+    if (sortBy === columnName) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(columnName);
+      setSortOrder('asc');
+    }
+  };
+
+  const getArrow = (columnName) => {
+    if (sortBy === columnName) {
+      return sortOrder === 'asc' ? '↑' : '↓';
+    }
+    return '';
+  };
+
+  const sortedGames = [...games].sort((a, b) => {
+    if (sortBy === 'name') {
+      return sortOrder === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+    } else if (sortBy === 'hourly_rate') {
+      return sortOrder === 'asc' ? a.hourly_rate - b.hourly_rate : b.hourly_rate - a.hourly_rate;
+    } else if (sortBy === 'game_rating') {
+      return sortOrder === 'asc' ? a.game_rating - b.game_rating : b.game_rating - a.game_rating;
+    }
+    return 0;
+  });
 
   return (
     <>
@@ -242,49 +283,87 @@ const GameTable = () => {
       </Box>
       <Box display="flex" justifyContent="center" alignItems="center">
         <TableContainer component={Paper} style={{ width: '100%' }}>
-          <Table  style={{ tableLayout: 'fixed' }}>
+          <Table style={{ tableLayout: 'fixed' }}>
             <StyledTableHead>
               <TableRow>
-                <StyledTableHeaderCell style={{ width: '10%' }}>Name</StyledTableHeaderCell>
-                <StyledTableHeaderCell style={{ width: '20%' }}>Image Path</StyledTableHeaderCell>
-                <StyledTableHeaderCell style={{ width: '10%' }}>Platform</StyledTableHeaderCell>
-                <StyledTableHeaderCell style={{ width: '10%' }}>Hourly Rate</StyledTableHeaderCell>
-                <StyledTableHeaderCell style={{ width: '10%' }}>Game Rating</StyledTableHeaderCell>
+                <StyledTableHeaderCell
+                  style={{ width: '20%' }}
+                  onClick={() => handleSort('name')}
+                >
+                  Name
+                  <StyledSortIcon>
+                    {getArrow('name')}
+                  </StyledSortIcon>
+                </StyledTableHeaderCell>
+                <StyledTableHeaderCell
+                  style={{ width: '20%' }}
+                  onClick={() => handleSort('image_path')}
+                >
+                  Image Path
+                </StyledTableHeaderCell>
+                <StyledTableHeaderCell
+                  style={{ width: '10%' }}
+                  onClick={() => handleSort('platform')}
+                >
+                  Platform
+                </StyledTableHeaderCell>
+                <StyledTableHeaderCell
+                  style={{ width: '8%' }}
+                  onClick={() => handleSort('hourly_rate')}
+                >
+                  Hourly Rate
+                  <StyledSortIcon>
+                    {getArrow('hourly_rate')}
+                  </StyledSortIcon>
+                </StyledTableHeaderCell>
+                <StyledTableHeaderCell
+                  style={{ width: '12%' }}
+                  onClick={() => handleSort('game_rating')}
+                >
+                  Game Rating
+                  <StyledSortIcon>
+                    {getArrow('game_rating')}
+                  </StyledSortIcon>
+                </StyledTableHeaderCell>
                 <StyledTableHeaderCell style={{ width: '20%' }}>Description</StyledTableHeaderCell>
+                <StyledTableHeaderCell style={{ width: '10%' }}>Availability</StyledTableHeaderCell> {/* Added Availability Header Cell */}
                 <StyledTableHeaderCell style={{ width: '20%' }}>Actions</StyledTableHeaderCell>
               </TableRow>
             </StyledTableHead>
             <TableBody>
-              {filteredGames.map((game) => (
-                <StyledTableRow key={game._id}>
-                  <StyledTableCell style={{ width: '20%' }}>{game.name}</StyledTableCell>
-                  <StyledTableCell style={{ width: '20%' }}>{game.image_path}</StyledTableCell>
-                  <StyledTableCell style={{ width: '10%' }}>{game.platform}</StyledTableCell>
-                  <StyledTableCell style={{ width: '10%' }}>{game.hourly_rate}</StyledTableCell>
-                  <StyledTableCell style={{ width: '10%' }}>{renderStarRating(game.game_rating)}</StyledTableCell>
-                  <StyledTableCell style={{ width: '20%' }}>{game.description}</StyledTableCell>
-                  <StyledTableCell style={{ width: '10%' }}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="small"
-                      onClick={() => handleEdit(game._id)}
-                      sx={{ marginRight: '5px', marginBottom: '5px' }}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      size="small"
-                      onClick={() => handleDelete(game._id)}
-                      sx={{ marginBottom: '5px' }}
-                    >
-                      Delete
-                    </Button>
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
+              {sortedGames
+                .filter((game) => game.name.toLowerCase().includes(searchText.toLowerCase()))
+                .map((game) => (
+                  <StyledTableRow key={game._id}>
+                    <StyledTableCell style={{ width: '20%' }}>{game.name}</StyledTableCell>
+                    <StyledTableCell style={{ width: '20%' }}>{game.image_path}</StyledTableCell>
+                    <StyledTableCell style={{ width: '10%' }}>{game.platform}</StyledTableCell>
+                    <StyledTableCell style={{ width: '10%' }}>{game.hourly_rate}</StyledTableCell>
+                    <StyledTableCell style={{ width: '10%' }}>{renderStarRating(game.game_rating)}</StyledTableCell>
+                    <StyledTableCell style={{ width: '20%' }}>{game.description}</StyledTableCell>
+                    <StyledTableCell style={{ width: '10%' }}>{game.availability ? 'Available' : 'Not Available'}</StyledTableCell> {/* Modified to display 'Available' or 'Not Available' */}
+                    <StyledTableCell style={{ width: '10%' }}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        onClick={() => handleEdit(game._id)}
+                        sx={{ marginRight: '5px', marginBottom: '5px' }}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color="error"
+                        size="small"
+                        onClick={() => handleDelete(game._id)}
+                        sx={{ marginBottom: '5px' }}
+                      >
+                        Delete
+                      </Button>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
@@ -361,6 +440,17 @@ const GameTable = () => {
             fullWidth
             margin="normal"
           />
+          <TextField
+            label="Availability"
+            select
+            value={editedGameDetails.availability}
+            onChange={(e) => setEditedGameDetails({ ...editedGameDetails, availability: e.target.value === 'true' })}
+            fullWidth
+            margin="normal"
+          >
+            <MenuItem value={'true'}>Available</MenuItem>
+            <MenuItem value={'false'}>Not Available</MenuItem>
+          </TextField>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleEditDialogClose} color="primary" size="small">

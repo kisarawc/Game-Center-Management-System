@@ -14,6 +14,7 @@ const CreateGameForm = () => {
     game_rating: 0,
     description: ''
   });
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -27,12 +28,28 @@ const CreateGameForm = () => {
     setFormData({ ...formData, game_rating: value });
   };
 
+  const validateForm = () => {
+    let tempErrors = {};
+    tempErrors.name = formData.name ? "" : "Name is required";
+    tempErrors.hourly_rate = formData.hourly_rate > 0 ? "" : "Hourly rate must be greater than 0";
+    tempErrors.game_rating = formData.game_rating >= 0 && formData.game_rating <= 5 ? "" : "Rating must be between 0 and 5";
+    tempErrors.description = formData.description ? "" : "Description is required";
+    setErrors(tempErrors);
+
+    return Object.values(tempErrors).every(x => x === "");
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) {
+      alert('Please correct the errors before submitting.');
+      return;
+    }
+
     try {
       await axios.post('http://localhost:5000/api/games/createGame', formData);
       alert('Game created successfully!');
-      // Add more logic here, like redirecting to a different page if desired
+      // You could also redirect or clear form here
     } catch (error) {
       console.error('Error creating game:', error);
       alert('Error creating game. Please try again.');
@@ -62,6 +79,8 @@ const CreateGameForm = () => {
               onChange={handleChange}
               fullWidth
               margin="normal"
+              error={!!errors.name}
+              helperText={errors.name}
             />
             <TextField
               label="Image Path"
@@ -97,14 +116,18 @@ const CreateGameForm = () => {
               type="number"
               fullWidth
               margin="normal"
+              error={!!errors.hourly_rate}
+              helperText={errors.hourly_rate}
             />
             <TextField
-              label="description"
+              label="Description"
               name="description"
               value={formData.description}
               onChange={handleChange}
               fullWidth
               margin="normal"
+              error={!!errors.description}
+              helperText={errors.description}
             />
             {/* Star rating with margin top and bottom */}
             <Box marginTop={2} marginBottom={2}>

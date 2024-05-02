@@ -6,7 +6,6 @@ import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
 import RatingStars from './ratingStars';
 
-
 const GameDetailPage = () => {
   const { gameId } = useParams();
   const [game, setGame] = useState(null);
@@ -18,7 +17,6 @@ const GameDetailPage = () => {
       setLoading(true);
       try {
         const response = await axios.get(`http://localhost:5000/api/games/${gameId}`);
-        console.log(response.data)
         if (response.data) {
           setGame(response.data);
         } else {
@@ -71,16 +69,17 @@ const GameDetailPage = () => {
             }}
           >
             <Box sx={{ width: '50%' }}>
-              <Card sx={{ maxWidth: '100%', borderRadius: '40px', boxShadow: 'none', overflow: 'hidden' , backgroundColor:'transparent'}}>
+              <Card sx={{ maxWidth: '100%', borderRadius: '40px', boxShadow: 'none', overflow: 'hidden', backgroundColor: 'transparent' }}>
                 <img src={game.image_path} alt={game.title || "Game Image"} style={{ width: '100%', height: 'auto', borderRadius: '10px 0 0 10px' }} />
               </Card>
             </Box>
             <Box sx={{ width: '50%', padding: '20px', textAlign: 'center' }}>
               <Typography variant="h2" sx={{ fontFamily: 'Arial', fontWeight: 'bold', marginBottom: '20px' }}>{game.name}</Typography>
-              <Typography variant="body1" sx={{ fontFamily: 'Arial', marginBottom: '10px' }}>Description: {game.description}</Typography>
-              <Typography variant="body1" sx={{ fontFamily: 'Arial', marginBottom: '10px' }}>Rating: <RatingStars rating={game.game_rating} /></Typography>
+              <Typography variant="body1" sx={{ fontFamily: 'Arial', marginBottom: '10px' }}>{game.description}</Typography>
+              <Typography variant="body1" sx={{ fontFamily: 'Arial', marginBottom: '10px', color: game.availability ? 'green' : 'red' }}>{game.availability ? "Available" : "Not Available"}</Typography>
+              <Typography variant="body1" sx={{ fontFamily: 'Arial', marginBottom: '10px' }}><RatingStars rating={game.game_rating} /></Typography>
               <Typography variant="body1" sx={{ fontFamily: 'Arial', marginBottom: '10px' }}>Hourly Rate: {game.hourly_rate}</Typography>
-              
+
               <Button variant="contained" color="primary">
                 Book Now
               </Button>
