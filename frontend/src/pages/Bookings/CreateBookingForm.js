@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FormControl, InputLabel, MenuItem, Select, Button, Table, TableHead, TableBody, TableRow, TableCell, Typography, Paper, TextField, Modal } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, Button, Table, TableHead, TableBody, TableRow, TableCell, Typography, Paper, TextField, Modal, InputAdornment } from '@mui/material';
 const userId = sessionStorage.getItem('userId');
 const BookingPage = () => {
   
@@ -16,6 +16,8 @@ const BookingPage = () => {
   const [messageRequest, setMessageRequest] = useState('');
   const [selectedStartTime, setSelectedStartTime] = useState('');
   const [selectedDuration, setSelectedDuration] = useState(30);
+  const [hourlyRate, setHourlyRate] = useState(0);
+  const [totalCost, setTotalCost] = useState(0);
 
   useEffect(() => {
     axios.get('http://localhost:3000/api/game/names')
@@ -58,6 +60,19 @@ const BookingPage = () => {
         setLoading(false);
 
       });
+
+      axios.get(`http://localhost:3000/api/game/rate/${selectedGame}`)
+    .then(response => {
+      const rate = response.data.hourly_rate;
+      setHourlyRate(rate);
+      // Assuming the response contains the hourly rate in the data
+      console.log('Hourly rate:', rate);
+      // Here you can set the hourly rate to state or display it as needed
+    })
+    .catch(error => {
+      console.error('Error fetching hourly rate:', error);
+    });
+    
   };
 
   const handleCloseModal = () => {
@@ -140,7 +155,8 @@ if(existingBookingWithStartTime) {
       num_players: numPlayers,
       status: 'pending',
       message_request: messageRequest,
-      user_id: userId
+      user_id: userId,
+      fee: totalCost,
     };
     console.log(newBooking)
     axios.post('http://localhost:3000/api/bookings', newBooking)
@@ -192,6 +208,13 @@ if(existingBookingWithStartTime) {
     const localTime = new Date(time);
     return localTime.toLocaleTimeString([], { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' });
   };
+
+  useEffect(() => {
+    if(selectedDuration && hourlyRate) {
+      const cost = (selectedDuration / 60) * hourlyRate;
+      setTotalCost(cost);
+    }
+  }, [selectedDuration, hourlyRate]);
 
   return (
     <Paper style={{ padding: '40px', maxWidth: '600px', margin: 'auto', borderRadius:'40px' }}>
@@ -297,6 +320,28 @@ if(existingBookingWithStartTime) {
               <MenuItem key={duration} value={duration}>{duration} minutes</MenuItem>
             ))}
           </Select>
+        </FormControl>
+
+        <FormControl fullWidth style={{ marginBottom: '10px' }}>
+          <TextField
+            label="Hourly Rate"
+            value={hourlyRate}
+            disabled
+            InputProps={{
+              startAdornment: <InputAdornment position="start">Rs </InputAdornment>,
+            }}
+          />
+        </FormControl>
+
+        <FormControl fullWidth style={{ marginBottom: '10px' }}>
+          <TextField
+            label="Total Cost"
+            value={totalCost}
+            disabled
+            InputProps={{
+              startAdornment: <InputAdornment position="start">Rs </InputAdornment>,
+            }}
+          />
         </FormControl>
 
         <TextField

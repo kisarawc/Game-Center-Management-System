@@ -48,7 +48,8 @@ const BookingTable = ({ loggedInUserId }) => {
           user_id: booking.user_id,
           game_id: booking.game_id,
           status: booking.status,
-          num_players: booking.num_players
+          num_players: booking.num_players,
+          fee: booking.fee
         }));
         setBookings(formattedBookings);
       })
@@ -97,7 +98,8 @@ const BookingTable = ({ loggedInUserId }) => {
               
               <StyledTableHeaderCell>Game Name</StyledTableHeaderCell>
               <StyledTableHeaderCell>Status</StyledTableHeaderCell>
-              <StyledTableHeaderCell>Number of Players</StyledTableHeaderCell>
+              <StyledTableHeaderCell>Players</StyledTableHeaderCell>
+              <StyledTableHeaderCell>Fee</StyledTableHeaderCell>
               <StyledTableHeaderCell>Actions</StyledTableHeaderCell>
             </TableRow>
           </StyledTableHead>
@@ -112,6 +114,7 @@ const BookingTable = ({ loggedInUserId }) => {
                 <StyledTableCell>{booking.game_name}</StyledTableCell>
                 <StyledTableCell>{booking.status}</StyledTableCell>
                 <StyledTableCell>{booking.num_players}</StyledTableCell>
+                <StyledTableCell>Rs. {booking.fee}.00</StyledTableCell>
                 <StyledTableCell>
                   <Button 
                     variant="contained" 

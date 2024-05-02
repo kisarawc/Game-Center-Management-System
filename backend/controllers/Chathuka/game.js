@@ -41,3 +41,18 @@ exports.createGame = async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
     }
   };
+
+  exports.getHourlyRateByName = async (req, res) => {
+    const { name } = req.params;
+    try {
+      const game = await Game.findOne({ name });
+      if (!game) {
+        return res.status(404).json({ error: 'Game not found' });
+      }
+      res.json({ hourly_rate: game.hourly_rate });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
+  

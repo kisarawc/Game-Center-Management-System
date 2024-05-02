@@ -9,7 +9,8 @@ const bookingSchema = new mongoose.Schema({
   user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   game_name: { type: String }, 
   status: { type: String },
-  num_players: { type: Number }
+  num_players: { type: Number },
+  fee: { type: Number } 
 });
 
 const Booking = mongoose.model('Booking', bookingSchema);
