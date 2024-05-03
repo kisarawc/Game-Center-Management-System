@@ -20,10 +20,7 @@ const BookingPage = () => {
   const [totalCost, setTotalCost] = useState(0);
 
   useEffect(() => {
-
     axios.get('http://localhost:3000/api/game/names')
-
-
       .then(response => {
         setGames(response.data);
       })
@@ -117,25 +114,24 @@ const BookingPage = () => {
     const timezoneOffset = selectedDateTime.getTimezoneOffset();
     const selectedDateTimeEnd = new Date(formattedEndTime.getTime()- timezoneOffset * 60000);
 
-    const existingBookingWithStartTime = bookings.some(booking => {
-        const bookingStartTime = booking.start_time;
-        const bookingEndTime = booking.end_time;
-        //const moment = require('moment');
-        // // Parse the date string into a moment object
-        // const momentDate = moment.utc(bookingEndTime);
+    const moment = require('moment');
 
-        // // Get the formatted time in the UTC time zone
-        // const formattedTime = momentDate.format('HH:mm');
+const existingBookingWithStartTime = bookings.some(booking => {
+    const bookingStartTime = moment.utc(booking.start_time, 'HH:mm');
+    const bookingEndTime = moment.utc(booking.end_time, 'HH:mm');
+    const selectedStartTimeMoment = moment.utc(selectedStartTime, 'HH:mm');
 
-        console.log('bt', bookingStartTime);
-        console.log('be', bookingEndTime);
-        console.log('st', selectedStartTime);
+    console.log('bt', bookingStartTime.format('HH:mm'));
+    console.log('be', bookingEndTime.format('HH:mm'));
+    console.log('st', selectedStartTimeMoment.format('HH:mm'));
 
-        if (selectedStartTime >= bookingStartTime && 
-          selectedStartTime < bookingEndTime) {
-          return true; 
-      } return false; 
+    if (selectedStartTimeMoment.isSameOrAfter(bookingStartTime) && 
+        selectedStartTimeMoment.isBefore(bookingEndTime)) {
+        return true; 
+    } 
+    return false; 
 });
+
 if(existingBookingWithStartTime) {
   console.log('Double booking found!');
 } else {

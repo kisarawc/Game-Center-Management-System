@@ -11,9 +11,9 @@ import ProfilePage from '../pages/UserProfile/profile';
 import UsersTable from '../pages/UserProfile/usersTable'; 
 import Event from '../pages/events/Event';
 
-import Dashboard from '../pages/UserProfile/adminDashboard';
+import UPDashboard from '../pages/UserProfile/adminDashboard';
 import BookingAdmin from '../pages/admin/booking/bookingAdmin';
-import Admin from '../pages/admin/home/admin';
+
 import EditBooking from '../pages/Bookings/editBooking'; 
 
 import Dashboard from '../pages/admin/home/admin';
@@ -47,7 +47,7 @@ const MyRouter = () => {
                 <Route path='/admin' element={<Admin/>} /> 
                 <Route path='/bookings/edit/:id' element={<EditBooking />} /> 
 
-                <Route path='/admin' Component={Dashboard}></Route>
+                <Route path='/useradmin' Component={UPDashboard}></Route>
 
             </Routes>
 
