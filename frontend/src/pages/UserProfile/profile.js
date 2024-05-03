@@ -226,7 +226,7 @@ const ProfilePage = () => {
       </Dialog>
 
       <Footer />
-    </Box></Box>
+    </Box>
   );
 };
 
