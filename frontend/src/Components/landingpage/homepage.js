@@ -2,38 +2,33 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import Header from '../common/Header/header';
 import Footer from '../common/Footer/footer';
-import { useSpring, animated } from 'react-spring';
+import { useTransition, animated } from 'react-spring';
+
+const images = [
+  "https://cdn.nivoli.com/adventuregamers/images/screenshots/21410/11468beyond_-_key_art_1.jpg",
+  "https://m.media-amazon.com/images/M/MV5BZTliZGM2NzUtYjQ0My00YWM4LTg1NjUtYTNjMzFkNzczYTAxXkEyXkFqcGdeQXVyNTgyNTA4MjM@._V1_.jpg",
+  "https://m.media-amazon.com/images/I/61fw7I5VRRL._AC_UF1000,1000_QL80_.jpg",
+  "https://th.bing.com/th/id/OIF.DXI1Lliuw9QCcyQdr8hz2g?rs=1&pid=ImgDetMain",
+  "https://th.bing.com/th/id/R.61755b3d7bad29b696c6259a9555b994?rik=HpUqmQ%2bFFr3Drw&pid=ImgRaw&r=0",
+  "https://th.bing.com/th/id/OIP.KgwvWCXf9N_n6SDlEHbI9gDHEs?rs=1&pid=ImgDetMain"
+];
 
 const HomePage = () => {
-  const [currentImages, setCurrentImages] = useState(0);
-
-  // Define state to toggle between two sets of images
-  const [images, setImages] = useState([
-    [
-      "https://play-lh.googleusercontent.com/JfzlPWEwh8HX_FhqOtuxUI_Jh8GgasGqYAkKUKYWYjULquOKMQoQy_jmGZq7-ugNEflV",
-      "https://m.media-amazon.com/images/M/MV5BZTliZGM2NzUtYjQ0My00YWM4LTg1NjUtYTNjMzFkNzczYTAxXkEyXkFqcGdeQXVyNTgyNTA4MjM@._V1_.jpg",
-      "https://m.media-amazon.com/images/I/61fw7I5VRRL._AC_UF1000,1000_QL80_.jpg"
-    ],
-    [
-      "https://m.media-amazon.com/images/M/MV5BZTliZGM2NzUtYjQ0My00YWM4LTg1NjUtYTNjMzFkNzczYTAxXkEyXkFqcGdeQXVyNTgyNTA4MjM@._V1_.jpg",
-      "https://m.media-amazon.com/images/I/61fw7I5VRRL._AC_UF1000,1000_QL80_.jpg",
-      "https://play-lh.googleusercontent.com/JfzlPWEwh8HX_FhqOtuxUI_Jh8GgasGqYAkKUKYWYjULquOKMQoQy_jmGZq7-ugNEflV"
-    ]
-  ]);
-
-  const props = useSpring({
-    opacity: 1,
-    from: { opacity: 0 },
-  });
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      setCurrentImages((prev) => (prev === 0 ? 1 : 0));
-    }, 2000);
+    const interval = setInterval(() => {
+      setIndex((prevIndex) => (prevIndex + 3) % images.length);
+    }, 3000);
 
-
-    return () => clearInterval(intervalId);
+    return () => clearInterval(interval);
   }, []);
+
+  const transitions = useTransition(images.slice(index, index + 3), {
+    from: { opacity: 0, transform: 'scale(0.98)' },
+    enter: { opacity: 1, transform: 'scale(1)' },
+    config: { duration: 2000 },
+  });
 
   return (
     <Box>
@@ -47,8 +42,7 @@ const HomePage = () => {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'flex-start',
-          //alignItems: 'center', 
-          padding: '20px', 
+          padding: '20px',
         }}
       >
         <Typography
@@ -64,28 +58,49 @@ const HomePage = () => {
           The <span style={{ color: '#14e9f2', fontFamily: 'Roboto', textShadow: '0 0 10px' }}>GG</span> Lounge
         </Typography>
 
-        <Typography variant="h2" sx={{ color: 'white', fontSize: '2rem', marginBottom: '20px', marginLeft:'240px' }}>
-          New Arival Games
+        <Typography variant="h2" sx={{ color: 'white', fontSize: '2rem', marginBottom: '20px', marginLeft: '240px' }}>
+          New Arrival Games
         </Typography>
 
-        <animated.div style={props}>
-          <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '40px' }}>
-            {images[currentImages].map((imageUrl, index) => (
-              <animated.img
-                key={index}
-                src={imageUrl}
-                alt={`Game ${index + 1}`}
-                style={{
-                  width: '300px',
-                  borderRadius: '10px',
-                  boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)',
-                  marginRight: '20px',
-                  transform: props.opacity.interpolate((o) => `scale(${o})`),
-                }}
-              />
-            ))}
-          </Box>
-        </animated.div>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          {transitions((style, item) => (
+            <animated.img
+              style={{ ...style, width: '300px', margin: '20px' }}
+              src={item}
+              alt="Game"
+            />
+          ))}
+        </Box>
+
+        {/* <Typography variant='h2' sx={{color:'#ffffff',fontSize:'2rem', textAlign:'center', mt:'50px', textDecoration: 'underline', textDecorationThickness: '0.2em',}}>Established in 2019</Typography> */}
+        <Typography variant='h5' sx={{color:'purple', textAlign:'center',fontSize:'1.7rem',mt:'20px', ml:'300px', mr:'300px'}}>The GG Lounge is the new exciting place for all ages to come and enjoy hours of fun with plenty to do for the whole family including:</Typography>
+
+       
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+  <Typography variant='h5' sx={{ color: 'white', mt: '20px', mx: '20px' }}> 
+    - Retro & Modern Arcade machines
+  </Typography>
+  <Typography variant='h5' sx={{ color: 'white', mt: '20px', mx: '20px' }}> 
+    - 65” touch screen games
+  </Typography>
+  <Typography variant='h5' sx={{ color: 'white', mt: '20px', mx: '20px' }}> 
+    - Air Hockey Tables
+  </Typography>
+</Box>
+<Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+  <Typography variant='h5' sx={{ color: 'white', mt: '20px', mx: '20px' }}> 
+    - VR System
+  </Typography>
+  <Typography variant='h5' sx={{ color: 'white', mt: '20px', mx: '20px' }}> 
+    - Pool tables
+  </Typography>
+  <Typography variant='h5' sx={{ color: 'white', mt: '20px', mx: '20px' }}> 
+    - Toddler gadgets & cafe
+  </Typography>
+</Box>
+
+
+        
       </Box>
       <Footer />
     </Box>
