@@ -31,7 +31,7 @@ const CreateGameForm = () => {
   const validateForm = () => {
     let tempErrors = {};
     tempErrors.name = formData.name ? "" : "Name is required";
-    tempErrors.hourly_rate = formData.hourly_rate > 0 ? "" : "Hourly rate must be greater than 0";
+    tempErrors.hourly_rate = formData.hourly_rate > 500 ? "" : "Hourly rate must be greater than 500";
     tempErrors.game_rating = formData.game_rating >= 0 && formData.game_rating <= 5 ? "" : "Rating must be between 0 and 5";
     tempErrors.description = formData.description ? "" : "Description is required";
     setErrors(tempErrors);
