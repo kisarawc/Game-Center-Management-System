@@ -27,35 +27,38 @@ const HomePage = () => {
   const transitions = useTransition(images.slice(index, index + 3), {
     from: { opacity: 0, transform: 'scale(0.98)' },
     enter: { opacity: 1, transform: 'scale(1)' },
-    config: { duration: 2000 },
+    config: { duration: 1500 },
   });
 
   return (
     <Box>
       <Header />
       <Box
-        sx={{
-          backgroundImage: `url('https://4kwallpapers.com/images/wallpapers/dark-background-abstract-background-network-3d-background-4480x2520-8324.png')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'flex-start',
-          padding: '20px',
-        }}
-      >
+  sx={{
+    backgroundImage: `
+      url('https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Hero-3.png'),
+      url('https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Game-over.png')
+    `,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    padding: '20px',
+  }}
+>
         <Typography
           variant="h1"
           sx={{
             textAlign: 'center',
             color: '#f32479',
             fontFamily: 'Great vibes',
-            marginBottom: '20px',
-            fontSize: '5rem',
+            marginBottom: '70px',
+            fontSize: '5rem',mt:'100px'
           }}
         >
-          The <span style={{ color: '#14e9f2', fontFamily: 'Roboto', textShadow: '0 0 10px' }}>GG</span> Lounge
+         - The <span style={{ color: '#14e9f2', fontFamily: 'Roboto', textShadow: '0 0 10px', }}>GG</span> Lounge -
         </Typography>
 
         <Typography variant="h2" sx={{ color: 'white', fontSize: '2rem', marginBottom: '20px', marginLeft: '240px' }}>
@@ -73,7 +76,15 @@ const HomePage = () => {
         </Box>
 
         {/* <Typography variant='h2' sx={{color:'#ffffff',fontSize:'2rem', textAlign:'center', mt:'50px', textDecoration: 'underline', textDecorationThickness: '0.2em',}}>Established in 2019</Typography> */}
-        <Typography variant='h5' sx={{color:'purple', textAlign:'center',fontSize:'1.7rem',mt:'20px', ml:'300px', mr:'300px'}}>The GG Lounge is the new exciting place for all ages to come and enjoy hours of fun with plenty to do for the whole family including:</Typography>
+        <Typography variant='h5' 
+                sx={{
+                  color:'#01cae5', 
+                  textAlign:'center',
+                  fontSize:'1.7rem',mt:'20px', 
+                  ml:'300px', mr:'300px'
+                  }}>The GG Lounge is the new exciting place for all ages to come and enjoy hours of fun with plenty to do for the whole family including:
+                  
+                  </Typography>
 
        
         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
@@ -98,7 +109,23 @@ const HomePage = () => {
     - Toddler gadgets & cafe
   </Typography>
 </Box>
-
+<Box  sx={{display: 'flex', flexDirection: 'row'}} >
+  <img
+    src="https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Gaming-pic.png"
+    alt="Gaming Pic"
+    style={{
+      height: '200px',
+      alignSelf: 'flex-start',
+      marginTop: '100px',
+      marginRight: '250px', 
+      marginLeft:'200px'
+    }}
+  />
+  <Box>
+  <Typography variant='h3' color='#ba39f7' sx={{mt:'150px', fontSize:'2rem',ml:'140px'}}>Our locations</Typography>
+  <Typography variant='h5' color='white' sx={{mt:'20px', fontSize:'1.4rem',textAlign:'center'}}>165/A, New Kandy Rd, Welivita Junction <br/> Malabe</Typography>
+</Box>
+</Box>
 
         
       </Box>
