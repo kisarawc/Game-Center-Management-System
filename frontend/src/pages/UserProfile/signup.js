@@ -1,4 +1,3 @@
-//SIGNUP
 import React, { useState } from 'react';
 import { Typography, Button, Container, CssBaseline, Paper, TextField, Grid, RadioGroup, Radio, FormControlLabel, Checkbox, FormLabel } from '@mui/material'; 
 import { NavLink } from 'react-router-dom';
@@ -17,6 +16,7 @@ const SignUp = () => {
   };
 
   const [formData, setFormData] = useState(initialFormState);
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,17 +25,15 @@ const SignUp = () => {
       const response = await axios.post('http://localhost:3000/api/users/createUser', formData);
       console.log('New user created:', response.data);
 
-      if(response.status === 201){
+      if (response.status === 201) {
         window.alert('You have successfully registered!');
         window.location.href = '/login';
-      } 
-      else {
-        window.alert(`Error : ${response.data.message}`);
+      } else {
+        throw new Error(response.data.message);
       }
-
     } catch (error) {
       console.error('Error creating user:', error);
-      window.alert('An error occurred while submitting the registration form. Please try again later');
+      setError(error.message || 'An error occurred while submitting the registration form. Please try again later');
     }
   };
 
@@ -58,6 +56,7 @@ const SignUp = () => {
             <Typography component="h1" variant="h5" style={{ fontFamily: 'Arial', fontSize: '32px', fontWeight: 'bold', marginBottom: '16px' }}>
               Sign Up
             </Typography>
+            {error && <Typography color="error" variant="body1">{error}</Typography>}
             <form style={{ width: '100%' }} onSubmit={handleSubmit}>
               <TextField
                 variant="outlined"

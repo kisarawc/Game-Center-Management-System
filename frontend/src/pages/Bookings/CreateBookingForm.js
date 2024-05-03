@@ -20,7 +20,10 @@ const BookingPage = () => {
   const [totalCost, setTotalCost] = useState(0);
 
   useEffect(() => {
+
     axios.get('http://localhost:3000/api/game/names')
+
+
       .then(response => {
         setGames(response.data);
       })

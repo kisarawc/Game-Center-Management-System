@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography, TextField, IconButton } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography, TextField, IconButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+// import autoTable from 'jspdf-autotable';
+import AdminHeader from '../../Components/common/adminHeader';
+import logo from '../../images/header/logo.jpeg';
 
 const StyledHeader = styled(Typography)(({ theme }) => ({
   textAlign: 'center',
@@ -23,12 +25,12 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const StyledTableHead = styled(TableHead)(({ theme }) => ({
-  backgroundColor: '#494949', // Adjust color of purple bar
+  backgroundColor: '#00008b', // Adjust color of purple bar
 }));
 
 const StyledTableHeaderCell = styled(TableCell)(({ theme }) => ({
   color: theme.palette.common.white,
-  backgroundColor: '#7B1FA2', // Adjust color of table header cell
+  backgroundColor: '#838383', // Adjust color of table header cell
   fontWeight: 'bold',
   textAlign: 'center', // Center align the text in the header cell
 }));
@@ -119,18 +121,44 @@ const UsersTable = () => {
   const generateUserReport = () => {
     const doc = new jsPDF()
 
-    doc.setFontSize(30)
-    doc.setFont('helvetica', 'bold')
-    doc.setTextColor(0, 0, 255)
-    doc.text('User Report', 105, 10, 'center')
-
-    autoTable(
-      doc,
-      {
-        head: rtitle,
-        body: rbody
-      }, 40, 100
-    )
+    const addHeaderToPdf = (doc) => {
+      // Load the logo image
+      const logoImage = logo; // Update path to your logo image
+      const imgWidth = 20;
+      const imgHeight = 20;
+  
+      // Add the title and date
+      doc.setFontSize(20);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(255, 255, 255);
+      doc.setFillColor(0, 0, 0);
+      doc.rect(0, 0, doc.internal.pageSize.width, 30, 'F'); // Draw black background
+      doc.addImage(logoImage, 'JPEG', 10, 5, imgWidth, imgHeight);
+      doc.text('GG LOUNGE GAME CENTER', 50, 18); // Positioning the title
+      doc.setFontSize(10); // Font size for the date
+      doc.text(`Report generated: ${new Date().toLocaleDateString('en-US', { timeZone: 'UTC' })}`, 150, 25); // Positioning the date
+    };
+  
+    // Function to add the footer
+    const addFooterToPdf = (doc) => {
+      const footerText = 'GG LOUNGE\n165/A, New Kandy Rd, Welivita Junction, Malabe';
+      doc.setFontSize(10);
+      doc.setTextColor('#555');
+      doc.text(footerText, doc.internal.pageSize.width / 2, doc.internal.pageSize.height - 10, { align: 'center' });
+    };
+  
+    // Add the header to the PDF
+    addHeaderToPdf(doc);
+  
+    // Add the footer to the PDF
+    addFooterToPdf(doc);
+    doc.autoTable({
+      head: rtitle,
+      body: rbody,
+      startY: 40, // Adjust this value based on the height of your header
+      margin: { top: 20 } // Set marginTop to 20px
+    });
+    
     doc.save('UserReport.pdf')
   }
 
@@ -141,7 +169,8 @@ const UsersTable = () => {
   ))
 
   return (
-    <>
+    <Box>
+    <AdminHeader/>
       <StyledHeader variant="h4">All Users</StyledHeader>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <TextField
@@ -242,7 +271,7 @@ const UsersTable = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </>
+      </Box>
   );
 };
 

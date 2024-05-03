@@ -28,19 +28,19 @@ const Login = () => {
           window.location.href = '/admin';
         } 
         else if (email === 'limasha@gmail.com' && password === 'limasha123') {
-          window.location.href = '/adminDashboard';
+          window.location.href = '/admin';
         }
         else if (email === 'ravindu@gmail.com' && password === 'ravindu123') {
-          window.location.href = '/adminDashboard';
+          window.location.href = '/admin';
         }
         else if (email === 'radeesa@gmail.com' && password === 'radeesa123') {
-          window.location.href = '/adminDashboard';
+          window.location.href = '/admin';
         }   
         else if (email === 'saniru@gmail.com' && password === 'saniru123') {
-          window.location.href = '/adminDashboard';
+          window.location.href = '/admin';
         }
         else if (email === 'shavindi@gmail.com' && password === 'shavindi123') {
-          window.location.href = '/adminDashboard';
+          window.location.href = '/admin';
         }  
         else {
           window.location.href = '/profile';
@@ -52,7 +52,7 @@ const Login = () => {
     .catch(err => {
       console.error(err);
       const errorMessage = err.response ? err.response.data.message : 'Unauthorized';
-      window.alert(`Error: ${errorMessage}`); // Display the error message in an alert box
+      window.alert('Error: ' + errorMessage); // Display the error message in an alert box
     });
   }
 

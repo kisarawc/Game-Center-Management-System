@@ -1,5 +1,6 @@
 const Comment = require('../../models/Ravindu/Comment');
 
+
 exports.getCommentsByEventId = async (req, res) => {
   try {
     const { eventId } = req.params;
@@ -17,7 +18,7 @@ exports.addComment = async (req, res) => {
 
     // Create a new comment and set the eventId and userId fields
     const newComment = new Comment({ comment, eventId, userId });
-    console.log(userId);
+    
     // Save the new comment to the database
     const savedComment = await newComment.save(); // Save the comment and capture the result
 
@@ -26,3 +27,5 @@ exports.addComment = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
+
