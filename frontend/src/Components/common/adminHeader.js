@@ -29,7 +29,9 @@ const AdminAppBar = () => {
           Admin Panel
         </Typography>
 
-        <Button color="inherit"onClick={handleLogout}>LogOut</Button>
+        <Button color="inherit"onClick={handleLogout} sx={{'&:hover': {
+                      backgroundColor: '#f56a6a'
+                    }}}>LogOut</Button>
       </Toolbar>
     </AppBar>
   );

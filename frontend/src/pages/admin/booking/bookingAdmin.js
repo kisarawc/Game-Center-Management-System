@@ -68,26 +68,28 @@ const BookingAdmin = () => {
           <PDFHeader />
             <Text style={{ marginBottom: 10 }}>Current Booking Details</Text>
             <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-              <Text style={[styles.headerCell, { width: '15%' }]}>Date</Text>
+              <Text style={[styles.headerCell, { width: '10%' }]}>Date</Text>
               <Text style={[styles.headerCell, { width: '10%' }]}>Start Time</Text>
               <Text style={[styles.headerCell, { width: '10%' }]}>End Time</Text>
               <Text style={[styles.headerCell, { width: '10%' }]}>Duration (minutes)</Text>
               <Text style={[styles.headerCell, { width: '15%' }]}>Request</Text>
-              <Text style={[styles.headerCell, { width: '15%' }]}>Game Name</Text>
-              <Text style={[styles.headerCell, { width: '15%' }]}>Status</Text>
+              <Text style={[styles.headerCell, { width: '15%' }]}>Fee</Text>
+              <Text style={[styles.headerCell, { width: '10%' }]}>Game Name</Text>
+              <Text style={[styles.headerCell, { width: '10%' }]}>Status</Text>
               <Text style={[styles.headerCell, { width: '10%' }]}>Number of Players</Text>
             </View>
 
             <View>
               {bookings.map((booking) => (
                 <View key={booking._id} style={styles.tableRow}>
-                  <Text style={[styles.tableCell, { width: '15%' }]}>{new Date(booking.date).toLocaleDateString()}</Text>
+                  <Text style={[styles.tableCell, { width: '10%' }]}>{new Date(booking.date).toLocaleDateString()}</Text>
                   <Text style={[styles.tableCell, { width: '10%' }]}>{formatTime(booking.start_time)}</Text>
                   <Text style={[styles.tableCell, { width: '10%' }]}>{formatTime(booking.end_time)}</Text>
                   <Text style={[styles.tableCell, { width: '10%' }]}>{booking.duration}</Text>
                   <Text style={[styles.tableCell, { width: '15%' }]}>{booking.message_request}</Text>
-                  <Text style={[styles.tableCell, { width: '15%' }]}>{booking.game_name}</Text>
-                  <Text style={[styles.tableCell, { width: '15%' }]}>{booking.status}</Text>
+                  <Text style={[styles.tableCell, { width:'15%' }]}>Rs.{booking.fee}.00</Text>
+                  <Text style={[styles.tableCell, { width: '10%' }]}>{booking.game_name}</Text>
+                  <Text style={[styles.tableCell, { width: '10%' }]}>{booking.status}</Text>
                   <Text style={[styles.tableCell, { width: '10%' }]}>{booking.num_players}</Text>
                 </View>
               ))}
@@ -101,53 +103,76 @@ const BookingAdmin = () => {
   
 
   return (
-  <div>
+    <div>
     <AdminHeader />
-    <div style={{ margin: '20px auto', padding: '10px', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)', borderRadius: '8px' }}>
-      <h2 style={{ textAlign: 'center', marginTop: '25px' }}>Current Booking Details</h2>
-      <input
-        type="text"
-        placeholder="Search Game Name"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        style={{ marginBottom: '20px', width: '40%', padding: '8px', boxSizing: 'border-box'  }}
-      />
-      <PDFDownloadLink document={<MyDocument bookings={filteredBookings} />} fileName="booking_details.pdf">
-        {({ blob, url, loading, error }) =>
-          loading ? 'Generating PDF...' : <button style={{ margin: '20px 80px',padding: '10px', backgroundColor: '#007bff', color: '#fff', border: 'none', borderRadius: '4px' }}>Generate PDF</button>
-        }
-      </PDFDownloadLink>
-      <table style={{ borderCollapse: 'collapse', width: '100%', marginTop: '20px' }}>
-        <thead style={{ backgroundColor: '#f5f5f5' }}>
-          <tr>
-            <th style={{ padding: '12px', textAlign: 'center' }}>Date</th>
-            <th style={{ padding: '12px', textAlign: 'center' }}>Start Time</th>
-            <th style={{ padding: '12px', textAlign: 'center' }}>End Time</th>
-            <th style={{ padding: '12px', textAlign: 'center' }}>Duration (minutes)</th>
-            <th style={{ padding: '12px', textAlign: 'center' }}>Message Request</th>
-            <th style={{ padding: '12px', textAlign: 'center' }}>Game Name</th>
-            <th style={{ padding: '12px', textAlign: 'center' }}>Status</th>
-            <th style={{ padding: '12px', textAlign: 'center' }}>Number of Players</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredBookings.map((booking) => (
-            <tr key={booking._id} style={{ borderBottom: '1px solid #ddd' }}>
-              <td style={{ padding: '12px' ,textAlign: 'center' }}>{new Date(booking.date).toLocaleDateString()}</td>
-              <td style={{ padding: '12px',textAlign: 'center' }}>{formatTime(booking.start_time)}</td>
-              <td style={{ padding: '12px' ,textAlign: 'center'}}>{formatTime(booking.end_time)}</td>
-              <td style={{ padding: '12px' ,textAlign: 'center'}}>{booking.duration}</td>
-              <td style={{ padding: '12px' ,textAlign: 'center'}}>{booking.message_request}</td>
-              <td style={{ padding: '12px' ,textAlign: 'center'}}>{booking.game_name}</td>
-              <td style={{ padding: '12px' ,textAlign: 'center'}}>{booking.status}</td>
-              <td style={{ padding: '12px' ,textAlign: 'center'}}>{booking.num_players}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div
+      style={{
+        backgroundImage: "url('https://coreui.io/images/ogimages/coreui_1200_600.jpg')",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        width: '100%',
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+      }}
+    >
+      <div style={{ margin: '10px', padding: '10px', boxShadow: '0px 0px 10px rgba(7, 6, 6, 0.5)', borderRadius: '8px', width: '90%' }}>
+        <h1 style={{ textAlign: 'center', marginTop: '25px', color: '#7157d8' }}>Current Booking Details</h1>
+        <div style={{ display: 'flex',alignItems: 'center', marginBottom: '20px' }}>
+          <input
+            type="text"
+            placeholder="Enter Game Name To Search ..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{ width: '20%', padding: '8px', boxSizing: 'border-box',marginLeft:'40px' }}
+          />
+          <PDFDownloadLink document={<MyDocument bookings={filteredBookings} />} fileName="booking_details.pdf">
+            {({ blob, url, loading, error }) =>
+              loading ? 'Generating PDF...' : <button style={{ padding: '10px', backgroundColor: '#7c45af', color: '#fff', border: 'none', borderRadius: '4px', marginLeft:'40px'}}>Generate PDF</button>
+            }
+          </PDFDownloadLink>
+          <div style={{ backgroundColor: '#fcfcfca0', width: '20%', color: '#4247d5', marginLeft: '500px', borderRadius: '10px', textAlign: 'center' }}>
+            <h3 style={{ margin: '0', padding: '10px' }}>Total Bookings: {bookings.length}</h3>
+          </div>
+        </div>
+  
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <table style={{ borderCollapse: 'collapse', width: '100%', backgroundColor: '#ffffff', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)', borderRadius: '8px', overflow: 'hidden' }}>
+            <thead style={{ backgroundColor: '#b9cef0', borderRadius: '8px' }}>
+              <tr>
+                <th style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>Date</th>
+                <th style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>Start Time</th>
+                <th style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>End Time</th>
+                <th style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>Duration (minutes)</th>
+                <th style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>Message Request</th>
+                <th style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>Fee</th>
+                <th style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>Game Name</th>
+                <th style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>Status</th>
+                <th style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>Number of Players</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredBookings.map((booking, index) => (
+                <tr key={booking._id} style={{ borderBottom: '1px solid #ddd', backgroundColor: index % 2 === 0 ? '#f4f3f3' : '#ffffff' }}>
+                  <td style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>{new Date(booking.date).toLocaleDateString()}</td>
+                  <td style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>{formatTime(booking.start_time)}</td>
+                  <td style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>{formatTime(booking.end_time)}</td>
+                  <td style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>{booking.duration}</td>
+                  <td style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>{booking.message_request}</td>
+                  <td style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>Rs.{booking.fee}.00</td>
+                  <td style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>{booking.game_name}</td>
+                  <td style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>{booking.status}</td>
+                  <td style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>{booking.num_players}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+  
+      </div>
     </div>
-    </div>
-  );
+  </div>
+  );  
 };
 
 export default BookingAdmin;
