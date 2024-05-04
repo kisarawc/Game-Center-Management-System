@@ -12,32 +12,80 @@ const Booking = () => {
   return (
     <Box>
       <Header /> 
+         
       <Box
         sx={{
-          backgroundImage: `url('https://4kwallpapers.com/images/wallpapers/dark-background-abstract-background-network-3d-background-4480x2520-8324.png')`,
+          backgroundImage: ` url('https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Hero-3.png')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          minHeight: '100vh',
           display: 'flex',
+           
           flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'flex-start',
+          //justifyContent: 'flex-start',
         }}
       >
-        <Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', mt:'10px' }}>
-            <Box sx={{ backgroundColor: '#4b4b4ba4', padding: '25px', borderRadius: '80px', width: '800px' }}>
-              <Typography variant='h4' sx={{ color: '#ffffff', textAlign: 'center', mb: '20px' }}>Create a new Booking</Typography>
-              <BookingForm />
-            </Box>
+      <Box sx={{display:'block' ,flexDirection:'row'}}>  
+         <img
+           
+           src='https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Blue-lightning-2.png'
+            style={{
+              height: '100px',
+              width: '100px',
+              marginLeft: '100px',
+              marginTop: '100px'
+            }}
+         />
+
+          <Box sx={{display:'flex', flexDirection:'column', mt:'10px'}}> 
+              <Typography variant='h3' sx={{color:'#de2eb8', ml:'0px', textAlign:'center', mb:'40px'}}>Please Note </Typography>
+              <Typography variant='h5' sx={{color:'#ffffff', ml:'0px', textAlign:'flex-start', mb:'20px'}}>- Under 14s must be accompanied by an adult.</Typography>
+              <Typography variant='h5' sx={{color:'#ffffff', ml:'0px', textAlign:'flex-start', mb:'20px'}}>- For cancellations and amendments to your booking we require 48 hours notice.</Typography>
+              <Typography variant='h5' sx={{color:'#ffffff', ml:'0px', textAlign:'flex-start', mb:'10px'}}>- Under 5s go FREE! Please note: You do not need to book a space for under 5s.</Typography>
+          
+          </Box>
+
+         
+              <img 
+              src='https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Pink-lightning-2.png'
+                style={{
+                  height: '100px',
+                  width: '100px',
+                  marginLeft: '800px',
+                  marginTop:'90px'
+
+                }}
+              />
+                <Typography 
+                      variant='h4' 
+                      sx={{ 
+                        color: '#31cdf8', 
+                        textAlign: 'center', 
+                        mb: '20px', 
+                        textDecoration:'underline' 
+                        }}>
+                          Create a new Booking
+                </Typography>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', mt:'20px' }}>
+              <Box sx={{ backgroundColor: '#898787a4', padding: '25px', borderRadius: '80px', width: '800px' }}>
+            
+                <BookingForm />
+                
+              </Box>
             
           </Box>
-          <Typography variant='h4' sx={{ color: '#ffffff', padding: '20px' }}>My Bookings</Typography>
+      </Box>
+          <Typography variant='h4' sx={{ color: '#2db9ff', padding: '20px' }}>My Bookings</Typography>
+
           <Box mb={4}>
             <BookingTable loggedInUserId={userId}/>
           </Box>
+
         </Box>
-      </Box>
+
+        
+      
       <Footer /> 
     </Box>
   );

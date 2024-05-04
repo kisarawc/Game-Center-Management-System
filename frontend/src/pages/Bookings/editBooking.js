@@ -154,18 +154,20 @@ const EditBooking = () => {
       <Header />
       <Box
         sx={{
-          backgroundImage: `url('https://images.saymedia-content.com/.image/t_share/MTkzNzg4MTIxMjM2NjQ1MzE1/aesthetic-website-backgrounds.gif')`,
+          backgroundImage: `url('https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Hero-3.png')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
+         // alignItems: 'center',
           justifyContent: 'flex-start',
         }}
       >
-        <Paper style={{ padding: '30px', maxWidth: '600px', margin: 'auto' }}>
-          <Typography variant="h4" sx={{ textAlign: 'center', mb: '30px' }}>Edit Booking Details</Typography>
+        <Typography variant="h4" sx={{ textAlign: 'center', mb: '30px', mt:'50px', color:'#fa76d2' }}>Edit Booking Details</Typography>
+
+        <Box sx={{display:'flex', flexDirection:'row', ml:'300px'}}> 
+        <Paper style={{ padding: '30px', maxWidth: '400px'}}>
           {errorMessage && <Typography color="error" sx={{ marginBottom: '10px' }}>{errorMessage}</Typography>}
           <TextField
             fullWidth
@@ -226,6 +228,16 @@ const EditBooking = () => {
 
           <Button variant="contained" onClick={() => handleSubmit(id)}>Update Booking</Button>
         </Paper>
+
+      <Box sx={{ml:'50px'}}> 
+        <Typography variant='h4' sx={{color:'#ca9bf8', ml:'250px' , mt:'90px'}}> Rules</Typography>
+        <Box sx={{display:'flex', flexDirection:'column', color:'#ffffff', mt:'10px', ml:'35px'}}>
+            <Typography sx={{mb:'10px',fontSize:'1.5rem'}}> - Select the date and time that you want to change your booking.</Typography>
+            <Typography sx={{mb:'10px',fontSize:'1.5rem'}}> - You cannot change the game because of the security reasons.</Typography>
+            <Typography sx={{mb:'10px',fontSize:'1.5rem'}}> - If you want to change the game delete this booking & place a new booking.</Typography>
+        </Box>
+      </Box>
+        </Box>
       </Box>
       <Footer />
       <Dialog open={openPopup} onClose={handleClosePopup}>

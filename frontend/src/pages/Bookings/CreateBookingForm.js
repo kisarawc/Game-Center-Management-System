@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FormControl, InputLabel, MenuItem, Select, Button, Table, TableHead, TableBody, TableRow, TableCell, Typography, Paper, TextField, Modal, InputAdornment } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, Button, Table, TableHead, TableBody, TableRow, TableCell, Typography, Paper, TextField, Modal, InputAdornment, Box } from '@mui/material';
 const userId = sessionStorage.getItem('userId');
 const BookingPage = () => {
   
@@ -65,9 +65,9 @@ const BookingPage = () => {
     .then(response => {
       const rate = response.data.hourly_rate;
       setHourlyRate(rate);
-      // Assuming the response contains the hourly rate in the data
+    
       console.log('Hourly rate:', rate);
-      // Here you can set the hourly rate to state or display it as needed
+
     })
     .catch(error => {
       console.error('Error fetching hourly rate:', error);
@@ -216,8 +216,9 @@ if(existingBookingWithStartTime) {
   }, [selectedDuration, hourlyRate]);
 
   return (
-    <Paper style={{ padding: '40px', maxWidth: '600px', margin: 'auto', borderRadius:'40px' }}>
-      <Typography variant="h5" gutterBottom>Select Game & Date</Typography>
+    <Box >
+    <Paper style={{ padding: '40px', maxWidth: '600px', margin: 'auto', borderRadius:'40px' , backgroundColor:'#f4efeffa'}}>
+      <Typography variant="h5" sx={{color:'#9574f0'}} gutterBottom>Select Game & Date</Typography>
       <FormControl fullWidth style={{ marginBottom: '10px' }}>
         <InputLabel>Select a game</InputLabel>
         <Select value={selectedGame} onChange={handleGameChange}>
@@ -245,8 +246,8 @@ if(existingBookingWithStartTime) {
           },
         }}
       />
-      <Button variant="contained" onClick={handleSubmit} disabled={!selectedGame || !selectedDate || loading}>
-        {loading ? 'Loading...' : 'Submit'}
+      <Button variant="contained" sx= {{backgroundColor:'#ea8c8c'}} onClick={handleSubmit} disabled={!selectedGame || !selectedDate || loading}>
+        {loading ? 'Loading...' : 'Check Availability'}
       </Button>
 
       {bookings.length > 0 ? (
@@ -298,7 +299,7 @@ if(existingBookingWithStartTime) {
       )}
 
       <form onSubmit={handleFormSubmit} style={{ marginTop: '20px' }}>
-        <Typography variant="h5" gutterBottom>Create New Booking</Typography>
+        <Typography variant="h5" sx={{color:'#9574f0'}} gutterBottom>Create New Booking</Typography>
         <FormControl fullWidth style={{ marginBottom: '10px' }}>
           <InputLabel>Select Start Time</InputLabel>
           <Select
@@ -360,11 +361,12 @@ if(existingBookingWithStartTime) {
           onChange={(event) => setMessageRequest(event.target.value)}
           style={{ marginBottom: '10px' }}
         />
-        <Button variant="contained" type="submit" disabled={!selectedGame || !selectedDate || !selectedStartTime || !numPlayers} >
-          Create Booking
+        <Button variant="contained" type="submit" sx={{ml:'230px', backgroundColor:'#08a480'}}disabled={!selectedGame || !selectedDate || !selectedStartTime || !numPlayers} >
+          Book The Session
         </Button>
       </form>
     </Paper>
+    </Box>
   );
 };
 

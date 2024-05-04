@@ -16,7 +16,7 @@ const StyledTableHead = styled(TableHead)(({ theme }) => ({
 
 const StyledTableHeaderCell = styled(TableCell)(({ theme }) => ({
   color: theme.palette.common.white,
-  backgroundColor: '#011276',
+  backgroundColor: '#5f0e9d',
   fontWeight: 'bold', 
   fontSize:'18px',
   textAlign:'center'
@@ -93,7 +93,7 @@ const BookingTable = ({ loggedInUserId }) => {
             <TableRow>
               <StyledTableHeaderCell>Date</StyledTableHeaderCell>
               <StyledTableHeaderCell>Start Time</StyledTableHeaderCell>
-              <StyledTableHeaderCell>Duration (minutes)</StyledTableHeaderCell> {/* Update header */}
+              <StyledTableHeaderCell>Duration (minutes)</StyledTableHeaderCell> 
               <StyledTableHeaderCell>Message Request</StyledTableHeaderCell>
               
               <StyledTableHeaderCell>Game Name</StyledTableHeaderCell>

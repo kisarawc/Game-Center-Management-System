@@ -45,7 +45,7 @@ const HomePage = () => {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'flex-start',
-          padding: '20px',
+          padding: '10px',
         }}
       >
         <Typography
@@ -129,7 +129,7 @@ const HomePage = () => {
             backgroundColor: '#244b8a', display: 'flex', flexDirection: 'row',
           }}
         >
-          <Box sx={{ marginTop: '10px' }}>
+          <Box sx={{ marginTop: '10px', color:'#ffffff'}}>
             <Typography variant='h3' sx={{ textAlign: 'center', mb: '20px' }}>About Us</Typography>
             <Typography variant='h5' textAlign={'center'} sx={{ ml: '100px', mr: '100px', fontFamily: 'fantasy', mb: '50px' }}>Opening the GG Lounge in April 2019 marking our 1 year anniversary of our Arcade Warehouse Scunthorpe open day we are extremely excited and ready to host Lincolns one and only FREE PLAY Arcade centre.
 
@@ -156,10 +156,10 @@ const HomePage = () => {
               src="https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Gaming-pic.png"
               alt="Gaming Pic"
               style={{
-                height: '200px',
+                height: '300px',
                 alignSelf: 'flex-start',
-                marginRight: '250px',
-                marginLeft: '250px',
+                marginRight: '100px',
+                marginLeft: '450px',
                 marginTop: '50px'
               }}
             />
