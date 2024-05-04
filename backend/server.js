@@ -26,7 +26,7 @@ mongoose.connect(process.env.MONGODB_URL, {
         // Use event routes
         app.use('/api/events', eventRoutes);
         app.use('/api/events', commentRoutes);// Using '/api' as the base URL for event routes
-        app.use('/api/feedbacks', feedbackRoutes);
+        app.use('/api/feedback', feedbackRoutes);
 
         // Start the server
         app.listen(PORT, () => {

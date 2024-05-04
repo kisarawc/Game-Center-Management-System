@@ -34,7 +34,7 @@ const Header = () => {
           <Button component={NavLink} to="/games" {...getButton()}>Games</Button>
           <Button component={NavLink} to="/book" {...getButton()} >Book</Button>
           <Button component={NavLink} to="/events" {...getButton()}>Events</Button>
-          <Button component={NavLink} to="/Feedback" {...getButton()}>Feedback</Button>
+          <Button component={NavLink} to="/feedbackform" {...getButton()}>Feedback</Button>
 
 
           <Divider orientation="vertical" flexItem sx={{ ml: 20, width: 5, backgroundColor: 'purple', mr: 5 }} />

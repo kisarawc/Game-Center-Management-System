@@ -25,7 +25,7 @@ exports.deleteFeedback = async (req, res) => {
   try {
     const { feedbackId } = req.params;
 
-    // Delete the event
+    // Delete the feedback
     const deletedFeedback = await Feedback.findByIdAndDelete(feedbackId);
 
     if (!deletedFeedback) {
