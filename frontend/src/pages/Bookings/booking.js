@@ -68,7 +68,7 @@ const Booking = () => {
                 </Typography>
 
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', mt:'20px' }}>
-              <Box sx={{ backgroundColor: '#898787a4', padding: '25px', borderRadius: '80px', width: '800px' }}>
+              <Box sx={{ backgroundColor: '#8987874e', padding: '25px', borderRadius: '80px', width: '800px' }}>
             
                 <BookingForm />
                 

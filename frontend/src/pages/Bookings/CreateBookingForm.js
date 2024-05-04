@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FormControl, InputLabel, MenuItem, Select, Button, Table, TableHead, TableBody, TableRow, TableCell, Typography, Paper, TextField, Modal, InputAdornment, Box } from '@mui/material';
 const userId = sessionStorage.getItem('userId');
+
 const BookingPage = () => {
   
   const [games, setGames] = useState([]);
@@ -217,7 +218,7 @@ if(existingBookingWithStartTime) {
 
   return (
     <Box >
-    <Paper style={{ padding: '40px', maxWidth: '600px', margin: 'auto', borderRadius:'40px' , backgroundColor:'#f4efeffa'}}>
+    <Paper style={{ padding: '40px', maxWidth: '600px', margin: 'auto', borderRadius:'40px' , backgroundColor:'#f4efefff'}}>
       <Typography variant="h5" sx={{color:'#9574f0'}} gutterBottom>Select Game & Date</Typography>
       <FormControl fullWidth style={{ marginBottom: '10px' }}>
         <InputLabel>Select a game</InputLabel>
