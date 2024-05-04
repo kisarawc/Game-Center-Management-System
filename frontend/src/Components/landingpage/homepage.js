@@ -3,8 +3,6 @@ import { Box, Typography } from '@mui/material';
 import Header from '../common/Header/header';
 import Footer from '../common/Footer/footer';
 
-
-
 const HomePage = () => {
   return (
     <Box>
