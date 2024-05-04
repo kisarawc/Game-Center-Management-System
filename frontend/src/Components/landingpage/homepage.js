@@ -34,20 +34,20 @@ const HomePage = () => {
     <Box>
       <Header />
       <Box
-  sx={{
-    backgroundImage: `
-      url('https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Hero-3.png'),
-      url('https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Game-over.png')
-    `,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    minHeight: '100vh',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    padding: '20px',
-  }}
->
+        sx={{
+          backgroundImage: `
+            url('https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Hero-3.png'),
+            url('https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Game-over.png')
+          `,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'flex-start',
+          padding: '20px',
+        }}
+      >
         <Typography
           variant="h1"
           sx={{
@@ -55,10 +55,11 @@ const HomePage = () => {
             color: '#f32479',
             fontFamily: 'Great vibes',
             marginBottom: '70px',
-            fontSize: '5rem',mt:'100px'
+            fontSize: '5rem',
+            mt: '100px'
           }}
         >
-         - The <span style={{ color: '#14e9f2', fontFamily: 'Roboto', textShadow: '0 0 10px', }}>GG</span> Lounge -
+          - The <span style={{ color: '#14e9f2', fontFamily: 'Roboto', textShadow: '0 0 10px' }}>GG</span> Lounge -
         </Typography>
 
         <Typography variant="h2" sx={{ color: 'white', fontSize: '2rem', marginBottom: '20px', marginLeft: '240px' }}>
@@ -75,59 +76,104 @@ const HomePage = () => {
           ))}
         </Box>
 
-        {/* <Typography variant='h2' sx={{color:'#ffffff',fontSize:'2rem', textAlign:'center', mt:'50px', textDecoration: 'underline', textDecorationThickness: '0.2em',}}>Established in 2019</Typography> */}
-        <Typography variant='h5' 
-                sx={{
-                  color:'#01cae5', 
-                  textAlign:'center',
-                  fontSize:'1.7rem',mt:'20px', 
-                  ml:'300px', mr:'300px'
-                  }}>The GG Lounge is the new exciting place for all ages to come and enjoy hours of fun with plenty to do for the whole family including:
-                  
-                  </Typography>
+        <Typography variant='h5'
+          sx={{
+            color: '#01cae5',
+            textAlign: 'center',
+            fontSize: '1.7rem', mt: '100px',
+            ml: '300px', mr: '300px'
+          }}>The GG Lounge is the new exciting place for all ages to come and enjoy hours of fun with plenty to do for the whole family including:
+
+        </Typography>
+
+
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+          <Typography variant='h5' sx={{ color: 'white', mt: '20px', mx: '20px' }}>
+            - Retro & Modern Arcade machines
+          </Typography>
+          <Typography variant='h5' sx={{ color: 'white', mt: '20px', mx: '20px' }}>
+            - 65” touch screen games
+          </Typography>
+          <Typography variant='h5' sx={{ color: 'white', mt: '20px', mx: '20px' }}>
+            - Air Hockey Tables
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+          <Typography variant='h5' sx={{ color: 'white', mt: '20px', mx: '20px' }}>
+            - VR System
+          </Typography>
+          <Typography variant='h5' sx={{ color: 'white', mt: '20px', mx: '20px' }}>
+            - Pool tables
+          </Typography>
+          <Typography variant='h5' sx={{ color: 'white', mt: '20px', mx: '20px' }}>
+            - Toddler gadgets & cafe
+          </Typography>
+
+        </Box><img
+          src='https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Pink-lightning-2.png'
+          style={{
+            height: '100px',
+            width: '100px',
+            marginLeft: '1200px'
+          }}
+        />
+        <img
+          src='https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Blue-lightning-2.png'
+          style={{ marginLeft: '50px', height: '100px', width: '100px', }}
+        />
+        <img
+          src='https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Curve-top-3-1536x154.png'
+        />
+        <Box
+          sx={{
+            backgroundColor: '#244b8a', display: 'flex', flexDirection: 'row',
+          }}
+        >
+          <Box sx={{ marginTop: '10px' }}>
+            <Typography variant='h3' sx={{ textAlign: 'center', mb: '20px' }}>About Us</Typography>
+            <Typography variant='h5' textAlign={'center'} sx={{ ml: '100px', mr: '100px', fontFamily: 'fantasy', mb: '50px' }}>Opening the GG Lounge in April 2019 marking our 1 year anniversary of our Arcade Warehouse Scunthorpe open day we are extremely excited and ready to host Lincolns one and only FREE PLAY Arcade centre.
+
+              Gaming has always been a passion of ours and opening an arcade has been our directors dream for many years. It has taken a lot of hard work and dedication to the gaming industry but finally our first Arcade is ready for you all.
+
+              The past 3-5 years has seen a huge increase in retro gaming and Esports and being at the forefront of this technology with our retail shop we knew now was the time we put everything in to opening this wonderful family venue for you all.</Typography>
+          </Box>
+
+          <img
+            src='https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Graphic.png'
+            style={{
+              height: '400px',
+              width: '500px',
+              marginLeft: '40px',
+              marginTop: '100px',
+              marginRight: '40px',
+
+
+            }}
+          />
+ </Box>
+          <Box sx={{ display: 'flex', flexDirection: 'row', marginTop: '50px', mb: '100px' }} >
+            <img
+              src="https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Gaming-pic.png"
+              alt="Gaming Pic"
+              style={{
+                height: '200px',
+                alignSelf: 'flex-start',
+                marginRight: '250px',
+                marginLeft: '250px',
+                marginTop: '50px'
+              }}
+            />
+
+
+            <Box>
+
+              <Typography variant='h3' color='#ba39f7' sx={{ mt: '100px', fontSize: '2rem', ml: '115px' }}>Our locations</Typography>
+              <Typography variant='h5' color='white' sx={{ mt: '20px', fontSize: '1.4rem', textAlign: 'center' }}>165/A, New Kandy Rd, Welivita Junction <br /> Malabe</Typography>
+            </Box>
+          </Box>
+
 
        
-        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-  <Typography variant='h5' sx={{ color: 'white', mt: '20px', mx: '20px' }}> 
-    - Retro & Modern Arcade machines
-  </Typography>
-  <Typography variant='h5' sx={{ color: 'white', mt: '20px', mx: '20px' }}> 
-    - 65” touch screen games
-  </Typography>
-  <Typography variant='h5' sx={{ color: 'white', mt: '20px', mx: '20px' }}> 
-    - Air Hockey Tables
-  </Typography>
-</Box>
-<Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-  <Typography variant='h5' sx={{ color: 'white', mt: '20px', mx: '20px' }}> 
-    - VR System
-  </Typography>
-  <Typography variant='h5' sx={{ color: 'white', mt: '20px', mx: '20px' }}> 
-    - Pool tables
-  </Typography>
-  <Typography variant='h5' sx={{ color: 'white', mt: '20px', mx: '20px' }}> 
-    - Toddler gadgets & cafe
-  </Typography>
-</Box>
-<Box  sx={{display: 'flex', flexDirection: 'row'}} >
-  <img
-    src="https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Gaming-pic.png"
-    alt="Gaming Pic"
-    style={{
-      height: '200px',
-      alignSelf: 'flex-start',
-      marginTop: '100px',
-      marginRight: '250px', 
-      marginLeft:'200px'
-    }}
-  />
-  <Box>
-  <Typography variant='h3' color='#ba39f7' sx={{mt:'150px', fontSize:'2rem',ml:'140px'}}>Our locations</Typography>
-  <Typography variant='h5' color='white' sx={{mt:'20px', fontSize:'1.4rem',textAlign:'center'}}>165/A, New Kandy Rd, Welivita Junction <br/> Malabe</Typography>
-</Box>
-</Box>
-
-        
       </Box>
       <Footer />
     </Box>
