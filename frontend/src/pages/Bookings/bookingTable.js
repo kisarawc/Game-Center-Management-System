@@ -118,14 +118,22 @@ const BookingTable = ({ loggedInUserId }) => {
                 <StyledTableCell>
                   <Button 
                     variant="contained" 
-                    sx={{mr:'10px' , backgroundColor:'#45d0b9'}}
+                    sx={{mr:'10px' ,
+                     backgroundColor:'#189f88',
+                     '&:hover': {
+                      backgroundColor: '#4dc7bd'
+                    }
+                    }}
                     onClick={() => handleEdit(booking._id)}
                   >
                     Edit
                   </Button>
                   <Button 
                     variant="contained" 
-                    sx={{backgroundColor:'#d02727'}}
+                    sx={{backgroundColor:'#d02727',
+                    '&:hover': {
+                      backgroundColor: '#f56a6a'
+                    }}}
                     onClick={() => handleDelete(booking._id)}
                   >
                     Delete

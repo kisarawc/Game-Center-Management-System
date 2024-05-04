@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import ErrorPopup from './ErrorPopup'; 
 import { FormControl, InputLabel, MenuItem, Select, Button, Table, TableHead, TableBody, TableRow, TableCell, Typography, Paper, TextField, Modal, InputAdornment, Box } from '@mui/material';
 const userId = sessionStorage.getItem('userId');
 
@@ -19,6 +20,7 @@ const BookingPage = () => {
   const [selectedDuration, setSelectedDuration] = useState(30);
   const [hourlyRate, setHourlyRate] = useState(0);
   const [totalCost, setTotalCost] = useState(0);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
 
   useEffect(() => {
     axios.get('http://localhost:3000/api/game/names')
@@ -88,11 +90,13 @@ const BookingPage = () => {
   
     if (selectedDateTime < currentDate) {
       setErrorMessage("You cannot create a booking for a past date.");
+      setShowErrorPopup(true);
       return;
     }
 
     if (numPlayers <= 0) {
       setErrorMessage("Please enter a valid number of players.");
+      setShowErrorPopup(true);
       return;
     }
 
@@ -140,6 +144,7 @@ if(existingBookingWithStartTime) {
 }
     if (existingBookingWithStartTime) {
       setErrorMessage("There's already a booking at the selected start time.");
+      setShowErrorPopup(true);
       return;
     }
  
@@ -247,7 +252,7 @@ if(existingBookingWithStartTime) {
           },
         }}
       />
-      <Button variant="contained" sx= {{backgroundColor:'#ea8c8c'}} onClick={handleSubmit} disabled={!selectedGame || !selectedDate || loading}>
+      <Button variant="contained" sx= {{backgroundColor:'#b83394'}} onClick={handleSubmit} disabled={!selectedGame || !selectedDate || loading}>
         {loading ? 'Loading...' : 'Check Availability'}
       </Button>
 
@@ -367,6 +372,11 @@ if(existingBookingWithStartTime) {
         </Button>
       </form>
     </Paper>
+    <ErrorPopup 
+        open={showErrorPopup} 
+        message={errorMessage} 
+        onClose={() => setShowErrorPopup(false)} 
+      />
     </Box>
   );
 };

@@ -38,7 +38,7 @@ const Booking = () => {
          />
 
           <Box sx={{display:'flex', flexDirection:'column', mt:'10px'}}> 
-              <Typography variant='h3' sx={{color:'#de2eb8', ml:'0px', textAlign:'center', mb:'40px'}}>Please Note </Typography>
+              <Typography variant='h3' sx={{color:'#de2eb8', ml:'0px', textAlign:'center', mb:'40px'}}>.. Please Note ..</Typography>
               <Typography variant='h5' sx={{color:'#ffffff', ml:'0px', textAlign:'flex-start', mb:'20px'}}>- Under 14s must be accompanied by an adult.</Typography>
               <Typography variant='h5' sx={{color:'#ffffff', ml:'0px', textAlign:'flex-start', mb:'20px'}}>- For cancellations and amendments to your booking we require 48 hours notice.</Typography>
               <Typography variant='h5' sx={{color:'#ffffff', ml:'0px', textAlign:'flex-start', mb:'10px'}}>- Under 5s go FREE! Please note: You do not need to book a space for under 5s.</Typography>
