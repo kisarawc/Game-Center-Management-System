@@ -1,4 +1,5 @@
 const Game = require('../../models/Saniru/Game');
+
 exports.createGame = async (req, res) => {
     try {
       const newGame = await Game.create(req.body);
@@ -35,8 +36,8 @@ exports.createGame = async (req, res) => {
 
   exports.getGamesDropdown = async (req, res) => {
     try {
-      const games = await Game.find({}, 'name'); // Fetch only the 'name' field of all games
-      res.json(games); // Send the array of game names as JSON response
+      const games = await Game.find({}, 'name'); 
+      res.json(games); 
     } catch (error) {
       res.status(500).json({ error: 'Internal server error' });
     }
