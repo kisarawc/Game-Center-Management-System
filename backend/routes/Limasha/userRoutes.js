@@ -8,5 +8,6 @@ router.delete('/deleteUser/:userId', userController.deleteUser);
 router.post('/login', userController.userLogin);
 router.get('/:userId', userController.getUserById);
 router.patch('/updateUser/:userId', userController.updateUser);
+router.post('/sendOTP', userController.sendOTP);
 
 module.exports = router;

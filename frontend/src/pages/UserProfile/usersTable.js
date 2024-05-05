@@ -1,22 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography, TextField, IconButton } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, IconButton, Drawer, List, ListItem, ListItemText, Checkbox, MenuItem, Select, Divider, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import jsPDF from 'jspdf';
-// import autoTable from 'jspdf-autotable';
 import AdminHeader from '../../Components/common/adminHeader';
 import logo from '../../images/header/logo.jpeg';
-
-const StyledHeader = styled(Typography)(({ theme }) => ({
-  textAlign: 'center',
-  padding: theme.spacing(2),
-  color: theme.palette.common.black,
-  fontWeight: 'bolder',
-  marginBottom: theme.spacing(2),
-  fontFamily: 'fantasy',
-  fontSize: '3.0rem',
-}));
+import MenuIcon from '@mui/icons-material/Menu';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   textAlign: 'center',
@@ -25,19 +15,19 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const StyledTableHead = styled(TableHead)(({ theme }) => ({
-  backgroundColor: '#00008b', // Adjust color of purple bar
+  backgroundColor: '#00008b',
 }));
 
 const StyledTableHeaderCell = styled(TableCell)(({ theme }) => ({
   color: theme.palette.common.white,
-  backgroundColor: '#838383', // Adjust color of table header cell
+  backgroundColor: '#838383',
   fontWeight: 'bold',
-  textAlign: 'center', // Center align the text in the header cell
+  textAlign: 'center',
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
-    backgroundColor: '#EEEEEE', // Changed to a lighter shade
+    backgroundColor: '#EEEEEE',
   },
 }));
 
@@ -59,11 +49,45 @@ const HorizontalBar = styled('hr')({
   borderTop: '1px solid #ccc',
 });
 
+const Sidebar = styled(Drawer)(({ theme }) => ({
+  '& .MuiDrawer-paper': {
+    width: '230px',
+    backgroundColor: '#f0f0f0',
+    height: '500px',
+    borderRadius: '20px',
+    marginTop: '50px', 
+  },
+}));
+
+const FilterOption = styled(ListItem)(({ theme }) => ({
+  '& .MuiTypography-body1': {
+    fontSize: '0.8rem',
+  },
+}));
+
+const SortingOption = styled(FilterOption)({
+  marginTop: '16px',
+});
+
+const TotalUsers = styled(ListItem)(({ theme }) => ({
+  marginTop: '16px',
+  '& .MuiTypography-body1': {
+    fontSize: '0.8rem',
+  },
+}));
+
 const UsersTable = () => {
   const [users, setUsers] = useState([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedUserID, setSelectedUserID] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [totalFemaleUsers, setTotalFemaleUsers] = useState(0);
+  const [totalMaleUsers, setTotalMaleUsers] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [filterFemale, setFilterFemale] = useState(false);
+  const [filterMale, setFilterMale] = useState(false);
+  const [sortOrder, setSortOrder] = useState('asc');
 
   useEffect(() => {
     axios.get(`http://localhost:5000/api/users`)
@@ -74,9 +98,16 @@ const UsersTable = () => {
           username: user.username,
           email: user.email,
           gender: user.gender,
-          joinDate: user.joinDate
+          bDate: user.bDate,
+          phoneNumber: user.phoneNumber,
         }));
         setUsers(formattedUsers);
+        // Calculate counts
+        setTotalUsers(formattedUsers.length);
+        const femaleCount = formattedUsers.filter(user => user.gender.toLowerCase() === 'female').length;
+        const maleCount = formattedUsers.filter(user => user.gender.toLowerCase() === 'male').length;
+        setTotalFemaleUsers(femaleCount);
+        setTotalMaleUsers(maleCount);
       })
       .catch(error => {
         console.error('Error fetching users:', error);
@@ -94,6 +125,14 @@ const UsersTable = () => {
       .then(response => {
         console.log('User deleted successfully');
         setUsers(users.filter(user => user._id !== selectedUserID));
+        // Recalculate counts
+        setTotalUsers(totalUsers - 1);
+        const deletedUser = users.find(user => user._id === selectedUserID);
+        if (deletedUser.gender.toLowerCase() === 'female') {
+          setTotalFemaleUsers(totalFemaleUsers - 1);
+        } else {
+          setTotalMaleUsers(totalMaleUsers - 1);
+        }
       })
       .catch(error => {
         console.error('Error deleting user:', error);
@@ -109,69 +148,136 @@ const UsersTable = () => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredUsers = users.filter(user =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.gender.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.joinDate.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleFilterChange = (event) => {
+    const { name, checked } = event.target;
+    if (name === 'female') {
+      setFilterFemale(checked);
+    } else if (name === 'male') {
+      setFilterMale(checked);
+    }
+  };
 
-  /* Generate user report */
+  const handleSort = (order) => {
+    setSortOrder(order);
+    const sortedUsers = [...users].sort((a, b) => {
+      if (order === 'asc') {
+        return a.name.localeCompare(b.name);
+      } else {
+        return b.name.localeCompare(a.name);
+      }
+    });
+    setUsers(sortedUsers);
+  };
+
+  const filteredUsers = users.filter(user => {
+    const { name, username, email } = user;
+    const searchTermLowerCase = searchTerm.toLowerCase();
+    return (
+      name.toLowerCase().includes(searchTermLowerCase) ||
+      username.toLowerCase().includes(searchTermLowerCase) ||
+      email.toLowerCase().includes(searchTermLowerCase)
+    );
+  });
+
   const generateUserReport = () => {
-    const doc = new jsPDF()
+    const doc = new jsPDF();
 
     const addHeaderToPdf = (doc) => {
-      // Load the logo image
-      const logoImage = logo; // Update path to your logo image
+      const logoImage = logo;
       const imgWidth = 20;
       const imgHeight = 20;
-  
-      // Add the title and date
+
       doc.setFontSize(20);
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(255, 255, 255);
       doc.setFillColor(0, 0, 0);
-      doc.rect(0, 0, doc.internal.pageSize.width, 30, 'F'); // Draw black background
+      doc.rect(0, 0, doc.internal.pageSize.width, 30, 'F');
       doc.addImage(logoImage, 'JPEG', 10, 5, imgWidth, imgHeight);
-      doc.text('GG LOUNGE GAME CENTER', 50, 18); // Positioning the title
-      doc.setFontSize(10); // Font size for the date
-      doc.text(`Report generated: ${new Date().toLocaleDateString('en-US', { timeZone: 'UTC' })}`, 150, 25); // Positioning the date
+      doc.text('GG LOUNGE GAME CENTER', 50, 18);
+      doc.setFontSize(10);
+      doc.text(`Report generated: ${new Date().toLocaleDateString('en-US', { timeZone: 'UTC' })}`, 150, 25);
     };
-  
-    // Function to add the footer
+
     const addFooterToPdf = (doc) => {
       const footerText = 'GG LOUNGE\n165/A, New Kandy Rd, Welivita Junction, Malabe';
       doc.setFontSize(10);
       doc.setTextColor('#555');
       doc.text(footerText, doc.internal.pageSize.width / 2, doc.internal.pageSize.height - 10, { align: 'center' });
     };
-  
-    // Add the header to the PDF
+
     addHeaderToPdf(doc);
-  
-    // Add the footer to the PDF
+
     addFooterToPdf(doc);
     doc.autoTable({
-      head: rtitle,
-      body: rbody,
-      startY: 40, // Adjust this value based on the height of your header
-      margin: { top: 20 } // Set marginTop to 20px
+      head: [['Name', 'Username', 'Email', 'Gender', 'Phone Number', 'Birth Date']],
+      body: users.map((user) => [user.name, user.username, user.email, user.gender, user.phoneNumber, new Date(user.bDate).toLocaleDateString()]),
+      startY: 40,
+      margin: { top: 20 }
     });
-    
-    doc.save('UserReport.pdf')
+
+    doc.save('UserReport.pdf');
   }
-
-  var rtitle = [['Name', 'Username', 'Email', 'Gender', 'Joined Date']]
-
-  var rbody = users && users.map((user) => (
-    [user.name, user.username, user.email, user.gender, user.joinDate]
-  ))
 
   return (
     <Box>
-    <AdminHeader/>
-      <StyledHeader variant="h4">All Users</StyledHeader>
+      <AdminHeader/>
+      <IconButton onClick={() => setSidebarOpen(true)} aria-label="Open sidebar">
+        <MenuIcon />
+      </IconButton>
+      <Sidebar
+        anchor="left"
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      >
+        <List>
+          <Typography variant="h6" style={{ margin: '10px 10px', fontWeight: 'bold'}}>
+            Gender
+          </Typography>
+          <FilterOption>
+            <Checkbox
+              checked={filterFemale}
+              onChange={handleFilterChange}
+              name="female"
+            />
+            <ListItemText primary={`Female`} />
+          </FilterOption>
+          <FilterOption>
+            <Checkbox
+              checked={filterMale}
+              onChange={handleFilterChange}
+              name="male"
+            />
+            <ListItemText primary={`Male `} />
+          </FilterOption>
+          <Divider />
+          <Typography variant="h6" style={{ margin: '10px 10px', fontWeight: 'bold' }}>
+            Sort By Name
+          </Typography>
+          <SortingOption>
+            <ListItemText primary="Sort By Name" />
+            <Select
+              value={sortOrder}
+              onChange={(event) => handleSort(event.target.value)}
+            >
+              <MenuItem value="asc">A-Z</MenuItem>
+              <MenuItem value="desc">Z-A</MenuItem>
+            </Select>
+          </SortingOption>
+          <Divider />
+          <Typography variant="h6" style={{ margin: '10px 10px', fontWeight: 'bold' }}>
+            User Counts
+          </Typography>
+          <TotalUsers style={{ marginTop: '5px' }}>
+            <ListItemText primary={`Total Users: ${totalUsers}`} />
+          </TotalUsers>
+          <TotalUsers style={{ marginTop: '5px' }}>
+            <ListItemText primary={`Total Female Users: ${totalFemaleUsers}`} />
+          </TotalUsers>
+          <TotalUsers style={{ marginTop: '5px' }}>
+            <ListItemText primary={`Total Male Users: ${totalMaleUsers}`} />
+          </TotalUsers>
+        </List>
+      </Sidebar>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <TextField
           variant="outlined"
@@ -179,25 +285,26 @@ const UsersTable = () => {
           value={searchTerm}
           onChange={handleSearch}
           sx={{
-            marginBottom: '16px', // Add some bottom margin for spacing
-            width: '30%', // Make the search bar span the full width of its container
-            height: '36px', // Set the height of the search bar
+            marginBottom: '16px',
+            marginTop:'14px',
+            width: '30%',
+            height: '36px',
             '& .MuiInputBase-root': {
-              paddingRight: '0', // Remove default padding on the right side
+              paddingRight: '0',
             },
             '& .MuiInputLabel-root': {
-              position: 'relative', // Set position to relative for proper centering
+              position: 'relative',
             },
             '& .MuiInputLabel-formControl': {
-              left: '50%', // Move the label to the left by 50% of its container
-              transform: 'translateX(-50%)', // Translate the label back by 50% of its own width
+              left: '50%',
+              transform: 'translateX(-50%)',
             },
             '& .MuiOutlinedInput-input': {
-              padding: '8px', // Adjust the padding of the input field
-              textAlign: 'center', // Center align the text in the input field
+              padding: '8px',
+              textAlign: 'center',
             },
             '& .MuiOutlinedInput-adornedEnd': {
-              paddingRight: '8px', // Add padding to the end for the search icon
+              paddingRight: '8px',
             },
           }}
           InputProps={{
@@ -207,8 +314,8 @@ const UsersTable = () => {
               </IconButton>
             ),
             sx: {
-              borderRadius: '8px', // Rounded corners
-              backgroundColor: '#f0f0f0', // Light gray background color
+              borderRadius: '8px',
+              backgroundColor: '#f0f0f0',
             },
           }}
         />
@@ -225,7 +332,8 @@ const UsersTable = () => {
               <StyledTableHeaderCell>Username</StyledTableHeaderCell>
               <StyledTableHeaderCell>Email</StyledTableHeaderCell>
               <StyledTableHeaderCell>Gender</StyledTableHeaderCell>
-              <StyledTableHeaderCell>Joined Date</StyledTableHeaderCell>
+              <StyledTableHeaderCell>Phone Number</StyledTableHeaderCell>
+              <StyledTableHeaderCell>Birth Date</StyledTableHeaderCell>
               <StyledTableHeaderCell>Actions</StyledTableHeaderCell>
             </TableRow>
           </StyledTableHead>
@@ -236,7 +344,8 @@ const UsersTable = () => {
                 <StyledTableCell>{user.username}</StyledTableCell>
                 <StyledTableCell>{user.email}</StyledTableCell>
                 <StyledTableCell>{user.gender}</StyledTableCell>
-                <StyledTableCell>{user.joinDate}</StyledTableCell>
+                <StyledTableCell>{user.phoneNumber}</StyledTableCell>
+                <StyledTableCell>{new Date(user.bDate).toLocaleDateString()}</StyledTableCell>
                 <StyledTableCell>
                   <DeleteButton
                     variant="contained"
@@ -271,7 +380,7 @@ const UsersTable = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      </Box>
+    </Box>
   );
 };
 
