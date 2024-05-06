@@ -107,7 +107,7 @@ const BookingAdmin = () => {
     <AdminHeader />
     <div
       style={{
-        backgroundImage: "url('https://coreui.io/images/ogimages/coreui_1200_600.jpg')",
+        //backgroundImage: "url('https://coreui.io/images/ogimages/coreui_1200_600.jpg')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         width: '100%',
@@ -128,17 +128,17 @@ const BookingAdmin = () => {
           />
           <PDFDownloadLink document={<MyDocument bookings={filteredBookings} />} fileName="booking_details.pdf">
             {({ blob, url, loading, error }) =>
-              loading ? 'Generating PDF...' : <button style={{ padding: '10px', backgroundColor: '#7c45af', color: '#fff', border: 'none', borderRadius: '4px', marginLeft:'40px'}}>Generate PDF</button>
+              loading ? 'Generating PDF...' : <button style={{ padding: '10px', backgroundColor: '#bc80f4', color: '#fff', border: 'none', borderRadius: '4px', marginLeft:'40px'}}>Generate PDF</button>
             }
           </PDFDownloadLink>
-          <div style={{ backgroundColor: '#fcfcfca0', width: '20%', color: '#4247d5', marginLeft: '500px', borderRadius: '10px', textAlign: 'center' }}>
-            <h3 style={{ margin: '0', padding: '10px' }}>Total Bookings: {bookings.length}</h3>
+          <div style={{ backgroundColor: '#b184ec9c', width: '20%', color: '#4247d5', marginLeft: '500px', borderRadius: '10px', textAlign: 'center' }}>
+            <h3 style={{ margin: '0', padding: '10px' ,color:'#ffffff'}}>Total Bookings: {bookings.length}</h3>
           </div>
         </div>
   
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <table style={{ borderCollapse: 'collapse', width: '100%', backgroundColor: '#ffffff', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)', borderRadius: '8px', overflow: 'hidden' }}>
-            <thead style={{ backgroundColor: '#b9cef0', borderRadius: '8px' }}>
+            <thead style={{ backgroundColor: '#ebebef', borderRadius: '8px' , color:'#1b0cbc'}}>
               <tr>
                 <th style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>Date</th>
                 <th style={{ padding: '12px', textAlign: 'center', borderBottom: '1px solid #ddd' }}>Start Time</th>

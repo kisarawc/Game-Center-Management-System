@@ -284,18 +284,45 @@ if(existingBookingWithStartTime) {
         onClose={handleCloseModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
       >
-        <Paper style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', padding: '20px' }}>
-          <Typography variant="h6" gutterBottom>
-            Booking created successfully!
-          </Typography>
-          <Button variant="contained" onClick={handlePaymentNow} style={{ marginRight: '10px' }}>
+        <Box
+        sx={{
+          backgroundImage: `url('https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Hero-3.png')`,
+          backgroundSize: 'cover',
+          width: '50%',
+          height: '50%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          //justifyContent: 'center',
+          padding: '20px',
+        }}
+      >
+
+          <img 
+            src='https://uxwing.com/wp-content/themes/uxwing/download/checkmark-cross/success-green-check-mark-icon.png'
+            style={{
+              height:'80px',
+              marginTop:'50px'
+            }}
+          />
+              <Typography variant="h5" gutterBottom sx={{ textAlign: 'center', color: '#7efefa', mt:'30px', mb:'20px'}}>
+              Booking created successfully!
+              </Typography>
+          <Box sx={{display:'flex', flexDirection:'row'}}>
+          <Button variant="contained" onClick={handlePaymentNow} sx={{fontSize:'15px',mr:'10px'}}>
             Do the Payment Now
           </Button>
-          <Button variant="contained" onClick={handlePaymentLater}>
+          <Button variant="contained" onClick={handlePaymentLater} sx={{fontSize:'15px'}}>
             Do the Payment Later
           </Button>
-        </Paper>
+          </Box>
+      </Box>
       </Modal>
 
       {errorMessage && (

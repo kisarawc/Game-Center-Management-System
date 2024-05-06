@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Button, TextField, Typography, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Select, MenuItem } from '@mui/material';
 import moment from 'moment';
 import Box from '@mui/material/Box';
+import ErrorPopup from './ErrorPopup'; 
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
 
@@ -37,7 +38,7 @@ const EditBooking = () => {
   const [openPopup, setOpenPopup] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [previousPage, setPreviousPage] = useState('');
 
   const formatTime = (time) => {
@@ -90,12 +91,14 @@ const EditBooking = () => {
         console.log(existingBooking)
         if (existingBooking) {
           setErrorMessage("There is already a booking for this game on the selected date.");
+          setShowErrorPopup(true);
         } else {
           const currentDate = new Date();
           const formattedDate = moment(currentDate).format('YYYY-MM-DD');
   
           if (editedBooking.date < formattedDate) {
             setErrorMessage("You cannot create a booking for a past date.");
+            setShowErrorPopup(true);
             return;
           }
   
@@ -226,7 +229,9 @@ const EditBooking = () => {
           />
 
 
-          <Button variant="contained" onClick={() => handleSubmit(id)}>Update Booking</Button>
+          <Button variant="contained" sx={{ml:'110px', backgroundColor: '#00a63a' ,'&:hover': {
+      backgroundColor: '#1cc592', 
+    }}} onClick={() => handleSubmit(id)}>Update Booking</Button>
         </Paper>
 
       <Box sx={{ml:'50px'}}> 
@@ -249,6 +254,12 @@ const EditBooking = () => {
           <Button onClick={handleClosePopup}>Close</Button>
         </DialogActions>
       </Dialog>
+
+      <ErrorPopup 
+        open={showErrorPopup} 
+        message={errorMessage} 
+        onClose={() => setShowErrorPopup(false)} 
+      />
     </Box>
   );
 };

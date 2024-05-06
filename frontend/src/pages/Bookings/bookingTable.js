@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -149,21 +149,41 @@ const BookingTable = ({ loggedInUserId }) => {
         onClose={handleCloseDeleteDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
       >
-        <DialogTitle id="alert-dialog-title">{"Delete Booking"}</DialogTitle>
+        <Box
+        sx={{
+          backgroundImage: `url('https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Hero-3.png')`,
+          backgroundSize: 'cover',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          //justifyContent: 'center',
+          padding: '20px',
+        }}
+      >
+        
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText id="alert-dialog-description" sx={{color:'#fc6f6f', fontSize:'25px'}}>
             Are you sure you want to delete this booking?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDeleteDialog} color="primary">
+          <Button onClick={handleCloseDeleteDialog} variant='contained' sx={{color:'white', backgroundColor: '#534890'}}>
             Cancel
           </Button>
-          <Button onClick={handleConfirmDelete} color="primary" autoFocus>
+          <Button onClick={handleConfirmDelete} variant='contained' sx={{color:'white', backgroundColor: '#534890' ,'&:hover': {
+      backgroundColor: '#f4656a'}}} autoFocus>
             Delete
           </Button>
         </DialogActions>
+      </Box>
       </Dialog>
     </>
   );
