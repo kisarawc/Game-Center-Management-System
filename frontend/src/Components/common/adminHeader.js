@@ -9,6 +9,7 @@ const handleLogout = () => {
 
 const AdminAppBar = () => {
   return (
+
     <AppBar position="static">
       <Toolbar sx={{backgroundColor:'#6d4af6'}}>
         <IconButton
@@ -27,7 +28,10 @@ const AdminAppBar = () => {
         <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
           Admin Panel
         </Typography>
-        <Button color="inherit"onClick={handleLogout}>LogOut</Button>
+
+        <Button color="inherit"onClick={handleLogout} sx={{'&:hover': {
+                      backgroundColor: '#f56a6a'
+                    }}}>LogOut</Button>
       </Toolbar>
     </AppBar>
   );

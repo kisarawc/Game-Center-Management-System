@@ -12,7 +12,9 @@
     "@mui/styles": "^5.15.14",
     "@mui/x-data-grid": "^6.19.10",
     "@paypal/react-paypal-js": "^8.2.0",
-    "@react-pdf/renderer": "^3.4.2",
+
+    "@react-pdf/renderer": "^3.4.4",
+
     "@reduxjs/toolkit": "^2.2.3",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -34,6 +36,7 @@
     "react-redux": "^9.1.0",
     "react-router": "^6.22.3",
     "react-router-dom": "^6.22.3",
+    "react-spring": "^9.7.3",
     "react-toastify": "^10.0.5",
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.8",

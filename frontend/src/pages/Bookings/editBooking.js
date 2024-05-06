@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Button, TextField, Typography, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Select, MenuItem } from '@mui/material';
 import moment from 'moment';
 import Box from '@mui/material/Box';
+import ErrorPopup from './ErrorPopup'; 
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
 
@@ -37,7 +38,7 @@ const EditBooking = () => {
   const [openPopup, setOpenPopup] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [previousPage, setPreviousPage] = useState('');
 
   const formatTime = (time) => {
@@ -90,12 +91,14 @@ const EditBooking = () => {
         console.log(existingBooking)
         if (existingBooking) {
           setErrorMessage("There is already a booking for this game on the selected date.");
+          setShowErrorPopup(true);
         } else {
           const currentDate = new Date();
           const formattedDate = moment(currentDate).format('YYYY-MM-DD');
   
           if (editedBooking.date < formattedDate) {
             setErrorMessage("You cannot create a booking for a past date.");
+            setShowErrorPopup(true);
             return;
           }
   
@@ -154,18 +157,20 @@ const EditBooking = () => {
       <Header />
       <Box
         sx={{
-          backgroundImage: `url('https://images.saymedia-content.com/.image/t_share/MTkzNzg4MTIxMjM2NjQ1MzE1/aesthetic-website-backgrounds.gif')`,
+          backgroundImage: `url('https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Hero-3.png')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
+         // alignItems: 'center',
           justifyContent: 'flex-start',
         }}
       >
-        <Paper style={{ padding: '30px', maxWidth: '600px', margin: 'auto' }}>
-          <Typography variant="h4" sx={{ textAlign: 'center', mb: '30px' }}>Edit Booking Details</Typography>
+        <Typography variant="h4" sx={{ textAlign: 'center', mb: '30px', mt:'50px', color:'#fa76d2' }}>Edit Booking Details</Typography>
+
+        <Box sx={{display:'flex', flexDirection:'row', ml:'300px'}}> 
+        <Paper style={{ padding: '30px', maxWidth: '400px'}}>
           {errorMessage && <Typography color="error" sx={{ marginBottom: '10px' }}>{errorMessage}</Typography>}
           <TextField
             fullWidth
@@ -224,8 +229,20 @@ const EditBooking = () => {
           />
 
 
-          <Button variant="contained" onClick={() => handleSubmit(id)}>Update Booking</Button>
+          <Button variant="contained" sx={{ml:'110px', backgroundColor: '#00a63a' ,'&:hover': {
+      backgroundColor: '#1cc592', 
+    }}} onClick={() => handleSubmit(id)}>Update Booking</Button>
         </Paper>
+
+      <Box sx={{ml:'50px'}}> 
+        <Typography variant='h4' sx={{color:'#ca9bf8', ml:'250px' , mt:'90px'}}> Rules</Typography>
+        <Box sx={{display:'flex', flexDirection:'column', color:'#ffffff', mt:'10px', ml:'35px'}}>
+            <Typography sx={{mb:'10px',fontSize:'1.5rem'}}> - Select the date and time that you want to change your booking.</Typography>
+            <Typography sx={{mb:'10px',fontSize:'1.5rem'}}> - You cannot change the game because of the security reasons.</Typography>
+            <Typography sx={{mb:'10px',fontSize:'1.5rem'}}> - If you want to change the game delete this booking & place a new booking.</Typography>
+        </Box>
+      </Box>
+        </Box>
       </Box>
       <Footer />
       <Dialog open={openPopup} onClose={handleClosePopup}>
@@ -237,6 +254,12 @@ const EditBooking = () => {
           <Button onClick={handleClosePopup}>Close</Button>
         </DialogActions>
       </Dialog>
+
+      <ErrorPopup 
+        open={showErrorPopup} 
+        message={errorMessage} 
+        onClose={() => setShowErrorPopup(false)} 
+      />
     </Box>
   );
 };

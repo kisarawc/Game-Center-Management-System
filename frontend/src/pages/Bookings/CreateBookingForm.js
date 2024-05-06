@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FormControl, InputLabel, MenuItem, Select, Button, Table, TableHead, TableBody, TableRow, TableCell, Typography, Paper, TextField, Modal } from '@mui/material';
+import ErrorPopup from './ErrorPopup'; 
+import { FormControl, InputLabel, MenuItem, Select, Button, Table, TableHead, TableBody, TableRow, TableCell, Typography, Paper, TextField, Modal, InputAdornment, Box } from '@mui/material';
+const userId = sessionStorage.getItem('userId');
 
 const BookingPage = () => {
+  
   const [games, setGames] = useState([]);
   const [selectedGame, setSelectedGame] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
@@ -11,15 +14,16 @@ const BookingPage = () => {
   const [bookingCreated,setBookingCreated] = useState(false);
   const [openModal, setOpenModal] = useState(false); 
   const [errorMessage, setErrorMessage] = useState(''); 
-  // Additional state for form fields
   const [numPlayers, setNumPlayers] = useState('');
   const [messageRequest, setMessageRequest] = useState('');
   const [selectedStartTime, setSelectedStartTime] = useState('');
   const [selectedDuration, setSelectedDuration] = useState(30);
+  const [hourlyRate, setHourlyRate] = useState(0);
+  const [totalCost, setTotalCost] = useState(0);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
 
   useEffect(() => {
-    // Fetch game names when the component mounts
-    axios.get('http://localhost:5000/api/game/names')
+    axios.get('http://localhost:3000/api/game/names')
       .then(response => {
         setGames(response.data);
       })
@@ -41,10 +45,8 @@ const BookingPage = () => {
   };
 
   const handleSubmit = () => {
-    // Clear previous bookings
     setBookings([]);
     setLoading(true);
-    // Fetch bookings for the selected game and date
     axios.get(`http://localhost:3000/api/bookings/game/${selectedGame}/${selectedDate}`)
       .then(response => {
         const formattedBookings = response.data.map(booking => ({
@@ -61,6 +63,19 @@ const BookingPage = () => {
         setLoading(false);
 
       });
+
+      axios.get(`http://localhost:3000/api/game/rate/${selectedGame}`)
+    .then(response => {
+      const rate = response.data.hourly_rate;
+      setHourlyRate(rate);
+    
+      console.log('Hourly rate:', rate);
+
+    })
+    .catch(error => {
+      console.error('Error fetching hourly rate:', error);
+    });
+    
   };
 
   const handleCloseModal = () => {
@@ -75,11 +90,13 @@ const BookingPage = () => {
   
     if (selectedDateTime < currentDate) {
       setErrorMessage("You cannot create a booking for a past date.");
+      setShowErrorPopup(true);
       return;
     }
 
     if (numPlayers <= 0) {
       setErrorMessage("Please enter a valid number of players.");
+      setShowErrorPopup(true);
       return;
     }
 
@@ -87,44 +104,39 @@ const BookingPage = () => {
     
 
 
-    // Convert selectedStartTime to a Date object
     const startTimeParts = selectedStartTime.split(':');
     const selectedTime = new Date();
     selectedTime.setHours(parseInt(startTimeParts[0], 10));
     selectedTime.setMinutes(parseInt(startTimeParts[1], 10));
 
-    // Add duration to selected start time
     const selectedEndTime = new Date(selectedTime.getTime() + selectedDuration * 60000);
 
-    // Format selectedEndTime as "HH:mm"
     const endHours = selectedEndTime.getHours().toString().padStart(2, '0');
     const endMinutes = selectedEndTime.getMinutes().toString().padStart(2, '0');
     const formattedEndTime = new Date(`${selectedDate}T${endHours}:${endMinutes}`);
 
 
-    //console.log('End Time:', formattedEndTime);
     const timezoneOffset = selectedDateTime.getTimezoneOffset();
     const selectedDateTimeEnd = new Date(formattedEndTime.getTime()- timezoneOffset * 60000);
 
-    const existingBookingWithStartTime = bookings.some(booking => {
-        const bookingStartTime = booking.start_time;
-        const bookingEndTime = booking.end_time;
-        //const moment = require('moment');
-        // // Parse the date string into a moment object
-        // const momentDate = moment.utc(bookingEndTime);
+    const moment = require('moment');
 
-        // // Get the formatted time in the UTC time zone
-        // const formattedTime = momentDate.format('HH:mm');
+const existingBookingWithStartTime = bookings.some(booking => {
+    const bookingStartTime = moment.utc(booking.start_time, 'HH:mm');
+    const bookingEndTime = moment.utc(booking.end_time, 'HH:mm');
+    const selectedStartTimeMoment = moment.utc(selectedStartTime, 'HH:mm');
 
-        console.log('bt', bookingStartTime);
-        console.log('be', bookingEndTime);
-        console.log('st', selectedStartTime);
+    console.log('bt', bookingStartTime.format('HH:mm'));
+    console.log('be', bookingEndTime.format('HH:mm'));
+    console.log('st', selectedStartTimeMoment.format('HH:mm'));
 
-        if (selectedStartTime >= bookingStartTime && 
-          selectedStartTime < bookingEndTime) {
-          return true; 
-      } return false; 
+    if (selectedStartTimeMoment.isSameOrAfter(bookingStartTime) && 
+        selectedStartTimeMoment.isBefore(bookingEndTime)) {
+        return true; 
+    } 
+    return false; 
 });
+
 if(existingBookingWithStartTime) {
   console.log('Double booking found!');
 } else {
@@ -132,6 +144,7 @@ if(existingBookingWithStartTime) {
 }
     if (existingBookingWithStartTime) {
       setErrorMessage("There's already a booking at the selected start time.");
+      setShowErrorPopup(true);
       return;
     }
  
@@ -139,17 +152,18 @@ if(existingBookingWithStartTime) {
     
     //console.log('et',selectedDateTimeEnd)
     const newBooking = {
-      date: selectedDateTimeLocal.toISOString().split('T')[0], // Convert date to ISO string format
+      date: selectedDateTimeLocal.toISOString().split('T')[0], 
       game_name: selectedGame,
-      start_time: selectedDateTimeLocal.toISOString(), // Convert start time to ISO string format
+      start_time: selectedDateTimeLocal.toISOString(), 
       end_time: selectedDateTimeEnd.toISOString(),
       duration: selectedDuration,
       num_players: numPlayers,
       status: 'pending',
       message_request: messageRequest,
-      user_id: '609d97334529cd465ab5c8a0'
+      user_id: userId,
+      fee: totalCost,
     };
-
+    console.log(newBooking)
     axios.post('http://localhost:3000/api/bookings', newBooking)
       .then(response => {
         console.log('Booking created successfully:', response.data);
@@ -200,9 +214,17 @@ if(existingBookingWithStartTime) {
     return localTime.toLocaleTimeString([], { timeZone: 'UTC', hour: '2-digit', minute: '2-digit' });
   };
 
+  useEffect(() => {
+    if(selectedDuration && hourlyRate) {
+      const cost = (selectedDuration / 60) * hourlyRate;
+      setTotalCost(cost);
+    }
+  }, [selectedDuration, hourlyRate]);
+
   return (
-    <Paper style={{ padding: '20px', maxWidth: '600px', margin: 'auto' }}>
-      <Typography variant="h5" gutterBottom>Select Game & Date</Typography>
+    <Box >
+    <Paper style={{ padding: '40px', maxWidth: '600px', margin: 'auto', borderRadius:'40px' , backgroundColor:'#f4efefff'}}>
+      <Typography variant="h5" sx={{color:'#9574f0'}} gutterBottom>Select Game & Date</Typography>
       <FormControl fullWidth style={{ marginBottom: '10px' }}>
         <InputLabel>Select a game</InputLabel>
         <Select value={selectedGame} onChange={handleGameChange}>
@@ -230,8 +252,8 @@ if(existingBookingWithStartTime) {
           },
         }}
       />
-      <Button variant="contained" onClick={handleSubmit} disabled={!selectedGame || !selectedDate || loading}>
-        {loading ? 'Loading...' : 'Submit'}
+      <Button variant="contained" sx= {{backgroundColor:'#b83394'}} onClick={handleSubmit} disabled={!selectedGame || !selectedDate || loading}>
+        {loading ? 'Loading...' : 'Check Availability'}
       </Button>
 
       {bookings.length > 0 ? (
@@ -262,18 +284,45 @@ if(existingBookingWithStartTime) {
         onClose={handleCloseModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
       >
-        <Paper style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', padding: '20px' }}>
-          <Typography variant="h6" gutterBottom>
-            Booking created successfully!
-          </Typography>
-          <Button variant="contained" onClick={handlePaymentNow} style={{ marginRight: '10px' }}>
+        <Box
+        sx={{
+          backgroundImage: `url('https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Hero-3.png')`,
+          backgroundSize: 'cover',
+          width: '50%',
+          height: '50%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          //justifyContent: 'center',
+          padding: '20px',
+        }}
+      >
+
+          <img 
+            src='https://uxwing.com/wp-content/themes/uxwing/download/checkmark-cross/success-green-check-mark-icon.png'
+            style={{
+              height:'80px',
+              marginTop:'50px'
+            }}
+          />
+              <Typography variant="h5" gutterBottom sx={{ textAlign: 'center', color: '#7efefa', mt:'30px', mb:'20px'}}>
+              Booking created successfully!
+              </Typography>
+          <Box sx={{display:'flex', flexDirection:'row'}}>
+          <Button variant="contained" onClick={handlePaymentNow} sx={{fontSize:'15px',mr:'10px'}}>
             Do the Payment Now
           </Button>
-          <Button variant="contained" onClick={handlePaymentLater}>
+          <Button variant="contained" onClick={handlePaymentLater} sx={{fontSize:'15px'}}>
             Do the Payment Later
           </Button>
-        </Paper>
+          </Box>
+      </Box>
       </Modal>
 
       {errorMessage && (
@@ -283,7 +332,7 @@ if(existingBookingWithStartTime) {
       )}
 
       <form onSubmit={handleFormSubmit} style={{ marginTop: '20px' }}>
-        <Typography variant="h5" gutterBottom>Create New Booking</Typography>
+        <Typography variant="h5" sx={{color:'#9574f0'}} gutterBottom>Create New Booking</Typography>
         <FormControl fullWidth style={{ marginBottom: '10px' }}>
           <InputLabel>Select Start Time</InputLabel>
           <Select
@@ -306,6 +355,28 @@ if(existingBookingWithStartTime) {
           </Select>
         </FormControl>
 
+        <FormControl fullWidth style={{ marginBottom: '10px' }}>
+          <TextField
+            label="Hourly Rate"
+            value={hourlyRate}
+            disabled
+            InputProps={{
+              startAdornment: <InputAdornment position="start">Rs </InputAdornment>,
+            }}
+          />
+        </FormControl>
+
+        <FormControl fullWidth style={{ marginBottom: '10px' }}>
+          <TextField
+            label="Total Cost"
+            value={totalCost}
+            disabled
+            InputProps={{
+              startAdornment: <InputAdornment position="start">Rs </InputAdornment>,
+            }}
+          />
+        </FormControl>
+
         <TextField
           fullWidth
           label="Number of Players"
@@ -323,11 +394,17 @@ if(existingBookingWithStartTime) {
           onChange={(event) => setMessageRequest(event.target.value)}
           style={{ marginBottom: '10px' }}
         />
-        <Button variant="contained" type="submit" disabled={!selectedGame || !selectedDate || !selectedStartTime || !numPlayers} >
-          Create Booking
+        <Button variant="contained" type="submit" sx={{ml:'230px', backgroundColor:'#08a480'}}disabled={!selectedGame || !selectedDate || !selectedStartTime || !numPlayers} >
+          Book The Session
         </Button>
       </form>
     </Paper>
+    <ErrorPopup 
+        open={showErrorPopup} 
+        message={errorMessage} 
+        onClose={() => setShowErrorPopup(false)} 
+      />
+    </Box>
   );
 };
 

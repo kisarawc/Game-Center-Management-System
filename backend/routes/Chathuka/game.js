@@ -12,4 +12,6 @@ router.route('/')
 
 router.get('/names', Game.getGamesDropdown);
 
+router.get('/rate/:name', Game.getHourlyRateByName);
+
 module.exports = router;

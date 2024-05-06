@@ -94,7 +94,7 @@ const ProfilePage = () => {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/users/${userId}`, {
+      const response = await axios.get(`http://localhost:3000/api/users/${userId}`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`           
@@ -123,7 +123,8 @@ const ProfilePage = () => {
   const handleLogout = () => {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('userId');
-    window.location.href='/login';
+    window.location.href = '/login';
+
   };
 
   const handleEditProfileOpen = () => {
@@ -137,7 +138,7 @@ const ProfilePage = () => {
   const handleEditProfileSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.patch(`http://localhost:5000/api/users/updateUser/${userId}`, formData, {
+      const response = await axios.patch(`http://localhost:3000/api/users/updateUser/${userId}`, formData, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
@@ -179,6 +180,7 @@ const ProfilePage = () => {
           padding: '16px',
         }}
       >
+
         <div className={classes.profilePage}>
           <Box className={classes.profileBox}>
             <Typography variant="h4" gutterBottom>{`Hi   ${user.username ? user.username.toUpperCase() : ''} 👋`}</Typography>
@@ -191,6 +193,7 @@ const ProfilePage = () => {
                 <Typography variant="body1">Gender: {user.gender || ''}</Typography>
                 <Typography variant="body1">Join Date: {user.joinDate || ''}</Typography>
               </div>
+
             </div>
             <Grid container spacing={2} justifyContent="center" className={classes.profileActions}>
               <Grid item xs={12} sm={6}> 
