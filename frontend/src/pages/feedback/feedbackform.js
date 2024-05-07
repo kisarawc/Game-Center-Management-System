@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
-import { Box, Typography, TextField, Button, Rating, Paper, Grid, Snackbar } from "@mui/material";
+import { Box, Typography, TextField, Button, Rating, Paper, Grid, Snackbar, MenuItem, FormControl, InputLabel, Select } from "@mui/material";
 import axios from 'axios';
+
+const getuserId = sessionStorage.getItem('userId');
 
 const CommentForm = () => {
   const [comment, setComment] = useState('');
@@ -13,6 +15,23 @@ const CommentForm = () => {
   const [error, setError] = useState('');
   const [submissionMessage, setSubmissionMessage] = useState('');
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [selectedGame, setSelectedGame] = useState('');
+  const [games, setGames] = useState([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/api/feedbacks/feedbackGameNames')
+      .then(response => {
+        setGames(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching game names:', error);
+      });
+  }, []);
+
+  const handleGameChange = (event) => {
+    setSelectedGame(event.target.value);
+  };
+
 
   const handleSubmit = async () => {
     if (date !== new Date().toISOString().split('T')[0]) {
@@ -24,13 +43,14 @@ const CommentForm = () => {
       comment,
       rating,
       date,
-      userId,
-      gameName,
+      user_id: getuserId,
+      game_name: selectedGame,
     };
 
     try {
+      console.log('Comment submitted:', commentData);
       const response = await axios.post('http://localhost:5000/api/feedbacks/createFeedback', commentData);
-      console.log('Comment submitted:', response.data);
+
 
       if (response.status === 201) {
         setSubmissionMessage('Form was submitted successfully!');
@@ -40,7 +60,7 @@ const CommentForm = () => {
       setComment('');
       setRating(0);
       setDate('');
-      setUserId('');
+
       setGameId('');
       setError('');
     } catch (error) {
@@ -87,7 +107,7 @@ const CommentForm = () => {
         <Paper elevation={3} sx={{ maxWidth: 600, margin: 'auto', padding: '20px', borderRadius: '10px', backgroundColor: '#ADD8E6' }}>
           <Typography variant="h5" sx={{ textAlign: 'center', marginBottom: 3, color: '#333' }}>Feedback Form</Typography>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <TextField
                 label="User ID"
                 fullWidth
@@ -95,16 +115,18 @@ const CommentForm = () => {
                 onChange={e => setUserId(e.target.value)}
                 variant="outlined"
               />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                label="Game Name"
-                fullWidth
-                value={gameName}
-                onChange={e => setGameId(e.target.value)}
-                variant="outlined"
-              />
-            </Grid>
+            </Grid> */}
+            <FormControl fullWidth style={{ marginBottom: '10px' }}>
+              <InputLabel>Select a game</InputLabel>
+              <Select value={selectedGame} onChange={handleGameChange}>
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                {games.map(game => (
+                  <MenuItem key={game._id} value={game.name}>{game.name}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <Grid item xs={12}>
               <TextField
                 label="Comment"

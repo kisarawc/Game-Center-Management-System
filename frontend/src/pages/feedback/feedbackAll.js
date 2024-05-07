@@ -16,7 +16,7 @@ const FeedbackTable = () => {
     useEffect(() => {
         async function fetchFeedbacks() {
             try {
-                const response = await axios.get(`http://localhost:5000/api/feedbacks/feedbacks/${userId}`);
+                const response = await axios.get(`http://localhost:5000/api/feedbacks`);
                 setFeedbacks(response.data);
             } catch (error) {
                 console.error('Error fetching feedbacks:', error);
@@ -99,6 +99,7 @@ const FeedbackTable = () => {
                                     alt="Game Image"
                                 />
                                 <CardContent>
+
                                     <Typography variant="body2" color="text.secondary">
                                         Game Name: {feedback.game_name}
                                     </Typography>
@@ -112,23 +113,11 @@ const FeedbackTable = () => {
                                         Date: {new Date(feedback.date).toLocaleDateString()}
                                     </Typography>
                                 </CardContent>
-                                <CardActions>
-                                    <Button size="small" onClick={() => handleEdit(feedback._id)}>Edit</Button>
-                                    <Button size="small" onClick={() => handleDelete(feedback._id)}>Delete</Button>
-                                </CardActions>
+
                             </Card>
                         </Grid>
                     ))}
                 </Grid>
-                {/* Option provided */}
-                {feedbacks.map((feedback) => {
-                    console.log(feedback); // Log the feedback object to see its structure
-                    return (
-                        <Grid item key={feedback._id}>
-                            {/* Your card component */}
-                        </Grid>
-                    );
-                })}
             </Box>
             <Footer />
 
@@ -150,10 +139,7 @@ const FeedbackTable = () => {
                         margin="normal"
                     />
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseDialog} color="primary">Cancel</Button>
-                    <Button onClick={handleSaveChanges} color="primary">Save Changes</Button>
-                </DialogActions>
+
             </Dialog>
         </Box>
     );
