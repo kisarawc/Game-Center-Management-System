@@ -27,20 +27,20 @@ const AdminAppBar = () => {
         </Typography>
 
 <Box sx={{mr:'20px'}}>
-    <Button component={Link} to="/game" variant="contained" sx={{ml:'10px',mr:'20px',fontSize:'15px',backgroundColor:'#00ADB5'}} >
+    <Button component={Link} to="/addGgame" variant="contained" sx={{ml:'10px',mr:'20px',fontSize:'15px',backgroundColor:'#00ADB5'}} >
       Games
     </Button>
     <Button component={Link} to="/bookingAdmin" variant="contained" sx={{mr:'20px',fontSize:'15px',backgroundColor:'#00ADB5'}}>
       Booking
     </Button>
-    <Button component={Link} to="/bookingAdmin" variant="contained" sx={{mr:'20px',fontSize:'15px',backgroundColor:'#00ADB5'}}>
+    <Button component={Link} to="/adminEvents" variant="contained" sx={{mr:'20px',fontSize:'15px',backgroundColor:'#00ADB5'}}>
       Event
     </Button>
-    <Button component={Link} to="/bookingAdmin" variant="contained" sx={{mr:'20px',fontSize:'15px',backgroundColor:'#00ADB5'}}>
+    <Button component={Link} to="/usersTable" variant="contained" sx={{mr:'20px',fontSize:'15px',backgroundColor:'#00ADB5'}}>
       User Account
     </Button>
 
-    <Button component={Link} to="/bookingAdmin" variant="contained" sx={{mr:'20px',fontSize:'15px',backgroundColor:'#00ADB5'}}>
+    <Button component={Link} to="/feedback" variant="contained" sx={{mr:'20px',fontSize:'15px',backgroundColor:'#00ADB5'}}>
       FeedBack
     </Button>
     </Box>
