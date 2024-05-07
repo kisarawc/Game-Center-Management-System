@@ -2,7 +2,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
-import { Box, Typography, TextField, Button, Grid, Snackbar } from '@mui/material';
+import { Box, Typography, TextField, Button, Grid, Snackbar, Divider } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import EventIcon from '@mui/icons-material/Event';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import DescriptionIcon from '@mui/icons-material/Description';
+
 
 const userId = sessionStorage.getItem('userId');
 
@@ -93,31 +98,37 @@ const ClientEvent = () => {
         }}
       >
         <div>
-        <TextField
-  type="text"
-  placeholder="Search by event title"
-  value={searchQuery}
-  onChange={(e) => setSearchQuery(e.target.value)}
-  fullWidth
-  margin="normal"
-  InputProps={{
-    sx: {
-      borderRadius: '25px',
-      paddingRight: '0',
-    },
-  }}
-  sx={{ width: '20%', float: 'right' }}
-/>
+          <TextField
+            type="text"
+            placeholder=" Event Title"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            fullWidth
+            margin="normal"
+            InputProps={{
+              sx: {
+                borderRadius: '25px',
+                paddingRight: '0',
+                backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.4)' // Background color
+              },
+              startAdornment: ( // Add search icon as start adornment
+                <SearchIcon sx={{ color: 'rgba(0, 0, 0, 0.54)' }} />
+              ),
+            }}
+            sx={{ width: '100%', marginBottom: '20px' }} // Adjust width and bottom margin
+          />
 
-          <Grid container spacing={2} sx={{ justifyContent: 'center' }}>
+          <Grid container spacing={5} sx={{ justifyContent: 'center' }}>
             {filteredEvents.map(event => (
               <Grid item xs={7} key={event._id} >
                 <Box
                   sx={{
-                    backgroundColor: '#fff',
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)', // Adjust alpha value (0.9 for slight transparency)
                     padding: '20px',
                     borderRadius: '10px',
-                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.9)',
+                    position: 'relative',
                   }}
                 >
                   <Typography variant="h5" component="div" gutterBottom>
@@ -137,39 +148,68 @@ const ClientEvent = () => {
                         borderRadius: '5px',
                       }}
                     />
+                    {new Date(event.eventDate) < new Date() && (
+                      <Typography
+                        variant="h5"
+                        component="div"
+                        gutterBottom
+                        sx={{
+                          position: 'absolute',
+                          top: '50%',
+                          left: '50%',
+                          transform: 'translate(-50%, -50%)',
+                          backgroundColor: 'rgba(255, 255, 255, 1)',
+                          padding: '10px',
+                          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.8)',
+                          borderRadius: '15px',
+                          zIndex: '1',
+                          color: 'red', // Change text color to red
+                        }}
+                      >
+                        !! SORRY THE EVENT IS OVER !!
+                      </Typography>
+                    )}
                   </div>
                   <Typography variant="body1" gutterBottom>
-                    Date: {formatDate(event.date)}
+                    <EventIcon sx={{ fontSize: 20, marginRight: 1 }} />
+                    {formatDate(event.eventDate)}
                   </Typography>
                   <Typography variant="body1" gutterBottom>
-                    Description: {event.description}
+                    <LocationOnIcon sx={{ fontSize: 20, marginRight: 1 }} />
+                    {event.Venue}
+                  </Typography>
+                  <Typography variant="body1" gutterBottom>
+                    <DescriptionIcon sx={{ fontSize: 20, marginRight: 1 }} />
+                    {event.description}
                   </Typography>
                   <h3>Comments</h3>
-                  {event.comments.map((comment, index) => {
-                    if (!showMore[event._id] && index >= 3) {
-                      return null; // Hide comments beyond the third one if "See More" is not clicked
-                    }
-                    return (
-                      <div key={comment._id}>
-                        {comment.userId && (
-                          <Typography variant="body2" sx={{ fontWeight: 'bold' }}>{comment.userName}</Typography>
+                  <Box sx={{ border: '1px solid #ccc', borderRadius: '5px', padding: '10px', marginBottom: '20px' }}>
+                    {event.comments.map((comment, index) => {
+                      if (!showMore[event._id] && index >= 3) {
+                        return null; // Hide comments beyond the third one if "See More" is not clicked
+                      }
+                      return (
+                        <div key={comment._id} style={{ marginBottom: '10px' }}>
+                          {comment.userId && (
+                            <Typography variant="body2" sx={{ fontWeight: 'bold' }}>{comment.userName}</Typography>
+                          )}
+
+                          <Typography variant="body1" color="textSecondary" gutterBottom marginLeft={5} sx={{ marginBottom: '8px' }}>
+                            {comment.comment}
+                          </Typography>
+                        </div>
+                      );
+                    })}
+                    {event.comments.length > 3 && (
+                      <div>
+                        {showMore[event._id] ? (
+                          <Button onClick={() => handleShowLess(event._id)}>Show Less</Button>
+                        ) : (
+                          <Button onClick={() => handleSeeMore(event._id)}>See More</Button>
                         )}
-                        
-                        <Typography variant="body1" color="textSecondary" gutterBottom marginLeft={5} sx={{ marginBottom: '8px' }}>
-                          {comment.comment}
-                        </Typography>
                       </div>
-                    );
-                  })}
-                  {event.comments.length > 3 && (
-                    <div>
-                      {showMore[event._id] ? (
-                        <Button onClick={() => handleShowLess(event._id)}>Show Less</Button>
-                      ) : (
-                        <Button onClick={() => handleSeeMore(event._id)}>See More</Button>
-                      )}
-                    </div>
-                  )}
+                    )}
+                  </Box>
                   <TextField
                     type="text"
                     placeholder="Add a comment"

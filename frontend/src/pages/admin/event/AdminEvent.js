@@ -8,7 +8,7 @@ import AdminHeader from '../../../Components/common/adminHeader';
 import logo from '../../../images/header/logo.jpeg';
 
 const AdminEvent = () => {
-  const [newEvent, setNewEvent] = useState({ title: '', description: '', date: '', imagePath: '' });
+  const [newEvent, setNewEvent] = useState({ title: '', description: '', date: '', imagePath: '', eventDate: '', Venue: '' });
   const [events, setEvents] = useState([]);
   const [editEventIds, setEditEventIds] = useState({});
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -20,36 +20,53 @@ const AdminEvent = () => {
   const [updateDialogOpen, setUpdateDialogOpen] = useState(false);
   const [updatingEventId, setUpdatingEventId] = useState('');
 
+  const [createEventDate, setCreateEventDate] = useState(''); // State for creating event date
+  const [updateEventDate, setUpdateEventDate] = useState({}); // State for updating event dates // State for updating event dates
+const [eventDates, setEventDates] = useState({}); // State to store fetched event dates
+
+
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-  // Function to fetch events
+  
   const fetchEvents = async () => {
     try {
       const eventsResponse = await axios.get('http://localhost:5000/api/events');
       setEvents(eventsResponse.data);
+  
+      // Initialize updateEventDate with event dates
+      const initialUpdateEventDate = {};
+      const initialEventDates = {};
+      eventsResponse.data.forEach(event => {
+        initialUpdateEventDate[event._id] = event.eventDate;
+        initialEventDates[event._id] = event.eventDate.split('T')[0];
+        console.log(event.eventDate)
+      });
+      setUpdateEventDate(initialUpdateEventDate);
+      setEventDates(initialEventDates);
     } catch (error) {
       console.error('Error fetching events:', error);
     }
   };
+  
+
 
   useEffect(() => {
     fetchEvents();
-  }, []); // Fetch events when component mounts
+  }, []);
 
   const createEvent = async () => {
     try {
-      // Get the current date
       const currentDate = new Date().toISOString().slice(0, 10);
-      // Set the date field of the new event to the current date
-      const eventWithDate = { ...newEvent, date: currentDate };
+      const eventWithDate = { ...newEvent, date: currentDate, eventDate: createEventDate };
 
       const eventResponse = await axios.post('http://localhost:5000/api/events', eventWithDate);
       console.log('New event created:', eventResponse.data);
-      // After creating a new event, refetch the events to update the list
+
       fetchEvents();
-      // Clear the input fields
-      setNewEvent({ title: '', description: '', date: '', imagePath: '' });
-      // Show the Snackbar
+
+      setNewEvent({ title: '', description: '', date: '', imagePath: '', eventDate: '', Venue: '' });
+      setCreateEventDate(''); // Reset create event date
+
       setSnackbarMessage('Your Event Is Successfully Created');
       setSnackbarOpen(true);
       setPreviewImages({});
@@ -64,23 +81,23 @@ const AdminEvent = () => {
       const eventDate = new Date(event.date);
       return eventDate.getMonth() === months.indexOf(selectedMonth);
     });
-  
+
     if (selectedMonthEvents.length === 0) {
       // No events found for the selected month
       setSnackbarMessage('No events found for the selected month.');
       setSnackbarOpen(true);
       return;
     }
-  
+
     const doc = new jsPDF();
-  
+
     // Function to add the header
     const addHeaderToPdf = (doc) => {
       // Load the logo image
       const logoImage = logo; // Update path to your logo image
       const imgWidth = 20;
       const imgHeight = 20;
-  
+
       // Add the title and date
       doc.setFontSize(20);
       doc.setFont('helvetica', 'bold');
@@ -92,7 +109,7 @@ const AdminEvent = () => {
       doc.setFontSize(10); // Font size for the date
       doc.text(`Report generated: ${new Date().toLocaleDateString('en-US', { timeZone: 'UTC' })}`, 150, 25); // Positioning the date
     };
-  
+
     // Function to add the footer
     const addFooterToPdf = (doc) => {
       const footerText = 'GG LOUNGE\n165/A, New Kandy Rd, Welivita Junction, Malabe';
@@ -100,31 +117,35 @@ const AdminEvent = () => {
       doc.setTextColor('#555');
       doc.text(footerText, doc.internal.pageSize.width / 2, doc.internal.pageSize.height - 10, { align: 'center' });
     };
-  
+
     // Add the header to the PDF
     addHeaderToPdf(doc);
-  
+
     // Add the footer to the PDF
     addFooterToPdf(doc);
-  
+
     // Define the data for the autoTable
-    const tableData = selectedMonthEvents.map(event => [
-      event.title,
-      new Date(event.date).toLocaleDateString('en-US', { timeZone: 'UTC' })
-      // Add more event details if needed
-    ]);
-  
+    // Define the data for the autoTable
+const tableData = selectedMonthEvents.map(event => [
+  event.title,
+  new Date(event.eventDate).toLocaleDateString('en-US', { timeZone: 'UTC' }), // Format event date
+  event.Venue,
+  new Date(event.date).toLocaleDateString('en-US', { timeZone: 'UTC' })
+  // Add more event details if needed
+]);
+
+
     // Draw the autoTable
     doc.autoTable({
-      head: [['Event Title', 'Event Date']],
+      head: [['Event Title', 'Event Date', 'Venue', 'Event Added Date']],
       body: tableData,
       startY: 40 // Starting Y position for the autoTable
     });
-  
+
     // Save the PDF
     doc.save(`${selectedMonth}_report.pdf`);
   };
-  
+
   const deleteEvent = async (eventId) => {
     try {
       await axios.delete(`http://localhost:5000/api/events/${eventId}`);
@@ -144,11 +165,10 @@ const AdminEvent = () => {
     setUpdatingEventId(eventId);
     setUpdateDialogOpen(true);
   };
-  
+
   const handleCloseUpdateDialog = () => {
     setUpdateDialogOpen(false);
   };
-  
 
   const handleDeleteConfirmation = (eventId) => {
     setDeletingEventId(eventId);
@@ -184,7 +204,6 @@ const AdminEvent = () => {
     updateEvent(eventId);
     handleCloseUpdateDialog();
   };
-  
 
   const handleEditChange = (eventId, field, value) => {
     setEditEventIds({
@@ -204,11 +223,46 @@ const AdminEvent = () => {
     setSnackbarOpen(false);
   };
 
+  const handleCreateEventDateChange = (e) => {
+    const selectedDate = e.target.value;
+    const currentDate = getCurrentDate();
+
+    // Check if selected date is before the current date
+    if (selectedDate < currentDate) {
+      // You can display an error message or handle the validation as needed
+      console.log("Please select a future date for the event.");
+      return;
+    }
+
+    // Update the event date for creating event
+    setCreateEventDate(selectedDate);
+  };
+
+  const handleUpdateEventDateChange = (eventId, value) => {
+    // Update the event date for updating event
+    setUpdateEventDate(prevState => ({
+      ...prevState,
+      [eventId]: value
+    }));
+    handleEditChange(eventId, 'eventDate', value);
+  };
+  
+
+  // Function to get the current date in the format required for the input min attribute
+  const getCurrentDate = () => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   return (
     <Box>
       <AdminHeader />
+      
       <Container maxWidth="lg">
-        <Typography variant="h4" gutterBottom style={{ marginBottom: '20px', textAlign: 'center' }}>Create New Event</Typography>
+        <Typography variant="h4" gutterBottom style={{ marginBottom: '20px', textAlign: 'center' }}>Create A New Event</Typography>
         <Grid container spacing={2} style={{ marginBottom: '20px' }}>
           <Grid item xs={12}>
             <TextField
@@ -226,6 +280,29 @@ const AdminEvent = () => {
               rows={4}
               value={newEvent.description}
               onChange={e => setNewEvent({ ...newEvent, description: e.target.value })}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Event Date"
+              type="date"
+              value={createEventDate}
+              onChange={handleCreateEventDateChange}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              inputProps={{
+                min: getCurrentDate(), // Set minimum selectable date to today's date
+              }}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              label="Venue"
+              value={newEvent.Venue}
+              onChange={e => setNewEvent({ ...newEvent, Venue: e.target.value })}
             />
           </Grid>
           <Grid item xs={12}>
@@ -250,7 +327,7 @@ const AdminEvent = () => {
           value={selectedMonth}
           onChange={(e) => setSelectedMonth(e.target.value)}
           variant="outlined"
-          style={{ marginTop: '20px' ,marginRight: '20px',width: '150px'}}
+          style={{ marginTop: '20px', marginRight: '10px', width: '150px' }}
         >
           {months.map(month => (
             <MenuItem key={month} value={month}>{month}</MenuItem>
@@ -259,7 +336,7 @@ const AdminEvent = () => {
 
         {/* Add button to generate PDF report */}
         <Button variant="contained" color="primary" onClick={generatePDFReport} style={{ marginTop: '20px' }}>Generate PDF Report</Button>
-        <Typography variant="h4" gutterBottom style={{ marginBottom: '20px',marginTop:'20px'}}>Events</Typography>
+        <Typography variant="h4" gutterBottom style={{ marginBottom: '20px', marginTop: '20px' }}>Events</Typography>
         <Grid container spacing={2}>
           {events.map(event => (
             <Grid item xs={12} key={event._id}>
@@ -283,18 +360,44 @@ const AdminEvent = () => {
                       style={{ marginBottom: '10px' }}
                     />
                     <TextField
+  fullWidth
+  label="Event Date"
+  type="date"
+  value={eventDates[event._id] || ''}
+  onChange={(e) => handleUpdateEventDateChange(event._id, e.target.value)}
+  InputLabelProps={{
+    shrink: true,
+  }}
+  inputProps={{
+    min: getCurrentDate(), // Set minimum selectable date to today's date
+  }}
+  style={{ marginBottom: '10px' }}
+/>
+
+
+
+
+                    <TextField
+                      fullWidth
+                      label="Venue"
+                      value={editEventIds[event._id].Venue}
+                      onChange={e => handleEditChange(event._id, 'Venue', e.target.value)}
+                      style={{ marginBottom: '10px' }}
+                    />
+                    <TextField
                       fullWidth
                       label="Image URL"
                       value={editEventIds[event._id].imagePath}
                       onChange={e => handleEditChange(event._id, 'imagePath', e.target.value)}
                       onInput={e => setPreviewImages({ ...previewImages, [event._id]: e.target.value })}
-                      style={{ marginBottom: '10px' }}
+                      style={{ marginBottom: '25px' }}
                     />
+
                     {previewImages[event._id] && (
                       <img src={previewImages[event._id]} alt="Preview" style={{ maxWidth: '20%', height: '50%', marginTop: '10px', }} />
                     )}
-                    <div style={{ position: 'absolute', bottom: '10px', left: '20px'}}>
-                      <Button variant="contained" color="primary" onClick={() => handleUpdateConfirmation(event._id)} style={{ marginRight: '10px'}}>Update</Button>
+                    <div style={{ position: 'absolute', bottom: '5px', left: '20px' }}>
+                      <Button variant="contained" color="primary" onClick={() => handleUpdateConfirmation(event._id)} style={{ marginRight: '10px', }}>Update</Button>
                       <Button variant="contained" onClick={() => handleCancelEdit(event._id)}>Cancel</Button>
                     </div>
                   </div>
@@ -306,13 +409,14 @@ const AdminEvent = () => {
                       src={event.imagePath}
                       alt=""
                       style={{
-                        width: '100%', 
-                        height: '50%', 
+                        width: '100%',
+                        height: '50%',
                         maxHeight: '150px',
-                        objectFit: 'cover', 
+                        objectFit: 'cover',
+                        marginBottom: '20px'
                       }}
                     />
-                    <div style={{ position: 'absolute', bottom: '10px', left: '20px' }}>
+                    <div style={{ position: 'absolute', bottom: '5px', left: '20px' }}>
                       <Button variant="contained" color="secondary" onClick={() => handleDeleteConfirmation(event._id)} style={{ marginRight: '10px' }}>Delete</Button>
                       <Button variant="contained" onClick={() => setEditEventIds({ ...editEventIds, [event._id]: { ...event } })}>Edit</Button>
                     </div>

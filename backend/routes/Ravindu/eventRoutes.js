@@ -8,4 +8,5 @@ router.post('/', eventController.createEvent);
 router.delete('/:eventId', eventController.deleteEvent);
 router.put('/:eventId', eventController.updateEvent);
 
+
 module.exports = router;

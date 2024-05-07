@@ -19,7 +19,7 @@ const MyRouter = () => {
             <Route exact path='/' element={<HomePage />} />
             <Route path='/book' element={<Book />} />
             <Route path='/Events' element={<UserEvent/>} />
-            <Route path='/adminEvents' element={<AdminEvent/>} />
+            <Route path='/adminEvents' element={<Admin/>} />
             <Route path='/admin' element={<Admin/>}/>
    
 
