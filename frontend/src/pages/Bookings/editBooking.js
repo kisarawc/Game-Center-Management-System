@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { Button, TextField, Typography, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Select, MenuItem } from '@mui/material';
+import { Button, TextField, Typography, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Select, MenuItem, InputLabel } from '@mui/material';
 import moment from 'moment';
 import Box from '@mui/material/Box';
 import ErrorPopup from './ErrorPopup'; 
@@ -80,7 +80,6 @@ const EditBooking = () => {
     }));
   };
   
-
   const handleSubmit = () => {
     const startTime = moment.utc(`${editedBooking.date}T${editedBooking.start_time}`);
     const startTimeFormatted = startTime.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
@@ -190,7 +189,7 @@ const EditBooking = () => {
             onChange={handleInputChange}
             style={{ marginBottom: '10px' }}
           />
-
+          <InputLabel id="start-time-label">Start Time</InputLabel>
           <Select
             fullWidth
             label="Start Time"
