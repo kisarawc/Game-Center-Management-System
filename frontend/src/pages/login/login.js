@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Container, Typography, TextField, Button, Grid, Link, Paper, CssBaseline, Box } from '@mui/material';
+import { Container, Typography, TextField, Button, Grid, Link, Paper, CssBaseline } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import loginBackground from '../../images/login/login.jpg';
 import axios from 'axios';
-import Header from '../../Components/common/Header/header';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -25,13 +24,13 @@ const Login = () => {
         window.location.href = `/profile/${userId}`;
         // Redirect based on user role or any other condition
         if (email === 'chathuka@gmail.com' && password === 'chathuka123') {
-          window.location.href = '/adminDashboard';
+          window.location.href = '/admin';
         } 
         else if (email === 'limasha@gmail.com' && password === 'limasha123') {
-          window.location.href = '/adminDashboard';
+          window.location.href = '/admin';
         }
         else if (email === 'ravindu@gmail.com' && password === 'ravindu123') {
-          window.location.href = '/adminDashboard';
+          window.location.href = '/admin';
         }
         else if (email === 'radeesa@gmail.com' && password === 'radeesa123') {
           window.location.href = '/adminDashboard';
@@ -52,7 +51,7 @@ const Login = () => {
     .catch(err => {
       console.error(err);
       const errorMessage = err.response ? err.response.data.message : 'Unauthorized';
-      window.alert('Error: ' + errorMessage); // Display the error message in an alert box
+      window.alert(`Error: ${errorMessage}`); // Display the error message in an alert box
     });
   }
 
@@ -62,9 +61,7 @@ const Login = () => {
   });
 
   return (
-    <Box>
-    <Header />
-    <div style={{ backgroundImage: `url(${loginBackground})`, backgroundSize: 'cover', height:'100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+    <div style={{ backgroundImage: `url(${loginBackground})`, backgroundSize: 'cover', height: '100vh', width: '100vw', display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: -24 }}>
 
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -129,7 +126,6 @@ const Login = () => {
         </div>
       </Container>
     </div>
-    </Box>
   );
 };
 

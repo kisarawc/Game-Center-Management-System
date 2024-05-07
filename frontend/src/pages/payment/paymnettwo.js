@@ -1,40 +1,90 @@
-import React, { useState, useEffect } from 'react'; 
+import React, { useState } from 'react'; 
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
-import { Box, FormControl, InputLabel, MenuItem, Select, Typography, Button, TextField } from '@mui/material';
+import { Box, FormControl, Typography, Button, TextField, InputLabel } from '@mui/material';
+import axios from 'axios';
+import jsPDF from 'jspdf';
 
 const Paymenttwo = () => {
-  const years = [2023, 2024, 2025];
-  const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ];
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [isReportGenerated, setIsReportGenerated] = useState(false);
+  const [reportData, setReportData] = useState(null);
 
-  const [selectedYear, setSelectedYear] = useState(2024);
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
-  const [showText, setShowText] = useState(false);
-  const [fromValue, setFromValue] = useState('');
-  const [toValue, setToValue] = useState('');
-
-  useEffect(() => {
-    const timer = setTimeout(() => setShowText(true), 500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleYearChange = (event) => {
-    setSelectedYear(event.target.value);
+  const handleStartDateChange = (event) => {
+    setStartDate(event.target.value);
   };
 
-  const handleMonthChange = (event) => {
-    setSelectedMonth(event.target.value);
+  const handleEndDateChange = (event) => {
+    setEndDate(event.target.value);
   };
 
-  const handleFromInputChange = (event) => {
-    setFromValue(event.target.value);
+  const handleGenerateReport = async () => {
+    // Fetch data from the server
+    try {
+      const response = await axios.post('http://localhost:3000/api/payments/getdatabasedonData', {
+        startDate,
+        endDate
+      });
+  
+      if (response.status === 200) {
+        const payments = response.data;
+        console.log(payments); // Log the retrieved payments
+
+        // Set state to indicate report is generated
+        setIsReportGenerated(true);
+        // Set report data
+        setReportData(payments);
+      } else {
+        console.error('Failed to fetch data');
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   };
 
-  const handleToInputChange = (event) => {
-    setToValue(event.target.value);
+  const handleDownloadReport = () => {
+    if (reportData) {
+      console.log(reportData); // Log the
+      // Generate PDF report
+      generatePDFReport(reportData);
+      // Clear date fields and reset UI
+      setStartDate("");
+      setEndDate("");
+      setIsReportGenerated(false);
+    } else {
+      console.error('Report data is not available');
+    }
+  };
+
+  // Function to format date
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  }
+
+  const generatePDFReport = (data) => {
+    const doc = new jsPDF();
+    let y = 20; // Initial y position
+  
+    doc.text(20, y, 'Payment Report:');
+    y += 10; // Increment y position for next content
+  
+    // Iterate over reportData and add each payment entry to the PDF
+    data.forEach((payment, index) => {
+      y += 10; // Increment y position for each payment entry
+      doc.text(20, y, `Payment ${index + 1}:`);
+      y += 5; // Increment y position
+      doc.text(30, y, `Amount: ${payment.amount}`);
+      y += 5;
+      doc.text(30, y, `Date: ${formatDate(payment.date)}`);
+      y += 5;
+      doc.text(30, y, `Payment Method: ${payment.payment_method}`);
+      y += 10; // Adjust vertical space between entries
+    });
+  
+    doc.save('payment_report.pdf');
   };
 
   return (
@@ -55,74 +105,43 @@ const Paymenttwo = () => {
       >
         <Box sx={{ marginTop: 6, marginLeft: 10 }}>
           <Typography variant="h3" color={'white'}>
-            <span className={showText ? 'word-animation' : ''}>Select</span>&nbsp;
-            <span className={showText ? 'word-animation' : ''}>Here</span>&nbsp;
-            <span className={showText ? 'word-animation' : ''}>To</span>&nbsp;
-            <span className={showText ? 'word-animation' : ''}>Create</span>&nbsp;
-            <span className={showText ? 'word-animation' : ''}>Report!</span>
+            Select Here To Create Report!
           </Typography>
         </Box>
         <br />
         <Box sx={{ position: 'absolute', top: '200px' ,marginLeft:10, marginTop:'5', backgroundImage:'src\images\payment\pic2.jpg'}}>
-          
-          <FormControl sx={{ margin: '1rem 0' }}>
-            <InputLabel id="year-label">Year</InputLabel>
-            <Select
-              labelId="year-label"
-              id="year"
-              value={selectedYear}
-              label="Year"
-              onChange={handleYearChange}
-            >
-              {years.map((year) => (
-                <MenuItem key={year} value={year}>
-                  {year}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl sx={{ margin: '1rem 0' }}>
-            <InputLabel id="month-label">Month</InputLabel>
-            <Select
-              labelId="month-label"
-              id="month"
-              value={selectedMonth}
-              label="Month"
-              onChange={handleMonthChange}
-            >
-              {months.map((month, index) => (
-                <MenuItem key={index} value={index}>
-                  {month}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl sx={{ margin: '1rem 0', width: 100 }}>
-            <InputLabel id="from-label">From</InputLabel>
-            <TextField
-              id="from-input"
-              label="From"
-              value={fromValue}
-              onChange={handleFromInputChange}
-              variant="outlined"
-            />
-          </FormControl>
-          <FormControl sx={{ margin: '1rem 0', width: 100 }}>
-            <InputLabel id="to-label">To</InputLabel>
-            <TextField
-              id="to-input"
-              label="To"
-              value={toValue}
-              onChange={handleToInputChange}
-              variant="outlined"
-            />
-          </FormControl>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem' }}>
-            <Button variant="contained" color="primary">
+          <Box style={{ gap: "50px" }}>
+            <FormControl sx={{ margin: '1rem 0' }}>
+              <TextField
+                id="from-input"
+                value={startDate}
+                variant="outlined"
+                type='date'
+                onChange={handleStartDateChange}
+              />
+            </FormControl>
+            <FormControl sx={{ margin: '1rem 0' }}>
+              <TextField
+                id="to-input"
+                value={endDate}
+                variant="outlined"
+                type='date'
+                onChange={handleEndDateChange}
+              />
+            </FormControl>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', gap:"20px", marginTop: "1rem" }}>
+            {isReportGenerated ? (
+              <Typography variant="body1" color="secondary">
+                Report Generated Successfully!
+              </Typography>
+            ) : (
+              <Button variant="contained" color="secondary" onClick={handleGenerateReport}>
+                Create Report
+              </Button>
+            )}
+            <Button variant="contained" color="primary" onClick={handleDownloadReport}>
               Download Report
-            </Button>
-            <Button variant="contained" color="secondary">
-              Create Report
             </Button>
           </Box>
         </Box>

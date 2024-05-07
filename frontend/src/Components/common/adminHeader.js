@@ -1,11 +1,6 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, IconButton, Button } from '@mui/material';
 
-const handleLogout = () => {
-  sessionStorage.removeItem('token');
-  sessionStorage.removeItem('userId');
-  window.location.href='/login';
-};
 
 const AdminAppBar = () => {
   return (
@@ -27,7 +22,7 @@ const AdminAppBar = () => {
         <Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
           Admin Panel
         </Typography>
-        <Button color="inherit"onClick={handleLogout}>LogOut</Button>
+        <Button color="inherit">LogOut</Button>
       </Toolbar>
     </AppBar>
   );

@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 
 const Paymentfive = () => {
     const [booking,setBooking] =useState([]);
+    const [amount,setAmount]=useState(); 
   // Dummy data for demonstration
 //   const rows = [
 //     { id: 1, date: '2024-04-17', start: '10:00 AM', duration: '2 hours', messageRequests: 3, userId: 'ABC123', gameName: 'Chess', status: 'Pending', numOfPlayers: 4 },
@@ -16,15 +17,22 @@ const Paymentfive = () => {
 //   ];
 
 useEffect(() => {
-    async function getBookingDetails() {
-      try {
-        const response = await axios.get('http://localhost:3000/api/bookings');
-        console.log(response.data); // Log the response data
-        setBooking(response.data);
-        } catch (error) {
-        console.error('Error fetching bookings:', error);
-      }
-    }
+  const userId = sessionStorage.getItem('userId');
+        console.log("User ID:", userId);
+        
+        console.log(userId);
+        async function getBookingDetails() {
+          try {
+           // const response = await axios.get(`http://localhost:3000/api/bookings/user/${userId}`);
+            const response = await axios.get('http://localhost:3000/api/bookings');
+
+            console.log(response.data); // Log the response data
+            setBooking(response.data);
+            setAmount(response.data.fee);
+          } catch (error) {
+            console.error('Error fetching bookings:', error);
+          }
+        }
     getBookingDetails();
   }, []);
   
@@ -72,7 +80,7 @@ useEffect(() => {
                   <TableCell>{row.status}</TableCell>
                   <TableCell>{row.num_players}</TableCell>
                   <TableCell>
-                    <Button variant="contained" color="primary"><Link to={`/paymentone/${row.user_id}/${row._id}`} >Do Payment</Link></Button>
+                    <Button variant="contained" color="primary"><Link to={`/paymentone/${row.user_id}/${row._id}/${row.fee}`} >Do Payment</Link></Button>
                   </TableCell>
                 </TableRow>
               ))}

@@ -6,7 +6,7 @@ const cardSchema = new mongoose.Schema({
   cvv: { type: Number },
   expire_date: { type: Date },
   card_type: { type: String },
-  // user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+  user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
 const Card = mongoose.model('Card', cardSchema);

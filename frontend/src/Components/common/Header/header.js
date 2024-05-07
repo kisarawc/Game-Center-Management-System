@@ -1,10 +1,9 @@
 import React from 'react';
 import { AppBar, Box, Toolbar, Button, ThemeProvider, Divider} from '@mui/material';
 import theme from '../../../styles/theme';
-import { Link,NavLink} from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import log from '../../../images/header/logo.jpeg';
-
 
 const Header = () => {
   const logoStyle = {
@@ -43,10 +42,7 @@ const Header = () => {
 
           </Box>
           
-            
-            <Link to="/profile">
-  <AccountCircleOutlinedIcon sx={{ fontSize: '45px', color: 'white', ml: 2 }} />
-</Link>
+            <AccountCircleOutlinedIcon  sx={{ fontSize: '45px', color:'white' , ml:2}}/> 
           
         </Toolbar>
       </AppBar>

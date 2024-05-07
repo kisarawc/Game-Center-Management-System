@@ -1,25 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
 import { Box, Button, Card, CardContent, TextField, Typography, MenuItem, Select } from '@mui/material';
 import { Link, useParams } from 'react-router-dom';
 import axios from "axios";
-import { toast } from "react-toastify";
+import { useNavigate } from 'react-router-dom';
 
 const Paymentone = () => {
     const [errorMessage, setErrorMessage] = useState('');
-    const { userid, bookid } = useParams();
-
+    const { bookid ,fee } = useParams();
+    const [paymentData, setPaymentData] = useState('');
     const [formData, setFormData] = useState({
-        amount: '',
+        amount: fee,
         time: '',
         date: '',
         payment_method: '',
-        userID: userid,
+        userID: '', // Initialize as empty string
         bookID: bookid
     });
+    const history = useNavigate();
 
     const { amount, time, date, payment_method, userID, bookID } = formData;
+
+    useEffect(() => {
+        // Retrieve user ID from session storage
+        const userId = sessionStorage.getItem('userId');
+        setFormData(prevState => ({
+            ...prevState,
+            userID: userId
+        }));
+    }, []); // Run only once on component mount
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -29,19 +39,18 @@ const Paymentone = () => {
     const paymentProcess = async (e) => {
         e.preventDefault();
 
-        // Check if any field is empty
         if (!amount || !date || !payment_method) {
             setErrorMessage("Please fill all fields.");
-            return; // Exit the function if any field is empty
+            return;
         }
 
         try {
-            // Clear any previous error messages
             setErrorMessage('');
-
-            console.log(formData);
+            // set paymentData state with form data
+            setPaymentData(formData);
 
             const data = await axios.post(`http://localhost:3000/api/payments/createPayment`, formData);
+            history(`/paymentfour/${userID}/${bookid}/${amount}/${date}/${payment_method}`);
 
             // Handle successful payment
         } catch (error) {
@@ -49,6 +58,8 @@ const Paymentone = () => {
             // Handle error
         }
     }
+
+    console.log(userID);
 
     return (
         <Box>
@@ -80,7 +91,6 @@ const Paymentone = () => {
                             </Typography>
                             <TextField id="date" variant="outlined" margin="normal" fullWidth type='date' name='date' value={date} onChange={handleInputChange} />
                             <TextField id="Amount" label="Amount" variant="outlined" margin="normal" fullWidth type='number' name='amount' value={amount} onChange={handleInputChange} />
-                            {/* <TextField id="Time" label="Time" variant="outlined" margin="normal" fullWidth type='time' name='time' value={time} onChange={handleInputChange} /> */}
                             <Select name='payment_method' value={payment_method} onChange={handleInputChange}
                                 sx={{
                                     marginTop: 5,
@@ -94,19 +104,20 @@ const Paymentone = () => {
 
                             {errorMessage && <Typography color="error">{errorMessage}</Typography>}
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
-                                <Button variant="contained" color="primary" type='submit'>
-                                    Confirm Details
+                                <Button variant="contained" color="secondary" type='submit'>
+                                    Add Card Details
                                 </Button>
-                                <Link to="/paymentfour">
+                                {/* <Link to="/paymentfour">
                                     <Button variant="contained" color="secondary">
                                         Add Card Details
                                     </Button>
-                                </Link>
+                                </Link> */}
                             </Box>
                         </form>
                     </CardContent>
                 </Card>
             </Box>
+            {/* Pass paymentData as prop to PaymentFour */}
             <Footer />
         </Box>
     );

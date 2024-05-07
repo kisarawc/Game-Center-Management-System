@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
-import { Box, Typography, TextField, Button, Grid, Snackbar } from '@mui/material';
-
-const userId = sessionStorage.getItem('userId');
+import { Box, Typography, TextField, Button, Grid, InputAdornment, IconButton, Snackbar } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
 const ClientEvent = () => {
   const [events, setEvents] = useState([]);
@@ -178,7 +177,7 @@ const ClientEvent = () => {
                     fullWidth
                     margin="normal"
                   />
-                  <Button variant="contained" color="primary" onClick={() => addComment(event._id, userId)}>Submit</Button>
+                  <Button variant="contained" color="primary" onClick={() => addComment(event._id, '66181e723c2dc6dc00c58a05')}>Submit</Button>
                 </Box>
               </Grid>
             ))}
