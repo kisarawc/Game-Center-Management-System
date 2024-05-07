@@ -36,7 +36,7 @@ const BookingTable = ({ loggedInUserId }) => {
   const [selectedBookingId, setSelectedBookingId] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/api/bookings/user/${loggedInUserId}`)
+    axios.get(`http://localhost:5000/api/bookings/user/${loggedInUserId}`)
     .then(response => {
         console.log(response.data);
         const formattedBookings = response.data.map(booking => ({
@@ -70,7 +70,7 @@ const BookingTable = ({ loggedInUserId }) => {
 
   const handleConfirmDelete = () => {
     console.log(`Deleting booking with id ${selectedBookingId}`);
-    axios.delete(`http://localhost:3000/api/bookings/${selectedBookingId}`)
+    axios.delete(`http://localhost:5000/api/bookings/${selectedBookingId}`)
       .then(response => {
         console.log('Booking deleted successfully');
         setBookings(bookings.filter(booking => booking._id !== selectedBookingId));

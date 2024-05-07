@@ -5,7 +5,11 @@ const cors = require('cors');
 const eventRoutes = require('./routes/Ravindu/eventRoutes'); 
 const commentRoutes = require('./routes/Ravindu/commentRoutes');
 
+
+const gameRoutes = require('./routes/Saniru/gameRoutes');
+
 const userRoutes = require('./routes/Limasha/userRoutes');
+
 
 const bookingRouter = require('./routes/Chathuka/bookingRoutes');
 const userRouter = require('./routes/Ravindu/userRoutes');
@@ -15,7 +19,7 @@ const game = require('./routes/Chathuka/game');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json()); // Middleware to parse JSON request bodies
@@ -31,8 +35,12 @@ mongoose.connect(process.env.MONGODB_URL, {
     
     // Use event routes
     app.use('/api/events', eventRoutes);
+
+    app.use('/api/games', gameRoutes);
+
     app.use('/api/events', commentRoutes);// Using '/api' as the base URL for event routes
     app.use('/api/users', userRoutes);
+
 
 
 
@@ -44,7 +52,7 @@ mongoose.connect(process.env.MONGODB_URL, {
 
     // Start the server
     app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
+        console.log(`Server running on prt ${PORT}`);
     });
 })
 .catch(err => {

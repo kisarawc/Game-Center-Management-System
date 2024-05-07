@@ -131,7 +131,7 @@ const HomePage = () => {
         >
           <Box sx={{ marginTop: '10px', color:'#ffffff'}}>
             <Typography variant='h3' sx={{ textAlign: 'center', mb: '20px' }}>About Us</Typography>
-            <Typography variant='h5' textAlign={'center'} sx={{ ml: '100px', mr: '100px', fontFamily: 'fantasy', mb: '50px' }}>Opening the GG Lounge in April 2019 marking our 1 year anniversary of our Arcade Warehouse Scunthorpe open day we are extremely excited and ready to host Lincolns one and only FREE PLAY Arcade centre.
+            <Typography variant='h5' textAlign={'center'} sx={{ ml: '100px', mr: '100px', fontFamily: 'cursive', mb: '50px' }}>Opening the GG Lounge in April 2019 marking our 1 year anniversary of our Arcade Warehouse Scunthorpe open day we are extremely excited and ready to host Lincolns one and only FREE PLAY Arcade centre.
 
               Gaming has always been a passion of ours and opening an arcade has been our directors dream for many years. It has taken a lot of hard work and dedication to the gaming industry but finally our first Arcade is ready for you all.
 
@@ -159,7 +159,7 @@ const HomePage = () => {
                 height: '300px',
                 alignSelf: 'flex-start',
                 marginRight: '100px',
-                marginLeft: '450px',
+                marginLeft: '350px',
                 marginTop: '50px'
               }}
             />
