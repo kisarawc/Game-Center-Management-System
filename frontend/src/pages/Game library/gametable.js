@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import MenuItem from '@mui/material/MenuItem';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import {
   Table,
@@ -44,7 +46,6 @@ const StyledTableHead = styled(TableHead)(({ theme }) => ({
 const StyledTableHeaderCell = styled(TableCell)(({ theme }) => ({
   color: theme.palette.common.white,
   backgroundColor: '#011276',
-
   fontWeight: 'bold',
   textAlign: 'center', // Center-align text in header cells
   position: 'relative', // To position the sort icons
@@ -56,7 +57,6 @@ const StyledSortIcon = styled('div')(({ theme }) => ({
   top: '50%',
   right: '4px',
   transform: 'translateY(-50%)',
-
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -66,7 +66,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const renderStarRating = (rating) => {
-  const wholeNumberRating = Math.round(rating);
+  const wholeNumberRating = Math.round(Math.min(Math.max(rating, 0), 5));
   const maxRating = 5;
   let stars = '⭐'.repeat(wholeNumberRating);
   stars += '☆'.repeat(maxRating - wholeNumberRating);
@@ -144,6 +144,7 @@ const GameTable = () => {
         });
         setGames(updatedGames);
         setEditDialogOpen(false);
+        toast.success('Game updated successfully');
       }).catch((error) => {
         console.error('Error updating game:', error);
       });
@@ -159,10 +160,11 @@ const GameTable = () => {
       .then(() => {
         console.log('Game deleted successfully');
         setGames(games.filter((game) => game._id !== selectedGameId));
+        setDeleteDialogOpen(false);
+        toast.success('Game deleted successfully');
       }).catch((error) => {
         console.error('Error deleting game:', error);
       });
-    setDeleteDialogOpen(false);
   };
 
   const handleCloseDeleteDialog = () => {
@@ -250,6 +252,7 @@ const GameTable = () => {
   return (
     <>
       <AdminHeader />
+      <ToastContainer />
       <Box display="flex" justifyContent="center" alignItems="center" mb={2} mt={3} width="100%">
         <Grid container justifyContent="center" spacing={3}>
           {/* Search bar */}

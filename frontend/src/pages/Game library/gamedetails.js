@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Box, Typography, Button, Card } from '@mui/material';
 import axios from 'axios';
 import Header from '../../Components/common/Header/header';
@@ -41,7 +41,7 @@ const GameDetailPage = () => {
       <Header />
       <Box
         sx={{
-          backgroundImage: `url('https://images.saymedia-content.com/.image/t_share/MTkzNzg4MTIxMjM2NjQ1MzE1/aesthetic-website-backgrounds.gif')`,
+          backgroundImage: `url('https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Hero-3.png')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           minHeight: '100vh',
@@ -63,7 +63,7 @@ const GameDetailPage = () => {
               justifyContent: 'center',
               alignItems: 'flex-end',
               marginBottom: '50px',
-              backgroundColor: 'rgba(255, 255, 255, .21)',
+              backgroundColor: 'rgba(255, 255, 255, .70)',
               borderRadius: '10px',
               padding: '20px',
             }}
@@ -80,7 +80,7 @@ const GameDetailPage = () => {
               <Typography variant="body1" sx={{ fontFamily: 'Arial', marginBottom: '10px' }}><RatingStars rating={game.game_rating} /></Typography>
               <Typography variant="body1" sx={{ fontFamily: 'Arial', marginBottom: '10px' }}>Hourly Rate: {game.hourly_rate}</Typography>
 
-              <Button variant="contained" color="primary">
+              <Button variant="contained" color="primary" component={Link} to="/book">
                 Book Now
               </Button>
             </Box>

@@ -3,6 +3,8 @@ import axios from 'axios';
 import AdminHeader from '../../Components/common/adminHeader';
 import { TextField, Checkbox, Button, FormControlLabel, Box, Rating, Typography } from '@mui/material';
 import { NavLink } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreateGameForm = () => {
   const [formData, setFormData] = useState({
@@ -42,22 +44,31 @@ const CreateGameForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) {
-      alert('Please correct the errors before submitting.');
+      toast.error('Please correct the errors before submitting.');
       return;
     }
 
     try {
       await axios.post('http://localhost:5000/api/games/createGame', formData);
-      alert('Game created successfully!');
-      // You could also redirect or clear form here
+      toast.success('Game created successfully!');
+      setFormData({
+        name: '',
+        image_path: '',
+        availability: false,
+        platform: '',
+        hourly_rate: 0,
+        game_rating: 0,
+        description: ''
+      });
     } catch (error) {
       console.error('Error creating game:', error);
-      alert('Error creating game. Please try again.');
+      toast.error('Error creating game. Please try again.');
     }
   };
 
   return (
     <Box>
+      <ToastContainer />
       <AdminHeader />
       <Box
         display="flex"

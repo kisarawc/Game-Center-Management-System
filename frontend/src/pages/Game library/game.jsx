@@ -90,6 +90,23 @@ const StyledHeader = styled('h1')({
   textShadow: '1px 1px px #000',
 });
 
+const SearchBox = styled(TextField)({
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: '#FFC0CB',
+    },
+    '&:hover fieldset': {
+      borderColor: '#FFC0CB',
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: '#FFC0CB',
+    },
+  },
+  '& .MuiFormLabel-root': {
+    color: '#FFC0CB', // Change the label color
+  },
+});
+
 const Game = () => {
   const [games, setGames] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -137,12 +154,11 @@ const Game = () => {
           }}
         >
           {/* Search bar */}
-          <TextField
+          <SearchBox
             label="Search Games"
             variant="outlined"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            sx={{ marginRight: '20px' }}
           />
         </Box>
         <Box
