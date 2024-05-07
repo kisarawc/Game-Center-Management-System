@@ -44,6 +44,7 @@ const StyledTableHead = styled(TableHead)(({ theme }) => ({
 const StyledTableHeaderCell = styled(TableCell)(({ theme }) => ({
   color: theme.palette.common.white,
   backgroundColor: '#011276',
+
   fontWeight: 'bold',
   textAlign: 'center', // Center-align text in header cells
   position: 'relative', // To position the sort icons
@@ -55,6 +56,7 @@ const StyledSortIcon = styled('div')(({ theme }) => ({
   top: '50%',
   right: '4px',
   transform: 'translateY(-50%)',
+
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({

@@ -2,6 +2,7 @@
 const Event = require('../../models/Ravindu/Event');
 const Comment = require('../../models/Ravindu/Comment');
 
+
 exports.createEvent = async (req, res) => {
     try {
         const { title, description, date, imagePath } = req.body;
@@ -50,5 +51,16 @@ exports.updateEvent = async (req, res) => {
     res.status(200).json(updatedEvent);
   } catch (error) {
     res.status(400).json({ message: error.message });
+  }
+};
+exports.getCommentsByEventId = async (req, res) => {
+  try {
+    const { eventId } = req.params;
+    // Populate the user information when fetching comments
+    const comments = await Comment.find({ eventId }).populate('userId', 'name');
+    res.json(comments);
+    
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

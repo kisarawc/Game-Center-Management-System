@@ -5,9 +5,14 @@ const cors = require('cors');
 const eventRoutes = require('./routes/Ravindu/eventRoutes'); 
 const commentRoutes = require('./routes/Ravindu/commentRoutes');
 
+
 const gameRoutes = require('./routes/Saniru/gameRoutes');
 
+const userRoutes = require('./routes/Limasha/userRoutes');
+
+
 const bookingRouter = require('./routes/Chathuka/bookingRoutes');
+const userRouter = require('./routes/Ravindu/userRoutes');
 const game = require('./routes/Chathuka/game');
 
 
@@ -30,13 +35,21 @@ mongoose.connect(process.env.MONGODB_URL, {
     
     // Use event routes
     app.use('/api/events', eventRoutes);
-    app.use('/api/events', commentRoutes);
+
     app.use('/api/games', gameRoutes);
+
+    app.use('/api/events', commentRoutes);// Using '/api' as the base URL for event routes
+    app.use('/api/users', userRoutes);
+
+
+
 
     //booking routes
     app.use('/api/bookings', bookingRouter);
     app.use('/api/game', game);
+    app.use('/api/users', userRouter);
     
+
     // Start the server
     app.listen(PORT, () => {
         console.log(`Server running on prt ${PORT}`);

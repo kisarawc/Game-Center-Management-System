@@ -9,10 +9,26 @@ import BookingAdmin from '../pages/admin/booking/bookingAdmin';
 import Admin from '../pages/admin/home/admin';
 import EditBooking from '../pages/Bookings/editBooking'; 
 
+import AdminEvent from '../pages/admin/event/AdminEvent';
+import Admin from '../pages/admin/home/admin';
+import UserEvent from '../pages/events/UserEvent'
+import Login from '../pages/login/login';
+import SignUp from '../pages/UserProfile/signup';
+import ProfilePage from '../pages/UserProfile/profile'; 
+import UsersTable from '../pages/UserProfile/usersTable'; 
 import Event from '../pages/events/Event';
 import GameDetailPage from '../pages/Game library/gamedetails';
 import GameTable from '../pages/Game library/gametable';
 import CreateGameForm from '../pages/Game library/addgame';
+
+import UPDashboard from '../pages/UserProfile/adminDashboard';
+import BookingAdmin from '../pages/admin/booking/bookingAdmin';
+
+import EditBooking from '../pages/Bookings/editBooking'; 
+
+import Dashboard from '../pages/admin/home/admin';
+
+
 
 const MyRouter = () => {
     return (
@@ -35,7 +51,36 @@ const MyRouter = () => {
             <Route path='/Events' element={<Event/>} />
 
 
-        </Routes>
+        
+
+            <Route path='/Events' element={<UserEvent/>} />
+            <Route path='/adminEvents' element={<AdminEvent/>} />
+            <Route path='/admin' element={<Admin/>}/>
+   
+
+
+
+
+
+                <Route exact path='/' Component={HomePage}></Route>
+                <Route path='/book' Component={Book}></Route>
+                <Route path='/login' Component={Login}></Route>
+                <Route path='/signup' Component={SignUp}></Route>
+                <Route path='/profile' Component={ProfilePage}></Route>
+                <Route path='/Event' Component={Event}></Route>
+                <Route path='/usersTable' Component={UsersTable}></Route>
+
+                <Route path='/adminDashboard' Component={Dashboard}></Route>
+                <Route path='/bookingAdmin' element={<BookingAdmin/>} /> 
+                <Route path='/admin' element={<Admin/>} /> 
+                <Route path='/bookings/edit/:id' element={<EditBooking />} /> 
+
+                <Route path='/useradmin' Component={UPDashboard}></Route>
+
+            </Routes>
+
+        
+
 
     );
 }

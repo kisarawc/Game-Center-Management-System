@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   textAlign: 'center',
   padding: theme.spacing(2), 
   borderBottom: '1px solid #ccc',
+  fontSize:'15px',
 }));
 
 const StyledTableHead = styled(TableHead)(({ theme }) => ({
@@ -15,8 +16,10 @@ const StyledTableHead = styled(TableHead)(({ theme }) => ({
 
 const StyledTableHeaderCell = styled(TableCell)(({ theme }) => ({
   color: theme.palette.common.white,
-  backgroundColor: '#011276',
+  backgroundColor: '#5f0e9d',
   fontWeight: 'bold', 
+  fontSize:'18px',
+  textAlign:'center'
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -45,7 +48,8 @@ const BookingTable = ({ loggedInUserId }) => {
           user_id: booking.user_id,
           game_id: booking.game_id,
           status: booking.status,
-          num_players: booking.num_players
+          num_players: booking.num_players,
+          fee: booking.fee
         }));
         setBookings(formattedBookings);
       })
@@ -89,12 +93,13 @@ const BookingTable = ({ loggedInUserId }) => {
             <TableRow>
               <StyledTableHeaderCell>Date</StyledTableHeaderCell>
               <StyledTableHeaderCell>Start Time</StyledTableHeaderCell>
-              <StyledTableHeaderCell>Duration (minutes)</StyledTableHeaderCell> {/* Update header */}
+              <StyledTableHeaderCell>Duration (minutes)</StyledTableHeaderCell> 
               <StyledTableHeaderCell>Message Request</StyledTableHeaderCell>
-              <StyledTableHeaderCell>User ID</StyledTableHeaderCell>
+              
               <StyledTableHeaderCell>Game Name</StyledTableHeaderCell>
               <StyledTableHeaderCell>Status</StyledTableHeaderCell>
-              <StyledTableHeaderCell>Number of Players</StyledTableHeaderCell>
+              <StyledTableHeaderCell>Players</StyledTableHeaderCell>
+              <StyledTableHeaderCell>Fee</StyledTableHeaderCell>
               <StyledTableHeaderCell>Actions</StyledTableHeaderCell>
             </TableRow>
           </StyledTableHead>
@@ -105,20 +110,30 @@ const BookingTable = ({ loggedInUserId }) => {
                 <StyledTableCell>{booking.start_time}</StyledTableCell>
                 <StyledTableCell>{booking.duration}</StyledTableCell>
                 <StyledTableCell>{booking.message_request}</StyledTableCell>
-                <StyledTableCell>{booking.user_id}</StyledTableCell>
+                
                 <StyledTableCell>{booking.game_name}</StyledTableCell>
                 <StyledTableCell>{booking.status}</StyledTableCell>
                 <StyledTableCell>{booking.num_players}</StyledTableCell>
+                <StyledTableCell>Rs. {booking.fee}.00</StyledTableCell>
                 <StyledTableCell>
                   <Button 
-                    variant="outlined" 
-                    sx={{mr:'10px'}}
+                    variant="contained" 
+                    sx={{mr:'10px' ,
+                     backgroundColor:'#189f88',
+                     '&:hover': {
+                      backgroundColor: '#4dc7bd'
+                    }
+                    }}
                     onClick={() => handleEdit(booking._id)}
                   >
                     Edit
                   </Button>
                   <Button 
-                    variant="outlined" 
+                    variant="contained" 
+                    sx={{backgroundColor:'#d02727',
+                    '&:hover': {
+                      backgroundColor: '#f56a6a'
+                    }}}
                     onClick={() => handleDelete(booking._id)}
                   >
                     Delete
@@ -134,21 +149,41 @@ const BookingTable = ({ loggedInUserId }) => {
         onClose={handleCloseDeleteDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
       >
-        <DialogTitle id="alert-dialog-title">{"Delete Booking"}</DialogTitle>
+        <Box
+        sx={{
+          backgroundImage: `url('https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Hero-3.png')`,
+          backgroundSize: 'cover',
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          //justifyContent: 'center',
+          padding: '20px',
+        }}
+      >
+        
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText id="alert-dialog-description" sx={{color:'#fc6f6f', fontSize:'25px'}}>
             Are you sure you want to delete this booking?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDeleteDialog} color="primary">
+          <Button onClick={handleCloseDeleteDialog} variant='contained' sx={{color:'white', backgroundColor: '#534890'}}>
             Cancel
           </Button>
-          <Button onClick={handleConfirmDelete} color="primary" autoFocus>
+          <Button onClick={handleConfirmDelete} variant='contained' sx={{color:'white', backgroundColor: '#534890' ,'&:hover': {
+      backgroundColor: '#f4656a'}}} autoFocus>
             Delete
           </Button>
         </DialogActions>
+      </Box>
       </Dialog>
     </>
   );

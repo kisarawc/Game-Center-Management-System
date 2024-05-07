@@ -93,7 +93,7 @@ const Admin = () => {
                 <Typography gutterBottom variant="h5" component="div" style={{ color: '#fff' }}>
                   Accounts
                 </Typography>
-                <Button onClick={() => handleButtonClick('/accounts')} variant="contained" sx={buttonStyles}>Go to Accounts</Button>
+                <Button onClick={() => handleButtonClick('/usersTable')} variant="contained" sx={buttonStyles}>Go to Accounts</Button>
               </CardContent>
             </CardActionArea>
           </Card>

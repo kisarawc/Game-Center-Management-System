@@ -12,9 +12,9 @@ const Event = () => {
 
   const fetchEventsAndComments = async () => {
     try {
-      const eventsResponse = await axios.get('http://localhost:5000/api/events');
+      const eventsResponse = await axios.get('http://localhost:3000/api/events');
       const eventsWithComments = await Promise.all(eventsResponse.data.map(async event => {
-        const commentsResponse = await axios.get(`http://localhost:5000/api/events/${event._id}/comments`);
+        const commentsResponse = await axios.get(`http://localhost:3000/api/events/${event._id}/comments`);
         return { ...event, comments: commentsResponse.data };
       }));
       setEvents(eventsWithComments);
@@ -29,7 +29,7 @@ const Event = () => {
 
   const createEvent = async () => {
     try {
-      const eventResponse = await axios.post('http://localhost:5000/api/events', newEvent);
+      const eventResponse = await axios.post('http://localhost:3000/api/events', newEvent);
       console.log('New event created:', eventResponse.data);
 
       fetchEventsAndComments();
@@ -41,7 +41,7 @@ const Event = () => {
   const addComment = async (eventId) => {
     try {
       const commentText = comments[eventId];
-      const response = await axios.post(`http://localhost:5000/api/events/${eventId}/comments`, { comment: commentText, eventId });
+      const response = await axios.post(`http://localhost:3000/api/events/${eventId}/comments`, { comment: commentText, eventId });
       console.log('New comment added:', response.data);
 
       fetchEventsAndComments();
@@ -65,7 +65,7 @@ const Event = () => {
   const updateEvent = async (eventId) => {
     try {
       const updatedEvent = editEventIds[eventId];
-      const response = await axios.put(`http://localhost:5000/api/events/${eventId}`, updatedEvent);
+      const response = await axios.put(`http://localhost:3000/api/events/${eventId}`, updatedEvent);
       console.log('Event updated:', response.data);
 
       fetchEventsAndComments();
