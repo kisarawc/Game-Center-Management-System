@@ -48,7 +48,7 @@ const EditBooking = () => {
 
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/api/bookings/${id}`)
+    axios.get(`http://localhost:5000/api/bookings/${id}`)
       .then(response => {
         const bookingData = response.data.data.booking;
         const formattedDate = moment(bookingData.date).format('YYYY-MM-DD');
@@ -84,7 +84,7 @@ const EditBooking = () => {
     const startTime = moment.utc(`${editedBooking.date}T${editedBooking.start_time}`);
     const startTimeFormatted = startTime.format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
   
-    axios.get(`http://localhost:3000/api/bookings/game/${editedBooking.game_name}/${editedBooking.date}/${startTimeFormatted}`)
+    axios.get(`http://localhost:5000/api/bookings/game/${editedBooking.game_name}/${editedBooking.date}/${startTimeFormatted}`)
       .then(response => {
         const existingBooking = response.data.exists;
         console.log(existingBooking)
@@ -115,7 +115,7 @@ const EditBooking = () => {
           
           console.log('new',editedBookingFormatted)
         
-          axios.patch(`http://localhost:3000/api/bookings/${id}`, editedBookingFormatted)
+          axios.patch(`http://localhost:5000/api/bookings/${id}`, editedBookingFormatted)
             .then(response => {
               setSuccessMessage('Booking updated successfully!');
             })

@@ -114,7 +114,7 @@ const Game = () => {
       <Header />
       <Box
         sx={{
-          backgroundImage: `url('https://images.saymedia-content.com/.image/t_share/MTkzNzg4MTIxMjM2NjQ1MzE1/aesthetic-website-backgrounds.gif')`,
+          backgroundImage: `url('https://thearcadewarehouse.co.uk/wp-content/uploads/2020/01/Hero-3.png')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           minHeight: '100vh',

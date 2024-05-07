@@ -23,7 +23,7 @@ const BookingPage = () => {
   const [showErrorPopup, setShowErrorPopup] = useState(false);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/api/game/names')
+    axios.get('http://localhost:5000/api/game/names')
       .then(response => {
         setGames(response.data);
       })
@@ -47,7 +47,7 @@ const BookingPage = () => {
   const handleSubmit = () => {
     setBookings([]);
     setLoading(true);
-    axios.get(`http://localhost:3000/api/bookings/game/${selectedGame}/${selectedDate}`)
+    axios.get(`http://localhost:5000/api/bookings/game/${selectedGame}/${selectedDate}`)
       .then(response => {
         const formattedBookings = response.data.map(booking => ({
           ...booking,
@@ -64,7 +64,7 @@ const BookingPage = () => {
 
       });
 
-      axios.get(`http://localhost:3000/api/game/rate/${selectedGame}`)
+      axios.get(`http://localhost:5000/api/game/rate/${selectedGame}`)
     .then(response => {
       const rate = response.data.hourly_rate;
       setHourlyRate(rate);
@@ -175,7 +175,7 @@ if(existingBookingWithStartTime) {
       fee: totalCost,
     };
     console.log(newBooking)
-    axios.post('http://localhost:3000/api/bookings', newBooking)
+    axios.post('http://localhost:5000/api/bookings', newBooking)
       .then(response => {
         console.log('Booking created successfully:', response.data);
         setBookingCreated(true); 

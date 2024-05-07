@@ -10,7 +10,7 @@ import Admin from '../pages/admin/home/admin';
 import EditBooking from '../pages/Bookings/editBooking'; 
 
 import AdminEvent from '../pages/admin/event/AdminEvent';
-import Admin from '../pages/admin/home/admin';
+
 import UserEvent from '../pages/events/UserEvent'
 import Login from '../pages/login/login';
 import SignUp from '../pages/UserProfile/signup';
@@ -22,9 +22,6 @@ import GameTable from '../pages/Game library/gametable';
 import CreateGameForm from '../pages/Game library/addgame';
 
 import UPDashboard from '../pages/UserProfile/adminDashboard';
-import BookingAdmin from '../pages/admin/booking/bookingAdmin';
-
-import EditBooking from '../pages/Bookings/editBooking'; 
 
 import Dashboard from '../pages/admin/home/admin';
 
