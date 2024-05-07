@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Button } from '@mui/material';
+import { AppBar, Toolbar, Typography, IconButton, Button, Box } from '@mui/material';
 
 const handleLogout = () => {
   sessionStorage.removeItem('token');
@@ -9,7 +9,7 @@ const handleLogout = () => {
 
 const AdminAppBar = () => {
   return (
-
+<Box>
     <AppBar position="static">
       <Toolbar sx={{backgroundColor:'#6d4af6'}}>
         <IconButton
@@ -34,6 +34,8 @@ const AdminAppBar = () => {
                     }}}>LogOut</Button>
       </Toolbar>
     </AppBar>
+
+</Box>
   );
 };
 
