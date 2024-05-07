@@ -4,9 +4,14 @@ import { Box, Table, TableHead, TableBody, TableRow, TableCell, Button, Typograp
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
 import { PDFViewer, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import jsPDF from 'jspdf'
+import 'jspdf-autotable';
+import logo from '../../images/header/logo.jpeg';
 
 const FeedbackTable = () => {
     const [feedbacks, setFeedbacks] = useState([]);
+    const [pdfVisible, setPdfVisible] = useState(false); // State to control PDF visibility
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         async function fetchFeedbacks() {
@@ -21,6 +26,12 @@ const FeedbackTable = () => {
         fetchFeedbacks();
     }, []);
 
+
+    const filteredfeedbacks = feedbacks.filter((feedback) =>
+        feedback?.game_name?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+
     const handleDelete = async (id) => {
         try {
             await axios.delete(`http://localhost:5000/api/feedbacks/deleteFeedback/${id}`);
@@ -29,72 +40,60 @@ const FeedbackTable = () => {
             console.error('Error deleting feedback:', error);
         }
     };
+    const genaratePDFReport = () => {
+        // Function to generate the PDF report
+        const doc = new jsPDF();
 
-    // Function to generate the PDF report
-    const generatePDF = () => {
-        const styles = StyleSheet.create({
-            page: {
-                flexDirection: 'row',
-                backgroundColor: 'white',
-                padding: 20,
-            },
-            section: {
-                margin: 10,
-                padding: 10,
-                flexGrow: 1,
-            },
-            tableCell: {
-                padding: 10,
-                borderBottomWidth: 1,
-                borderBottomColor: '#000',
-            },
+        // Function to add the header
+        const addHeaderToPdf = (doc) => {
+            // Load the logo image
+            const logoImage = logo; // Replace 'path/to/your/logo' with the correct path to your logo image
+            const imgWidth = 20;
+            const imgHeight = 20;
+
+            // Add the title and date
+            doc.setFontSize(20);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(255, 255, 255);
+            doc.setFillColor(0, 0, 0);
+            doc.rect(0, 0, doc.internal.pageSize.width, 30, 'F'); // Draw black background
+            doc.addImage(logoImage, 'JPEG', 10, 5, imgWidth, imgHeight);
+            doc.text('GG LOUNGE GAME CENTER', 50, 18); // Positioning the title
+            doc.setFontSize(10); // Font size for the date
+            doc.text(`Report generated: ${new Date().toLocaleDateString('en-US', { timeZone: 'UTC' })}`, 150, 25); // Positioning the date
+        };
+
+        // Function to add the footer
+        const addFooterToPdf = (doc) => {
+            const footerText = 'GG LOUNGE\n165/A, New Kandy Rd, Welivita Junction, Malabe';
+            doc.setFontSize(10);
+            doc.setTextColor('#555');
+            doc.text(footerText, doc.internal.pageSize.width / 2, doc.internal.pageSize.height - 10, { align: 'center' });
+        };
+
+        // Add the header to the PDF
+        addHeaderToPdf(doc);
+
+        // Add the footer to the PDF
+        addFooterToPdf(doc);
+
+        // Define the data for the autoTable
+        const tableData = filteredfeedbacks.map(feedback => [
+            feedback.game_name,
+            feedback.rating,
+            feedback.comment,
+            new Date(feedback.date).toLocaleDateString('en-US', { timeZone: 'UTC' })
+        ]);
+
+        // Draw the autoTable
+        doc.autoTable({
+            head: [['Game', 'Rating', 'Comment', 'Date']],
+            body: tableData,
+            startY: 40 // Starting Y position for the autoTable
         });
 
-        // Create the PDF document
-        const pdfDocument = (
-            <Document>
-                <Page size="A4" style={styles.page}>
-                    <View style={styles.section}>
-                        <Text style={{ fontSize: 20, marginBottom: 10 }}>Feedback Report</Text>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell style={styles.tableCell}>User ID</TableCell>
-                                    <TableCell style={styles.tableCell}>Game Name</TableCell>
-                                    <TableCell style={styles.tableCell}>Comment</TableCell>
-                                    <TableCell style={styles.tableCell}>Rating</TableCell>
-                                    <TableCell style={styles.tableCell}>Date</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {feedbacks.map((feedback) => (
-                                    <TableRow key={feedback._id}>
-                                        <TableCell style={styles.tableCell}>{feedback.user_id}</TableCell>
-                                        <TableCell style={styles.tableCell}>{feedback.game_name}</TableCell>
-                                        <TableCell style={styles.tableCell}>{feedback.comment}</TableCell>
-                                        <TableCell style={styles.tableCell}>{feedback.rating}</TableCell>
-                                        <TableCell style={styles.tableCell}>{new Date(feedback.date).toLocaleDateString()}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </View>
-                </Page>
-            </Document>
-        );
-
-        return pdfDocument;
-    };
-
-    // Function to handle PDF download
-    const handleDownloadPDF = () => {
-        const pdfBlob = new Blob([generatePDF()], { type: 'application/pdf' });
-        const url = URL.createObjectURL(pdfBlob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'Feedback_Report.pdf');
-        document.body.appendChild(link);
-        link.click();
+        // Save the PDF
+        doc.save('feedback_report.pdf'); // Provide a valid filename for saving the PDF
     };
 
     return (
@@ -111,9 +110,19 @@ const FeedbackTable = () => {
             }}
         >
             <Header />
+
+            <input
+                type="text"
+                placeholder="Search Game Name"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{ marginBottom: '20px', width: '40%', padding: '8px', boxSizing: 'border-box' }}
+            />
+
             <Box sx={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px', borderRadius: '8px', width: '80%', marginTop: '20px' }}>
                 <Typography variant="h4" sx={{ marginBottom: 2 }}>Feedback Form (Admin view)</Typography>
-                <Button onClick={handleDownloadPDF} variant="contained" color="primary" sx={{ position: 'absolute', top: '160px', right: '200px', zIndex: 1 }}>Download Report</Button>
+                <Button onClick={genaratePDFReport} variant="contained" color="primary" sx={{ position: 'absolute', top: '160px', right: '200px', zIndex: 1 }}>Download Report</Button>
+
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -126,7 +135,7 @@ const FeedbackTable = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {feedbacks.map((feedback) => (
+                        {filteredfeedbacks.map((feedback) => (
                             <TableRow key={feedback._id}>
                                 <TableCell>{feedback.user_id}</TableCell>
                                 <TableCell>{feedback.game_name}</TableCell>

@@ -48,8 +48,8 @@ const CommentForm = () => {
     };
 
     try {
-      console.log('Comment submitted:', commentData);
       const response = await axios.post('http://localhost:5000/api/feedbacks/createFeedback', commentData);
+      console.log('Comment submitted:', response);
 
 
       if (response.status === 201) {
@@ -93,15 +93,8 @@ const CommentForm = () => {
         alignItems: 'center',
         justifyContent: 'flex-start',
       }}>
-        {/* Search Bar */}
-        <Box sx={{ position: 'absolute', top: 0, right: 0, padding: '20px' }}>
-          <Typography variant="body1" sx={{ marginBottom: 1 }}>Search</Typography>
-          <TextField
-            variant="outlined"
-            size="small"
-            sx={{ backgroundColor: '#fff', borderRadius: '5px' }}
-          />
-        </Box>
+
+
 
 
         <Paper elevation={3} sx={{ maxWidth: 600, margin: 'auto', padding: '20px', borderRadius: '10px', backgroundColor: '#ADD8E6' }}>

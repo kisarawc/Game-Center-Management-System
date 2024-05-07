@@ -7,7 +7,8 @@ const feedbackSchema = new mongoose.Schema({
   date: { type: Date },
   // admin_feedback: { type: String },
   user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  game_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Game' }
+  game_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Game' },
+  game_name: { type: String }
 });
 
 const Feedback = mongoose.model('Feedback', feedbackSchema);

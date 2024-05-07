@@ -4,8 +4,8 @@ const Game = require('../../models/Saniru/Game');
 
 exports.createFeedback = async (req, res) => {
   try {
-    const { comment, rating, image_path, date, admin_feedback, user_id, game_id } = req.body;
-    const newFeedback = new Feedback({ comment, rating, image_path, date, admin_feedback, user_id, game_id });
+    const { comment, rating, image_path, date, admin_feedback, user_id, game_id, game_name } = req.body;
+    const newFeedback = new Feedback({ comment, rating, image_path, date, admin_feedback, user_id, game_id, game_name });
     const savedFeedback = await newFeedback.save();
     res.status(201).json(savedFeedback);
   } catch (error) {
