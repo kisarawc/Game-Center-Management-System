@@ -28,7 +28,7 @@ const ErrorPopup = ({ open, message, onClose }) => {
         }}
       >
         
-          <Typography variant="h5" gutterBottom sx={{ textAlign: 'center', color: '#e67efe', mt:'100px'}}>
+          <Typography variant="h4" gutterBottom sx={{ textAlign: 'center', color: '#e67efe', mt:'100px'}}>
             Error Creating Booking
           </Typography>
           <Typography variant="h6" sx={{color:'#ffffff',mt:'30px'}}gutterBottom>

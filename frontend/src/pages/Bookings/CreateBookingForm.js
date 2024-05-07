@@ -121,21 +121,32 @@ const BookingPage = () => {
 
     const moment = require('moment');
 
-const existingBookingWithStartTime = bookings.some(booking => {
-    const bookingStartTime = moment.utc(booking.start_time, 'HH:mm');
-    const bookingEndTime = moment.utc(booking.end_time, 'HH:mm');
-    const selectedStartTimeMoment = moment.utc(selectedStartTime, 'HH:mm');
+    const selectedStartTimeMoment = moment.utc(selectedStartTime, 'HH:mm'); // Parse with 24-hour format
 
-    console.log('bt', bookingStartTime.format('HH:mm'));
-    console.log('be', bookingEndTime.format('HH:mm'));
-    console.log('st', selectedStartTimeMoment.format('HH:mm'));
-
-    if (selectedStartTimeMoment.isSameOrAfter(bookingStartTime) && 
-        selectedStartTimeMoment.isBefore(bookingEndTime)) {
-        return true; 
-    } 
-    return false; 
+    const existingBookingWithStartTime = bookings.some(booking => {
+      const bookingStartTime = moment.utc(booking.start_time, 'HH:mm');
+      const bookingEndTime = moment.utc(booking.end_time, 'HH:mm');
+    
+      console.log('bt', bookingStartTime.format('HH:mm')); // bt in 24-hour format
+      console.log('be', bookingEndTime.format('HH:mm'));   // be in 24-hour format
+      console.log('st', selectedStartTimeMoment.format('hh:mm')); // st in 24-hour format
+    
+      const selectedTime = selectedStartTimeMoment.format('hh:mm');
+    
+      if (
+        selectedTime >= bookingStartTime.format('HH:mm') && 
+        selectedTime < bookingEndTime.format('HH:mm')
+      ) {
+        return true; // There's a conflicting booking
+      }
+      
+    
+  return false; // No conflict
 });
+
+    
+    
+
 
 if(existingBookingWithStartTime) {
   console.log('Double booking found!');
@@ -223,7 +234,7 @@ if(existingBookingWithStartTime) {
 
   return (
     <Box >
-    <Paper style={{ padding: '40px', maxWidth: '600px', margin: 'auto', borderRadius:'40px' , backgroundColor:'#f4efefff'}}>
+    <Paper style={{ padding: '40px', maxWidth: '600px', margin: 'auto', borderRadius:'40px' , backgroundColor:'#f4efefff', boxShadow:'0px 4px 8px 8px  rgba(224,139,236,0.4)'}}>
       <Typography variant="h5" sx={{color:'#9574f0'}} gutterBottom>Select Game & Date</Typography>
       <FormControl fullWidth style={{ marginBottom: '10px' }}>
         <InputLabel>Select a game</InputLabel>
