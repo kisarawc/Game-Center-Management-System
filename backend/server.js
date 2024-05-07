@@ -40,7 +40,8 @@ mongoose.connect(process.env.MONGODB_URL, {
         app.use('/api/events', commentRoutes);// Using '/api' as the base URL for event routes
         app.use('/api/users', userRoutes);
 
-
+        //feedback
+        app.use('/api/feedbacks', feedbackRoutes);
 
         //booking routes
         app.use('/api/bookings', bookingRouter);

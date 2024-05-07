@@ -7,6 +7,7 @@ import Feedback from '../pages/feedback/feedbackform'; // Updated import
 import Event from '../pages/events/Event';
 import FeedbackTable from '../pages/feedback/feedbackTable';
 import Feedbacks from '../pages/feedback/feedbacks';
+import FeedbackAll from '../pages/feedback/feedbackAll';
 
 import AdminEvent from '../pages/admin/event/AdminEvent';
 import Admin from '../pages/admin/home/admin';
@@ -15,7 +16,6 @@ import Login from '../pages/login/login';
 import SignUp from '../pages/UserProfile/signup';
 import ProfilePage from '../pages/UserProfile/profile';
 import UsersTable from '../pages/UserProfile/usersTable';
-import Event from '../pages/events/Event';
 import Dashboard from '../pages/admin/home/admin';
 
 
@@ -29,14 +29,12 @@ const MyRouter = () => {
             <Route path='/feedbackform' element={<Feedback />} /> {/* Updated route path */}
             <Route path='/feedbackTable' element={<FeedbackTable />} />
             <Route path='/feedbacks' element={<Feedbacks />} />
+            <Route path='/feedbackAll' element={<FeedbackAll />} />
 
 
             <Route path='/Events' element={<UserEvent />} />
             <Route path='/adminEvents' element={<AdminEvent />} />
             <Route path='/admin' element={<Admin />} />
-
-
-
 
 
 
