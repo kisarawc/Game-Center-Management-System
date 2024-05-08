@@ -9,10 +9,9 @@ const FilterBookings = ({ onFilter }) => {
   const [selectedDate, setSelectedDate] = useState('');
 
   useEffect(() => {
-    // Fetch games from backend
     axios.get('/api/games')
       .then(response => {
-        setGames(response.data.data.games); // Assuming API returns an object with a 'games' key
+        setGames(response.data.data.games); 
       })
       .catch(error => {
         console.error('Error fetching games:', error);

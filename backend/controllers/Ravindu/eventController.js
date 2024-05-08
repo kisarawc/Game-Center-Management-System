@@ -5,8 +5,8 @@ const Comment = require('../../models/Ravindu/Comment');
 
 exports.createEvent = async (req, res) => {
     try {
-        const { title, description, date, imagePath } = req.body;
-        const newEvent = new Event({ title, description, date, imagePath });
+        const { title, description, date, imagePath, eventDate, Venue } = req.body;
+        const newEvent = new Event({ title, description, date, imagePath, eventDate, Venue });
         const savedEvent = await newEvent.save();
         res.status(201).json(savedEvent);
     } catch (error) {
@@ -64,3 +64,51 @@ exports.getCommentsByEventId = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// exports.likeEvent = async (req, res, next) => {
+//   try {
+//     const eventId = req.params.eventId;
+//     const userId = req.body.userId; // Assuming userId is sent in the request body
+
+//     const event = await Event.findById(eventId);
+//     if (!event) {
+//       return res.status(404).json({ message: 'Event not found' });
+//     }
+
+//     // Check if the user has already liked the event
+//     if (event.likes.includes(userId)) {
+//       return res.status(400).json({ message: 'User has already liked the event' });
+//     }
+
+//     // Add user to likes array
+//     event.likes.push(userId);
+//     await event.save();
+
+//     res.status(200).json({ message: 'Event liked successfully' });
+//   } catch (error) {
+//     console.error('Error liking event:', error);
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// };
+
+// // Unlike an event
+// exports.unlikeEvent = async (req, res, next) => {
+//   try {
+//     const eventId = req.params.eventId;
+//     const userId = req.body.userId; // Assuming userId is sent in the request body
+
+//     const event = await Event.findById(eventId);
+//     if (!event) {
+//       return res.status(404).json({ message: 'Event not found' });
+//     }
+
+//     // Remove user from likes array
+//     event.likes = event.likes.filter(like => like.toString() !== userId);
+//     await event.save();
+
+//     res.status(200).json({ message: 'Event unliked successfully' });
+//   } catch (error) {
+//     console.error('Error unliking event:', error);
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// };

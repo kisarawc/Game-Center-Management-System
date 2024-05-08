@@ -21,7 +21,7 @@ const Footer = () => {
     <AppBar position="static" sx={{ backgroundImage: 'linear-gradient(to right, #3e0f80, #000000,#3e0f80)', boxShadow: '10'}}>
       <Toolbar>
         <Box sx={{ display: 'flex', alignItems: 'center'}}>
-          <FacebookIcon sx={{fontSize:'3rem', ml:'200px'}}/>
+          <FacebookIcon sx={{fontSize:'3rem', ml:'250px'}}/>
           <Typography variant='h6' ml={'7px'} mr={'50px'}>
             <Link href="https://www.facebook.com/gglounge101" underline="hover"  sx={{ color: '#fff' }}>
               {'GG Lounge'}
@@ -60,7 +60,7 @@ const Footer = () => {
       <Divider orientation="horizontal" flexItem sx={{ width: '100%', backgroundColor: 'white' }} />
 
       <Box sx={{ display: 'flex', mt: '5px', ml: '20px' }}>
-      <Typography sx={{ color: 'white', mr: '400px' }}>Copyrights 2024</Typography>
+      <Typography sx={{ color: 'white', mr: '450px' }}>Copyrights 2024</Typography>
       <Typography sx={{ color: 'white', textAlign: 'center'}}>165/A, New Kandy Rd, Welivita Junction, Malabe</Typography>
     </Box>
 

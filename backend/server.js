@@ -12,6 +12,7 @@ const paymentRoutes = require('./routes/Shavindi/paymentRoutes');
 const cardRoutes = require('./routes/Shavindi/cardRoutes');
 const cookieParser = require("cookie-parser")
 
+const gameRoutes = require('./routes/Saniru/gameRoutes');
 
 const userRoutes = require('./routes/Limasha/userRoutes');
 
@@ -45,14 +46,15 @@ app.use(express.json()); // Middleware to parse JSON request bodies
 // Connect to MongoDB Atlas
 mongoose.connect(process.env.MONGODB_URL, {
     dbName: 'GGLounge', 
-    // useNewUrlParser: true,
-    // useUnifiedTopology: true,
 })
 .then(() => {
     console.log('Connected to MongoDB Atlas');
     
     // Use event routes
     app.use('/api/events', eventRoutes);
+
+    app.use('/api/games', gameRoutes);
+
     app.use('/api/events', commentRoutes);// Using '/api' as the base URL for event routes
     app.use('/api/users', userRoutes);
 
@@ -72,7 +74,7 @@ mongoose.connect(process.env.MONGODB_URL, {
 
     // Start the server
     app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
+        console.log(`Server running on prt ${PORT}`);
     });
 })
 .catch(err => {
