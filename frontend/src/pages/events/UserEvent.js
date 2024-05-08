@@ -24,11 +24,11 @@ const ClientEvent = () => {
 
   const fetchEventsAndComments = async () => {
     try {
-      const eventsResponse = await axios.get('http://localhost:3000/api/events');
+      const eventsResponse = await axios.get('http://localhost:5000/api/events');
       const eventsWithComments = await Promise.all(eventsResponse.data.map(async event => {
-        const commentsResponse = await axios.get(`http://localhost:3000/api/events/${event._id}/comments`);
+        const commentsResponse = await axios.get(`http://localhost:5000/api/events/${event._id}/comments`);
         const commentsWithUserNames = await Promise.all(commentsResponse.data.map(async comment => {
-          const userResponse = await axios.get(`http://localhost:3000/api/users/${comment.userId}`);
+          const userResponse = await axios.get(`http://localhost:5000/api/users/${comment.userId}`);
           return { ...comment, userName: userResponse.data.name };
         }));
         return { ...event, comments: commentsWithUserNames };
@@ -54,7 +54,7 @@ const ClientEvent = () => {
         return;
       }
       
-      const response = await axios.post(`http://localhost:3000/api/events/${eventId}/comments`, {
+      const response = await axios.post(`http://localhost:5000/api/events/${eventId}/comments`, {
         comment: comments[eventId],
         eventId,
         userId
@@ -218,7 +218,7 @@ const ClientEvent = () => {
                     fullWidth
                     margin="normal"
                   />
-                  <Button variant="contained" color="primary" onClick={() => addComment(event._id, '66181e723c2dc6dc00c58a05')}>Submit</Button>
+                  <Button variant="contained" color="primary" onClick={() => addComment(event._id, userId)}>Submit</Button>
                 </Box>
               </Grid>
             ))}

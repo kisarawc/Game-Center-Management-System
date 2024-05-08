@@ -443,7 +443,7 @@ const tableData = selectedMonthEvents.map(event => [
         <Grid item xs={12} style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button variant="contained" color="primary" onClick={createEvent}>Create Event</Button>
         </Grid>
-      </Grid>
+      
       <TextField
         select
         label="Select Month"

@@ -19,7 +19,7 @@ import Paymentfive from '../pages/payment/paymnetfive';
 import AdminEvent from '../pages/admin/event/AdminEvent';
 
 import UserEvent from '../pages/events/UserEvent'
-
+import Game from '../pages/Game library/game'
 import Login from '../pages/login/login';
 import SignUp from '../pages/UserProfile/signup';
 import ProfilePage from '../pages/UserProfile/profile'; 
@@ -47,11 +47,12 @@ const MyRouter = () => {
             <Route path='/addgame' element={<CreateGameForm />} />
             <Route path='/gametable' element={<GameTable />} />
             <Route path='/Events' element={<Event/>} />
-            {/* <Route path='/game' element={<Game/>} /> */}
+            <Route path='/game' element={<Game/>} />
 
             <Route path='/bookingAdmin' element={<BookingAdmin/>} /> 
             
             <Route path='/bookings/edit/:id' element={<EditBooking />} /> 
+            <Route path='/userEvents' element={<UserEvent />} />
             
             <Route path='/Events' element={<Event/>} />
 
