@@ -16,6 +16,7 @@ router.route('/:id')
 
   router.get('/user/:userId', bookingController.getBookingsByUserId);
 
+  router.get('/getAllbookbyId/:userId', bookingController.getAllBookingsByUser)
 router.route('/game/:gameName/:date')
   .get(bookingController.getBookingDetailsByGameAndDate);
 

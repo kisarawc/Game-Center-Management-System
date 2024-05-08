@@ -36,10 +36,11 @@ const MyRouter = () => {
 
 
             <Route path='/payment' element={<Payment />} />
-            <Route path='/paymentone/:userid/:bookid' element={<PaymentOne />} />
+           
             <Route path='/paymenttwo' element={<PaymentTwo />} />
             <Route path='/paymentthree' element={<PaymentThree />} />
-            <Route path='/paymentfour' element={<PaymentFour />} />
+            <Route path="/paymentone/:userid/:bookid/:fee" element={<PaymentOne />} />
+            <Route path="/paymentfour/:userid/:bookid/:amount/:date/:payment_method" element={<PaymentFour />} />
             <Route path='/paymentfive' element={<Paymentfive />} />
 
             <Route path='/Events' element={<Event/>} />

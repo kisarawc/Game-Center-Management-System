@@ -25,7 +25,7 @@ const Payment = () => {
         }}
       >
         {/* Heading */}
-        <Typography variant="h1" sx={{ fontSize: '60px', marginTop: '40px' }}>Select what you want!</Typography>
+        <Typography variant="h1" sx={{ fontSize: '60px', marginTop: '40px',color:"white" }}>Select what you want!</Typography>
 
         {/* Action Buttons */}
         <Box sx={{ display: 'grid', gridTemplateColumns: '1fr auto', alignItems: 'start' }}>

@@ -13,6 +13,30 @@ exports.getAllBookings = async (req, res) => {
   }
 };
 
+
+exports.getAllBookingsByUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    console.log(userId); // Assuming user ID is passed as a parameter
+    const bookings = await Booking.find({ user_id: userId });
+    
+    // Check if bookings array is empty
+    if (bookings.length === 0) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'No bookings found for the specified user ID'
+      });
+    }
+    
+    res.status(200).json(bookings);
+  } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: err.message
+    });
+  }
+}
+
 exports.createBooking = async (req, res) => {
   try {
     const newBooking = await Booking.create(req.body);
