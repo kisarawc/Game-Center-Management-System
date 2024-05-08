@@ -36,12 +36,19 @@ exports.getAllUsers = async (req, res) => {
 //create a user
 exports.createUser = async (req, res) => {
   try {
-    const { name, username, email, password, joinDate, gender} = req.body;
+    const { name, username, email, password, bDate, gender, phoneNumber } = req.body;
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const newUser = new User({ name, username, email, password: hashedPassword, joinDate, gender
+    const newUser = new User({
+      name,
+      username,
+      email,
+      password: hashedPassword,
+      bDate,
+      gender,
+      phoneNumber
     });
 
     const savedUser = await newUser.save();
@@ -53,8 +60,7 @@ exports.createUser = async (req, res) => {
         user: savedUser
       }
     });
-  }
-  catch (error) {
+  } catch (error) {
     res.status(500).json({
       status: 'error',
       message: error.message
@@ -72,8 +78,7 @@ exports.deleteUser = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
     res.status(200).json({ message: 'User deleted successfully' });
-  } 
-  catch (error) {
+  } catch (error) {
     console.error('Error deleting the user:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
@@ -82,7 +87,7 @@ exports.deleteUser = async (req, res) => {
 
 //login
 exports.userLogin = async (req, res) => {
-  const { email, password} = req.body;
+  const { email, password } = req.body;
 
   try {
     // Find the user by email
@@ -111,22 +116,22 @@ exports.userLogin = async (req, res) => {
 // getUserByID
 exports.getUserById = async (req, res) => {
 
-  const {userId} = req.params;
+  const { userId } = req.params;
 
-      //check for valid id
-      if (!Mongoose.Types.ObjectId.isValid(userId)){
-          return res.status(404).json({error:'invalid id'})
-      }
-  
+  //check for valid id
+  if (!Mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(404).json({ error: 'invalid id' })
+  }
+
   const user = await User.findById(userId)
 
-      //if User not found
-      if(!user){
-          return res.status(400).json({error:'User not found'})
-      }
-  
-      res.status(200).json(user)
+  //if User not found
+  if (!user) {
+    return res.status(400).json({ error: 'User not found' })
   }
+
+  res.status(200).json(user)
+}
 
 //updateUser
 exports.updateUser = async (req, res) => {
@@ -134,8 +139,7 @@ exports.updateUser = async (req, res) => {
   try {
     const updatedUser = await User.findByIdAndUpdate(userId, req.body, { new: true });
     res.status(200).json(updatedUser);
-  } 
-  catch (error) {
+  } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
