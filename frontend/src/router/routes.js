@@ -14,7 +14,7 @@ import PasswordReset from '../pages/UserProfile/passwordReset';
 // import Event from '../pages/events/Event';
 import Dashboard from '../pages/admin/home/admin';
 import ForgotPassword from '../pages/UserProfile/forgetPsswrd';
-
+import BookingAdmin from '../pages/admin/booking/bookingAdmin';
 
 const MyRouter = () => {
     return (
@@ -33,6 +33,7 @@ const MyRouter = () => {
             <Route path='/admin' Component={Dashboard}></Route>
             <Route path='/forgetPsswrd' Component={ForgotPassword}></Route>
             <Route path='/passwordReset/:userId/:token' Component={PasswordReset}></Route>
+            <Route path='/bookingAdmin' element={<BookingAdmin/>} /> 
         </Routes>
 
     )
