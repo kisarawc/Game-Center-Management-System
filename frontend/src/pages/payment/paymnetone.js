@@ -91,7 +91,10 @@ const Paymentone = () => {
                             </Typography>
                             <TextField id="date" variant="outlined" margin="normal" fullWidth type='date' name='date' value={date} onChange={handleInputChange} />
                             <TextField id="Amount" label="Amount" variant="outlined" margin="normal" fullWidth type='number' name='amount' value={amount} onChange={handleInputChange} />
-                            <Select name='payment_method' value={payment_method} onChange={handleInputChange}
+                            <Select
+                                name='payment_method' // Name of the select field
+                                value={payment_method} // Current selected value
+                                onChange={handleInputChange} // Handle change function
                                 sx={{
                                     marginTop: 5,
                                     width: 250,

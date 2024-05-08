@@ -1,30 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
-import { Box, Button, Card, CardContent, MenuItem, Select, TextField, Typography } from '@mui/material'; // Import Card from '@mui/material'
+import { Box, Button, Card, CardContent, Typography ,TextField} from '@mui/material'; // Remove unused imports
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom'; // Import useHistory
+import { useNavigate } from 'react-router-dom';
 
 const PaymentThree = () => {
   const [errorMessage, setErrorMessage] = useState('');
-  const [card, setCard] = useState([]);
+  const [card, setCard] = useState({});
   const [formattedDate, setFormattedDate] = useState('');
-  const history = useNavigate(); // Initialize useHistory
+  const history = useNavigate();
 
   useEffect(() => {
     async function fetchCardDetails() {
       try {
-        // Retrieve user ID from session storage
         const userId = sessionStorage.getItem('userId');
-        console.log("User ID:", userId);
-        
-        console.log(userId);
-        // Make request to API endpoint with user ID
         const response = await axios.get(`http://localhost:3000/api/card-payments/getcardDetail/${userId}`);
-        console.log("Card details:", response.data);
+        
         if (!response.data || Object.keys(response.data).length === 0) {
-          // If no card details, show SweetAlert
           Swal.fire({
             title: 'No Card Details Found',
             text: 'Redirecting to payment page...',
@@ -35,23 +29,16 @@ const PaymentThree = () => {
             showCancelButton: false,
             showCloseButton: false,
           }).then(() => {
-            // Redirect to payment page
-            // Replace '/payment' with the URL of your payment page
-            history('/payment')
+            history('/payment');
           });
           return;
         }
-        // Update state with card details
+
         setCard(response.data);
         console.log(card._id);
 
-        // Format the date
         const date = new Date(response.data.expire_date);
-        const formattedDate = date.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-        });
+        const formattedDate = date.toISOString().substr(0, 10); // Format date as YYYY-MM-DD
         setFormattedDate(formattedDate);
       } catch (error) {
         console.error(error);
@@ -65,14 +52,18 @@ const PaymentThree = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCard({ ...card, [name]: value });
+
+    if (name === 'expire_date') {
+      setFormattedDate(value);
+    }
   };
 
   const CardUpdate = async (e) => {
     e.preventDefault();
-
+    
     try {
       console.log(card);
-      await axios.put(`http://localhost:3000/api/card-payments/update/${card._id}`, card); // Send PATCH request to update card details
+      await axios.put(`http://localhost:3000/api/card-payments/update/${card._id}`, card);
       Swal.fire('Success!', 'Card details have been updated.', 'success');
     } catch (error) {
       console.log(error.message);
@@ -96,16 +87,14 @@ const PaymentThree = () => {
       if (shouldDelete.isConfirmed) {
         const userId = sessionStorage.getItem('userId');
         await axios.delete(`http://localhost:3000/api/card-payments/delete/${card._id}`);
-        setCard({}); // Clear card details from state
+        setCard({});
         setFormattedDate('');
-        // Clear input fields
         document.getElementById('card-number').value = '';
         document.getElementById('card-holder-name').value = '';
         document.getElementById('exp-date').value = '';
   
         Swal.fire('Deleted!', 'Card details have been deleted.', 'success');
-        history('/payment'); // Assuming '/payment' is your payment page route
-
+        history('/payment');
       }
     } catch (error) {
       console.log(error.message);
@@ -135,16 +124,16 @@ const PaymentThree = () => {
                 <Typography variant="h5" gutterBottom>
                   Card Details
                 </Typography>
-                <form >
-                <Typography variant="subtitle1" gutterBottom>
-                                Card Number
-                  </Typography>
-                  <TextField id="card-number"  variant="outlined" margin="normal" fullWidth name="card_no" value={card.card_no} onChange={handleInputChange} />
+                <form>
                   <Typography variant="subtitle1" gutterBottom>
-                                Card Holder's Name:
+                    Card Number
                   </Typography>
-                  <TextField id="card-holder-name"  variant="outlined" margin="normal" fullWidth name="name" value={card.name} onChange={handleInputChange} />
-                  <TextField id="exp-date" label="Exp-Date" variant="outlined" margin="normal" fullWidth name="expire_date" value={formattedDate} onChange={handleInputChange} />
+                  <TextField id="card-number" variant="outlined" margin="normal" fullWidth name="card_no" value={card.card_no} onChange={handleInputChange} />
+                  <Typography variant="subtitle1" gutterBottom>
+                    Card Holder's Name:
+                  </Typography>
+                  <TextField id="card-holder-name" variant="outlined" margin="normal" fullWidth name="name" value={card.name} onChange={handleInputChange} />
+                  <TextField id="exp-date" type="date" variant="outlined" margin="normal" fullWidth name="expire_date" value={formattedDate} onChange={handleInputChange} />
                   {errorMessage && <Typography color="error">{errorMessage}</Typography>}
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
                     <Button variant="contained" color="primary" type="submit" onClick={CardUpdate} >
