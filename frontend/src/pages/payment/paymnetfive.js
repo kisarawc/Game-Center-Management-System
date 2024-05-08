@@ -23,8 +23,8 @@ useEffect(() => {
         console.log(userId);
         async function getBookingDetails() {
           try {
-           // const response = await axios.get(`http://localhost:3000/api/bookings/user/${userId}`);
-            const response = await axios.get('http://localhost:3000/api/bookings');
+           const response = await axios.get(`http://localhost:3000/api/bookings/user/${userId}`);
+            //const response = await axios.get('http://localhost:3000/api/bookings');
 
             console.log(response.data); // Log the response data
             setBooking(response.data);
