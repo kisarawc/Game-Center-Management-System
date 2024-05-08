@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography, TextField, IconButton } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, IconButton, Drawer, List, ListItem, ListItemText, Checkbox, MenuItem, Select, Divider, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import jsPDF from 'jspdf';
@@ -17,19 +17,19 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const StyledTableHead = styled(TableHead)(({ theme }) => ({
-  backgroundColor: '#494949', // Adjust color of purple bar
+  backgroundColor: '#00008b',
 }));
 
 const StyledTableHeaderCell = styled(TableCell)(({ theme }) => ({
   color: theme.palette.common.white,
-  backgroundColor: '#7B1FA2', // Adjust color of table header cell
+  backgroundColor: '#838383',
   fontWeight: 'bold',
-  textAlign: 'center', // Center align the text in the header cell
+  textAlign: 'center',
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
-    backgroundColor: '#EEEEEE', // Changed to a lighter shade
+    backgroundColor: '#EEEEEE',
   },
 }));
 
@@ -51,11 +51,45 @@ const HorizontalBar = styled('hr')({
   borderTop: '1px solid #ccc',
 });
 
+const Sidebar = styled(Drawer)(({ theme }) => ({
+  '& .MuiDrawer-paper': {
+    width: '230px',
+    backgroundColor: '#f0f0f0',
+    height: '500px',
+    borderRadius: '20px',
+    marginTop: '50px', 
+  },
+}));
+
+const FilterOption = styled(ListItem)(({ theme }) => ({
+  '& .MuiTypography-body1': {
+    fontSize: '0.8rem',
+  },
+}));
+
+const SortingOption = styled(FilterOption)({
+  marginTop: '16px',
+});
+
+const TotalUsers = styled(ListItem)(({ theme }) => ({
+  marginTop: '16px',
+  '& .MuiTypography-body1': {
+    fontSize: '0.8rem',
+  },
+}));
+
 const UsersTable = () => {
   const [users, setUsers] = useState([]);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedUserID, setSelectedUserID] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [totalFemaleUsers, setTotalFemaleUsers] = useState(0);
+  const [totalMaleUsers, setTotalMaleUsers] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [filterFemale, setFilterFemale] = useState(false);
+  const [filterMale, setFilterMale] = useState(false);
+  const [sortOrder, setSortOrder] = useState('asc');
 
   useEffect(() => {
     axios.get(`http://localhost:5000/api/users`)
@@ -66,9 +100,16 @@ const UsersTable = () => {
           username: user.username,
           email: user.email,
           gender: user.gender,
-          joinDate: user.joinDate
+          bDate: user.bDate,
+          phoneNumber: user.phoneNumber,
         }));
         setUsers(formattedUsers);
+        // Calculate counts
+        setTotalUsers(formattedUsers.length);
+        const femaleCount = formattedUsers.filter(user => user.gender.toLowerCase() === 'female').length;
+        const maleCount = formattedUsers.filter(user => user.gender.toLowerCase() === 'male').length;
+        setTotalFemaleUsers(femaleCount);
+        setTotalMaleUsers(maleCount);
       })
       .catch(error => {
         console.error('Error fetching users:', error);
@@ -84,7 +125,7 @@ const UsersTable = () => {
     console.log(`Deleting user with id ${selectedUserID}`);
     axios.delete(`http://localhost:5000/api/users/deleteUser/${selectedUserID}`)
       .then(response => {
-        window.alert('User deleted successfully');
+        console.log('User deleted successfully');
         setUsers(users.filter(user => user._id !== selectedUserID));
         // Recalculate counts
         setTotalUsers(totalUsers - 1);
@@ -150,30 +191,44 @@ const UsersTable = () => {
     return matchesSearchTerm && matchesGenderFilter;
   });
 
-  /* Generate user report */
   const generateUserReport = () => {
-    const doc = new jsPDF()
+    const doc = new jsPDF();
 
-    doc.setFontSize(30)
-    doc.setFont('helvetica', 'bold')
-    doc.setTextColor(0, 0, 255)
-    doc.text('User Report', 105, 10, 'center')
+    const addHeaderToPdf = (doc) => {
+      const logoImage = logo;
+      const imgWidth = 20;
+      const imgHeight = 20;
 
-    autoTable(
-      doc,
-      {
-        head: rtitle,
-        body: rbody
-      }, 40, 100
-    )
-    doc.save('UserReport.pdf')
+      doc.setFontSize(20);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(255, 255, 255);
+      doc.setFillColor(0, 0, 0);
+      doc.rect(0, 0, doc.internal.pageSize.width, 30, 'F');
+      doc.addImage(logoImage, 'JPEG', 10, 5, imgWidth, imgHeight);
+      doc.text('GG LOUNGE GAME CENTER', 50, 18);
+      doc.setFontSize(10);
+      doc.text(`Report generated: ${new Date().toLocaleDateString('en-US', { timeZone: 'UTC' })}`, 150, 25);
+    };
+
+    const addFooterToPdf = (doc) => {
+      const footerText = 'GG LOUNGE\n165/A, New Kandy Rd, Welivita Junction, Malabe';
+      doc.setFontSize(10);
+      doc.setTextColor('#555');
+      doc.text(footerText, doc.internal.pageSize.width / 2, doc.internal.pageSize.height - 10, { align: 'center' });
+    };
+
+    addHeaderToPdf(doc);
+
+    addFooterToPdf(doc);
+    doc.autoTable({
+      head: [['Name', 'Username', 'Email', 'Gender', 'Phone Number', 'Birth Date']],
+      body: users.map((user) => [user.name, user.username, user.email, user.gender, user.phoneNumber, new Date(user.bDate).toLocaleDateString()]),
+      startY: 40,
+      margin: { top: 20 }
+    });
+
+    doc.save('UserReport.pdf');
   }
-
-  var rtitle = [['Name', 'Username', 'Email', 'Gender', 'Joined Date']]
-
-  var rbody = users && users.map((user) => (
-    [user.name, user.username, user.email, user.gender, user.joinDate]
-  ))
 
   return (
     <Box>
@@ -242,25 +297,26 @@ const UsersTable = () => {
           value={searchTerm}
           onChange={handleSearch}
           sx={{
-            marginBottom: '16px', // Add some bottom margin for spacing
-            width: '30%', // Make the search bar span the full width of its container
-            height: '36px', // Set the height of the search bar
+            marginBottom: '16px',
+            marginTop:'14px',
+            width: '30%',
+            height: '36px',
             '& .MuiInputBase-root': {
-              paddingRight: '0', // Remove default padding on the right side
+              paddingRight: '0',
             },
             '& .MuiInputLabel-root': {
-              position: 'relative', // Set position to relative for proper centering
+              position: 'relative',
             },
             '& .MuiInputLabel-formControl': {
-              left: '50%', // Move the label to the left by 50% of its container
-              transform: 'translateX(-50%)', // Translate the label back by 50% of its own width
+              left: '50%',
+              transform: 'translateX(-50%)',
             },
             '& .MuiOutlinedInput-input': {
-              padding: '8px', // Adjust the padding of the input field
-              textAlign: 'center', // Center align the text in the input field
+              padding: '8px',
+              textAlign: 'center',
             },
             '& .MuiOutlinedInput-adornedEnd': {
-              paddingRight: '8px', // Add padding to the end for the search icon
+              paddingRight: '8px',
             },
           }}
           InputProps={{
@@ -270,8 +326,8 @@ const UsersTable = () => {
               </IconButton>
             ),
             sx: {
-              borderRadius: '8px', // Rounded corners
-              backgroundColor: '#f0f0f0', // Light gray background color
+              borderRadius: '8px',
+              backgroundColor: '#f0f0f0',
             },
           }}
         />
@@ -288,7 +344,8 @@ const UsersTable = () => {
               <StyledTableHeaderCell>Username</StyledTableHeaderCell>
               <StyledTableHeaderCell>Email</StyledTableHeaderCell>
               <StyledTableHeaderCell>Gender</StyledTableHeaderCell>
-              <StyledTableHeaderCell>Joined Date</StyledTableHeaderCell>
+              <StyledTableHeaderCell>Phone Number</StyledTableHeaderCell>
+              <StyledTableHeaderCell>Birth Date</StyledTableHeaderCell>
               <StyledTableHeaderCell>Actions</StyledTableHeaderCell>
             </TableRow>
           </StyledTableHead>
@@ -299,7 +356,8 @@ const UsersTable = () => {
                 <StyledTableCell>{user.username}</StyledTableCell>
                 <StyledTableCell>{user.email}</StyledTableCell>
                 <StyledTableCell>{user.gender}</StyledTableCell>
-                <StyledTableCell>{user.joinDate}</StyledTableCell>
+                <StyledTableCell>{user.phoneNumber}</StyledTableCell>
+                <StyledTableCell>{new Date(user.bDate).toLocaleDateString()}</StyledTableCell>
                 <StyledTableCell>
                   <DeleteButton
                     variant="contained"
