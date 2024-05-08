@@ -32,11 +32,11 @@ import { NavLink } from 'react-router-dom';
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   padding: theme.spacing(2),
   borderBottom: '1px solid #ccc',
-  textAlign: 'center', // Center-align text in each cell
-  whiteSpace: 'nowrap', // Ensure that the text stays on a single line
-  overflow: 'hidden', // Hide any overflow content
-  textOverflow: 'ellipsis', // Add an ellipsis (...) if content overflows
-  position: 'relative', // To position the sort icons
+  textAlign: 'center', 
+  whiteSpace: 'nowrap', 
+  overflow: 'hidden', 
+  textOverflow: 'ellipsis', 
+  position: 'relative',
 }));
 
 const StyledTableHead = styled(TableHead)(({ theme }) => ({
@@ -47,8 +47,8 @@ const StyledTableHeaderCell = styled(TableCell)(({ theme }) => ({
   color: theme.palette.common.white,
   backgroundColor: '#011276',
   fontWeight: 'bold',
-  textAlign: 'center', // Center-align text in header cells
-  position: 'relative', // To position the sort icons
+  textAlign: 'center', 
+  position: 'relative', 
   cursor: 'pointer',
 }));
 
@@ -86,7 +86,7 @@ const GameTable = () => {
     hourly_rate: '',
     game_rating: '',
     description: '',
-    availability: false, // Updated to boolean
+    availability: false, 
   });
   const [searchText, setSearchText] = useState('');
   const [sortBy, setSortBy] = useState('');
@@ -171,7 +171,7 @@ const GameTable = () => {
     setDeleteDialogOpen(false);
   };
 
-  const generateUserReport = () => {
+  const generateGameReport = () => {
     const doc = new jsPDF();
 
     const addHeaderToPdf = (doc) => {
@@ -206,7 +206,7 @@ const GameTable = () => {
       game.hourly_rate,
       game.game_rating,
       game.description,
-      game.availability ? 'Available' : 'Not Available', // Modified to display 'Available' or 'Not Available'
+      game.availability ? 'Available' : 'Not Available',
     ]);
 
     autoTable(doc, {
@@ -215,7 +215,7 @@ const GameTable = () => {
       startY: 40,
     });
 
-    doc.save('UserReport.pdf');
+    doc.save('GameReport.pdf');
   };
 
   const handleSearch = (e) => {
@@ -265,7 +265,7 @@ const GameTable = () => {
               fullWidth
             />
           </Grid>
-          {/* "Add Games" button */}
+          
           <Grid item>
             <NavLink to="/addgame" style={{ textDecoration: 'none' }}>
               <Button variant="contained" color="primary" size="small">
@@ -273,13 +273,13 @@ const GameTable = () => {
               </Button>
             </NavLink>
           </Grid>
-          {/* Generate Report button */}
+         
           <Grid item>
             <Button
               variant="contained"
               color="primary"
               size="small"
-              onClick={generateUserReport}
+              onClick={generateGameReport}
             >
               Generate Report
             </Button>
@@ -331,7 +331,7 @@ const GameTable = () => {
                   </StyledSortIcon>
                 </StyledTableHeaderCell>
                 <StyledTableHeaderCell style={{ width: '20%' }}>Description</StyledTableHeaderCell>
-                <StyledTableHeaderCell style={{ width: '10%' }}>Availability</StyledTableHeaderCell> {/* Added Availability Header Cell */}
+                <StyledTableHeaderCell style={{ width: '10%' }}>Availability</StyledTableHeaderCell> 
                 <StyledTableHeaderCell style={{ width: '20%' }}>Actions</StyledTableHeaderCell>
               </TableRow>
             </StyledTableHead>
@@ -346,7 +346,7 @@ const GameTable = () => {
                     <StyledTableCell style={{ width: '10%' }}>{game.hourly_rate}</StyledTableCell>
                     <StyledTableCell style={{ width: '10%' }}>{renderStarRating(game.game_rating)}</StyledTableCell>
                     <StyledTableCell style={{ width: '20%' }}>{game.description}</StyledTableCell>
-                    <StyledTableCell style={{ width: '10%' }}>{game.availability ? 'Available' : 'Not Available'}</StyledTableCell> {/* Modified to display 'Available' or 'Not Available' */}
+                    <StyledTableCell style={{ width: '10%' }}>{game.availability ? 'Available' : 'Not Available'}</StyledTableCell> 
                     <StyledTableCell style={{ width: '10%' }}>
                       <Button
                         variant="contained"

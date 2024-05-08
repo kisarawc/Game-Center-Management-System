@@ -15,11 +15,11 @@ const ImageButton = styled(ButtonBase)(({ theme }) => ({
   margin: '30px',
   border: '1px solid #FB41FF',
   borderBottom: 'none',
-  borderRadius: '10px', // Add this line to set the border radius
+  borderRadius: '10px', 
   [theme.breakpoints.down('sm')]: {
     width: '100% !important',
     height: 100,
-    borderRadius: '5px', // Smaller radius for small screens
+    borderRadius: '5px', 
   },
   '&:hover, &.Mui-focusVisible': {
     zIndex: 1,
@@ -44,7 +44,7 @@ const ImageSrc = styled('span')({
   bottom: 0,
   backgroundSize: 'cover',
   backgroundPosition: 'center 40%',
-  borderRadius: '10px', // Add this line to match the border radius
+  borderRadius: '10px', 
 });
 
 const Image = styled('span')(({ theme }) => ({
@@ -68,7 +68,7 @@ const ImageBackdrop = styled('span')(({ theme }) => ({
   backgroundColor: theme.palette.common.black,
   opacity: 0.1,
   transition: theme.transitions.create('opacity'),
-  borderRadius: '10px', // Add this line to match the border radius
+  borderRadius: '10px', 
 }));
 
 const ImageMarked = styled('span')(({ theme }) => ({
@@ -81,7 +81,7 @@ const ImageMarked = styled('span')(({ theme }) => ({
   transition: theme.transitions.create('opacity'),
 }));
 
-// Styled header for the "Game Library" title
+
 const StyledHeader = styled('h1')({
   color: '#FFC0CB',
   fontSize: '3rem',
@@ -103,7 +103,7 @@ const SearchBox = styled(TextField)({
     },
   },
   '& .MuiFormLabel-root': {
-    color: '#FFC0CB', // Change the label color
+    color: '#FFC0CB', 
   },
 });
 
@@ -121,7 +121,7 @@ const Game = () => {
       });
   }, []);
 
-  // Filter games based on the search term
+
   const filteredGames = games.filter((game) =>
     game.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -142,7 +142,7 @@ const Game = () => {
         }}
       >
         <StyledHeader>Game Library</StyledHeader>
-        {/* Container for the search bar */}
+        
         <Box
           sx={{
             display: 'flex',
@@ -153,7 +153,7 @@ const Game = () => {
             paddingRight: '20px',
           }}
         >
-          {/* Search bar */}
+          
           <SearchBox
             label="Search Games"
             variant="outlined"

@@ -1,5 +1,3 @@
-// ratingStars.js
-
 import React from 'react';
 import { Star, StarBorder } from '@mui/icons-material';
 
