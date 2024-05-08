@@ -46,22 +46,15 @@ const MyRouter = () => {
             <Route path='/gamedetails/:gameId' element={<GameDetailPage />} />
             <Route path='/addgame' element={<CreateGameForm />} />
             <Route path='/gametable' element={<GameTable />} />
-            <Route path='/Events' element={<Event/>} />
-            <Route path='/game' element={<Game/>} />
+            
+            {/* <Route path='/game' element={<Game/>} /> */}
 
             <Route path='/bookingAdmin' element={<BookingAdmin/>} /> 
             
             <Route path='/bookings/edit/:id' element={<EditBooking />} /> 
-            <Route path='/userEvents' element={<UserEvent />} />
+            <Route path='/userEvents' element={<UserEvent/>} />
+            <Route path='/adminEvents' element={<AdminEvent/>} />
             
-            <Route path='/Events' element={<Event/>} />
-
-
-        
-
-            
-            
-            <Route path='/admin' element={<Admin/>}/>
    
 
 
