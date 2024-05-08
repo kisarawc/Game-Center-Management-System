@@ -35,6 +35,7 @@ const PaymentThree = () => {
         }
 
         setCard(response.data);
+        console.log(card._id);
 
         const date = new Date(response.data.expire_date);
         const formattedDate = date.toISOString().substr(0, 10); // Format date as YYYY-MM-DD
