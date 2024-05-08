@@ -5,7 +5,7 @@ import Book from '../pages/Bookings/booking';
 
 import Game from '../pages/Game library/game';
 
-import BookingAdmin from '../pages/admin/booking/bookingAdmin';
+
 import Admin from '../pages/admin/home/admin';
 import EditBooking from '../pages/Bookings/editBooking'; 
 
@@ -19,7 +19,7 @@ import UsersTable from '../pages/UserProfile/usersTable';
 import Event from '../pages/events/Event';
 import PasswordReset from '../pages/UserProfile/passwordReset';
 // import Event from '../pages/events/Event';
-import Dashboard from '../pages/admin/home/admin';
+
 import ForgotPassword from '../pages/UserProfile/forgetPsswrd';
 import BookingAdmin from '../pages/admin/booking/bookingAdmin';
 import GameDetailPage from '../pages/Game library/gamedetails';

@@ -2,19 +2,15 @@ import React from 'react';
 import { AppBar, Toolbar, Typography, IconButton, Button, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 
+
+const AdminAppBar = () => {
 const handleLogout = () => {
   sessionStorage.removeItem('token');
   sessionStorage.removeItem('userId');
   window.location.href='/login';
 };
 
-const AdminAppBar = () => {
-
-  const handleLogout = () => {
-    // Perform logout actions here (clear tokens, session data, etc.)
-    // For now, let's assume you're clearing sessionStorage
-    sessionStorage.clear();
-  };
+ 
 
   return (
 <Box>
