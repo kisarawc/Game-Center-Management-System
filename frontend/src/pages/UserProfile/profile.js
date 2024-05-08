@@ -5,11 +5,31 @@ import propic from '../../images/login/profile.png';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
 import axios from 'axios';
+import profileBackground from '../../images/login/profile.jpg';
 
 const useStyles = makeStyles((theme) => ({
   profilePage: {
     textAlign: 'center',
     padding: theme.spacing(3),
+  },
+  profileBackground: {
+    backgroundImage: `url(${profileBackground})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  },
+  profileBox: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(3),
+    borderRadius: theme.shape.borderRadius,
+    boxShadow: theme.shadows[3],
+    maxWidth: 600,
+    width: '100%',
+    margin: '0 auto',
+  },
+  largeAvatar: {
+    width: theme.spacing(15),
+    height: theme.spacing(15),
+    marginBottom: theme.spacing(2),
   },
   profileInfo: {
     display: 'flex',
@@ -23,11 +43,6 @@ const useStyles = makeStyles((theme) => ({
   },
   profileActions: {
     marginTop: theme.spacing(3),
-  },
-  largeAvatar: {
-    width: theme.spacing(15),
-    height: theme.spacing(15),
-    marginBottom: theme.spacing(2),
   },
   editProfileForm: {
     display: 'flex',
@@ -57,17 +72,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     backgroundColor: theme.palette.background.default, 
   },
-
-  profileBox: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(3),
-    borderRadius: theme.shape.borderRadius,
-    boxShadow: theme.shadows[3],
-    maxWidth: 600,
-    width: '100%',
-    margin: '0 auto', 
-  },
-
   profileButton: {
     width: '50%', // Decrease button width
     marginBottom: theme.spacing(1), // Add some space between buttons
@@ -84,13 +88,15 @@ const ProfilePage = () => {
     name: '',
     username: '',
     email: '',
-    password: '',
-    gender: ''
+    gender: '',
+    phoneNumber:'',
+    bDate: ''
   });
+  const [authenticated, setAuthenticated] = useState(true); // Track authentication status
 
   useEffect(() => {
     fetchUser();
-  }, []);
+  }, [authenticated]); // Fetch user data whenever authentication status changes
 
   const fetchUser = async () => {
     try {
@@ -109,8 +115,9 @@ const ProfilePage = () => {
           name: response.data.name,
           username: response.data.username,
           email: response.data.email,
-          password: '',
-          gender: response.data.gender
+          gender: response.data.gender,
+          phoneNumber: response.data.phoneNumber,
+          bDate: response.data.bDate.split('T')[0] // Extracting only the date part
         });
       } else {
         console.error('Error fetching user data');
@@ -118,19 +125,6 @@ const ProfilePage = () => {
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
-  };
-
-  const handleLogout = () => {
-    sessionStorage.removeItem('token');
-    sessionStorage.removeItem('userId');
-  };
-
-  const handleEditProfileOpen = () => {
-    setEditProfileOpen(true);
-  };
-
-  const handleEditProfileClose = () => {
-    setEditProfileOpen(false);
   };
 
   const handleEditProfileSubmit = async (e) => {
@@ -146,6 +140,8 @@ const ProfilePage = () => {
       if (response.status === 200) {
         fetchUser();
         handleEditProfileClose();
+        toast.success('Profile updated successfully');
+        setAuthenticated(false); // Force reauthentication
       } else {
         console.error('Error updating user data');
       }
@@ -162,34 +158,43 @@ const ProfilePage = () => {
     });
   };
 
+  const handleLogout = () => {
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('userId');
+    window.location.href = '/login'; 
+  };
+
+  const handleEditProfileOpen = () => {
+    setEditProfileOpen(true);
+  };
+
+  const handleEditProfileClose = () => {
+    setEditProfileOpen(false);
+  };
+
+  const getAvatar = () => {
+    if (formData.gender === 'Male') {
+      return maleAvatar;
+    } else {
+      return femaleAvatar;
+    }
+  };
+
   return (
     <Box>
       <Header />
-      <Box
-        sx={{
-          backgroundImage: `url('https://images.saymedia-content.com/.image/t_share/MTkzNzg4MTIxMjM2NjQ1MzE1/aesthetic-website-backgrounds.gif')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'flex-start',
-          padding: '16px',
-        }}
-      >
-        <div className={classes.profilePage}>
-          <Box className={classes.profileBox}>
-            <Typography variant="h4" gutterBottom>{`Hi   ${user.username ? user.username.toUpperCase() : ''} 👋`}</Typography>
-            <div className={classes.profileInfo}>
-              <Avatar alt="Profile" src={propic} className={classes.largeAvatar} />
-              <div className={classes.userDetails}>
-                <Typography variant="body1">Name: {user.name || ''}</Typography>
-                <Typography variant="body1">Username: {user.username || ''}</Typography>
-                <Typography variant="body1">Email: {user.email || ''}</Typography>
-                <Typography variant="body1">Gender: {user.gender || ''}</Typography>
-                <Typography variant="body1">Join Date: {user.joinDate || ''}</Typography>
-              </div>
+      <div className={`${classes.profilePage} ${classes.profileBackground}`}>
+        <Box className={classes.profileBox}>
+          <Typography variant="h4" gutterBottom className={classes.cursiveText}>{`Hi   ${user.username ? user.username.toUpperCase() : ''} 👋`}</Typography>
+          <div className={classes.profileInfo}>
+            <Avatar alt="Profile" src={getAvatar()} className={classes.largeAvatar} /> {/* Render avatar dynamically */}
+            <div className={classes.userDetails}>
+              <Typography variant="body1" className={`${classes.formInput}`}>Name: {user.name || ''}</Typography>
+              <Typography variant="body1" className={`${classes.formInput}`}>Username: {user.username || ''}</Typography>
+              <Typography variant="body1" className={`${classes.formInput}`}>Email: {user.email || ''}</Typography>
+              <Typography variant="body1" className={`${classes.formInput}`}>Phone Number: {formData.phoneNumber || ''}</Typography>
+              <Typography variant="body1" className={`${classes.formInput}`}>Gender: {user.gender || ''}</Typography>
+              <Typography variant="body1" className={`${classes.formInput}`}>Birth Day: {formData.bDate || ''}</Typography>
             </div>
             <Grid container spacing={2} justifyContent="center" className={classes.profileActions}>
               <Grid item xs={12} sm={6}> 
@@ -199,10 +204,9 @@ const ProfilePage = () => {
                 <Button fullWidth variant="contained" color="secondary" onClick={handleLogout} className={classes.profileButton}>Logout</Button>
               </Grid>
             </Grid>
-          </Box>
-        </div>
-      </Box>
-
+          </div>
+        </Box>
+      </div>
       <Dialog open={editProfileOpen} onClose={handleEditProfileClose} className={classes.dialogContainer}>
         <form onSubmit={handleEditProfileSubmit}>
           <DialogTitle className={classes.dialogTitle}>Edit Profile</DialogTitle>
@@ -220,7 +224,6 @@ const ProfilePage = () => {
           </DialogActions>
         </form>
       </Dialog>
-
       <Footer />
     </Box>
   );

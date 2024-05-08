@@ -16,7 +16,12 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(cors(
+    {
+        origin: ["http://localhost:3000","https://pinvent-app.vercel.app"],
+        credentials: true,
+    }
+));
 app.use(express.json()); // Middleware to parse JSON request bodies
 
 // Connect to MongoDB Atlas
@@ -32,8 +37,6 @@ mongoose.connect(process.env.MONGODB_URL, {
     app.use('/api/events', eventRoutes);
     app.use('/api/events', commentRoutes);// Using '/api' as the base URL for event routes
     app.use('/api/users', userRoutes);
-
-
 
     //booking routes
     app.use('/api/bookings', bookingRouter);

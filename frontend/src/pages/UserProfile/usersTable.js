@@ -4,18 +4,11 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import AdminHeader from '../../../Components/common/adminHeader'
-
-const StyledHeader = styled(Typography)(({ theme }) => ({
-  textAlign: 'center',
-  padding: theme.spacing(2),
-  color: theme.palette.common.black,
-  fontWeight: 'bolder',
-  marginBottom: theme.spacing(2),
-  fontFamily: 'fantasy',
-  fontSize: '3.0rem',
-}));
+import AdminHeader from '../../Components/common/adminHeader';
+import logo from '../../images/header/logo.jpeg';
+import MenuIcon from '@mui/icons-material/Menu';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   textAlign: 'center',
@@ -93,9 +86,19 @@ const UsersTable = () => {
       .then(response => {
         window.alert('User deleted successfully');
         setUsers(users.filter(user => user._id !== selectedUserID));
+        // Recalculate counts
+        setTotalUsers(totalUsers - 1);
+        const deletedUser = users.find(user => user._id === selectedUserID);
+        if (deletedUser.gender.toLowerCase() === 'female') {
+          setTotalFemaleUsers(totalFemaleUsers - 1);
+        } else {
+          setTotalMaleUsers(totalMaleUsers - 1);
+        }
+        toast.success('User deleted successfully');
       })
       .catch(error => {
         console.error('Error deleting user:', error);
+        toast.error('An error occurred while deleting the user');
       });
     setDeleteDialogOpen(false);
   };
@@ -108,13 +111,44 @@ const UsersTable = () => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredUsers = users.filter(user =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.gender.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.joinDate.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleFilterChange = (event) => {
+    const { name, checked } = event.target;
+    if (name === 'Female') {
+      setFilterFemale(checked);
+    } else if (name === 'Male') {
+      setFilterMale(checked);
+    }
+  };
+
+  const handleSort = (order) => {
+    setSortOrder(order);
+    const sortedUsers = [...users].sort((a, b) => {
+      if (order === 'asc') {
+        return a.name.localeCompare(b.name);
+      } else {
+        return b.name.localeCompare(a.name);
+      }
+    });
+    setUsers(sortedUsers);
+  };
+
+  const filteredUsers = users.filter(user => {
+    const { name, username, email, gender } = user;
+    const searchTermLowerCase = searchTerm.toLowerCase();
+
+    // Filter by search term
+    const matchesSearchTerm =
+      name.toLowerCase().includes(searchTermLowerCase) ||
+      username.toLowerCase().includes(searchTermLowerCase) ||
+      email.toLowerCase().includes(searchTermLowerCase);
+
+    // Filter by gender
+    const matchesGenderFilter =
+      (!filterFemale || gender.toLowerCase() === 'female') &&
+      (!filterMale || gender.toLowerCase() === 'male');
+
+    return matchesSearchTerm && matchesGenderFilter;
+  });
 
   /* Generate user report */
   const generateUserReport = () => {
@@ -142,8 +176,65 @@ const UsersTable = () => {
   ))
 
   return (
-    <>
-      <StyledHeader variant="h4">All Users</StyledHeader>
+    <Box>
+      <AdminHeader/>
+      <IconButton onClick={() => setSidebarOpen(true)} aria-label="Open sidebar">
+        <MenuIcon />
+      </IconButton>
+      <Sidebar
+        anchor="left"
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      >
+        <List>
+          <Typography variant="h6" style={{ margin: '10px 10px', fontWeight: 'bold'}}>
+            Gender
+          </Typography>
+          <FilterOption>
+            <Checkbox
+              checked={filterFemale}
+              onChange={handleFilterChange}
+              name="Female" 
+            />
+            <ListItemText primary={`Female`} />
+          </FilterOption>
+          <FilterOption>
+            <Checkbox
+              checked={filterMale}
+              onChange={handleFilterChange}
+              name="Male" 
+            />
+            <ListItemText primary={`Male `} />
+          </FilterOption>
+          <Divider />
+          <Typography variant="h6" style={{ margin: '10px 10px', fontWeight: 'bold' }}>
+            Sort By Name
+          </Typography>
+          <SortingOption>
+            <ListItemText primary="Sort By Name" />
+            <Select
+              value={sortOrder}
+              onChange={(event) => handleSort(event.target.value)}
+            >
+              <MenuItem value="asc">A-Z</MenuItem>
+              <MenuItem value="desc">Z-A</MenuItem>
+            </Select>
+          </SortingOption>
+          <Divider />
+          <Typography variant="h6" style={{ margin: '10px 10px', fontWeight: 'bold' }}>
+            User Counts
+          </Typography>
+          <TotalUsers style={{ marginTop: '5px' }}>
+            <ListItemText primary={`Total Users: ${totalUsers}`} />
+          </TotalUsers>
+          <TotalUsers style={{ marginTop: '5px' }}>
+            <ListItemText primary={`Total Female Users: ${totalFemaleUsers}`} />
+          </TotalUsers>
+          <TotalUsers style={{ marginTop: '5px' }}>
+            <ListItemText primary={`Total Male Users: ${totalMaleUsers}`} />
+          </TotalUsers>
+        </List>
+      </Sidebar>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <TextField
           variant="outlined"
@@ -243,7 +334,8 @@ const UsersTable = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </>
+      <ToastContainer position="top-right" autoClose={5000} />
+    </Box>
   );
 };
 
