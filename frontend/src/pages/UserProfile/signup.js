@@ -23,6 +23,7 @@ const SignUp = () => {
   };
 
   const [formData, setFormData] = useState(initialFormState);
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,7 +59,6 @@ const SignUp = () => {
       else {
         toast.error(`Error : ${response.data.message}`);
       }
-
     } catch (error) {
       console.error('Error creating user:', error);
       toast.error('An error occurred while submitting the registration form. Please try again later');

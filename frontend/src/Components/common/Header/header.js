@@ -1,9 +1,10 @@
 import React from 'react';
 import { AppBar, Box, Toolbar, Button, ThemeProvider, Divider } from '@mui/material';
 import theme from '../../../styles/theme';
-import { NavLink,Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import log from '../../../images/header/logo.jpeg';
+
 
 const Header = () => {
   const logoStyle = {
@@ -32,19 +33,20 @@ const Header = () => {
           <Button component={NavLink} to="/" {...getButton()} >Home</Button>
           <Button component={NavLink} to="/games" {...getButton()}>Games</Button>
           <Button component={NavLink} to="/book" {...getButton()} >Book</Button>
-          <Button component={NavLink} to="/events" {...getButton()}>Events</Button>
-
-          <Divider orientation="vertical" flexItem sx={{ ml: 20, width: 5, backgroundColor: 'purple', mr: 5 }} />
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <Button component={NavLink} to="/signup" {...getButton()} variant='outlined' sx={{ width: '100px', mb: '8px', boxShadow: '0 0 8px #9605f7' }}>Register</Button>
-            <Button component={NavLink} to="/login" {...getButton()} variant='outlined' sx={{ width: '100px', boxShadow: '0 0 8px #9605f7' }}>Log in</Button>
+          <Button component={NavLink} to="/userEvents" {...getButton()}>Events</Button>
+          
+          <Divider orientation="vertical" flexItem sx={{ml: 20,width: 5, backgroundColor: 'purple', mr: 5}} />
+           <Box sx={{display:'flex', flexDirection: 'column', alignItems:'center'}}>
+            <Button component={NavLink} to="/signup" {...getButton()} variant='outlined' sx={{width:'100px' , mb:'8px',boxShadow: '0 0 8px #9605f7', color:'#f559d6'}}>Register</Button>
+            <Button component={NavLink} to="/login" {...getButton()} variant='outlined' sx={{width:'100px',boxShadow: '0 0 8px #9605f7', color:'#f559d6'}}>Log in</Button>
 
           </Box>
-
+          
           <Link to="/profile">
-            <AccountCircleOutlinedIcon sx={{ fontSize: '45px', color: 'white', ml: 2 }} />
-          </Link>
+  <AccountCircleOutlinedIcon sx={{ fontSize: '45px', color: 'white', ml: 2 }} />
+</Link> 
 
+          
         </Toolbar>
       </AppBar>
     </ThemeProvider>
