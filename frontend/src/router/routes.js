@@ -10,13 +10,11 @@ import SignUp from '../pages/UserProfile/signup';
 import ProfilePage from '../pages/UserProfile/profile'; 
 import UsersTable from '../pages/UserProfile/usersTable'; 
 import Event from '../pages/events/Event';
-import Dashboard from '../pages/admin/home/admin';
-import ForgotPassword from '../pages/UserProfile/forgetPsswrd';
 import PasswordReset from '../pages/UserProfile/passwordReset';
 // import Event from '../pages/events/Event';
 import Dashboard from '../pages/admin/home/admin';
 import ForgotPassword from '../pages/UserProfile/forgetPsswrd';
-import OTPSend from '../pages/UserProfile/OTPinput';
+
 
 const MyRouter = () => {
     return (
