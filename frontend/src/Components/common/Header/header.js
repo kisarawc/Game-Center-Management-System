@@ -35,7 +35,7 @@ const Header = () => {
           <Button component={NavLink} to="/" {...getButton()} >Home</Button>
           <Button component={NavLink} to="/games" {...getButton()}>Games</Button>
           <Button component={NavLink} to="/book" {...getButton()} >Book</Button>
-          <Button component={NavLink} to="/events" {...getButton()}>Events</Button>
+          <Button component={NavLink} to="/userEvents" {...getButton()}>Events</Button>
           
           <Divider orientation="vertical" flexItem sx={{ml: 20,width: 5, backgroundColor: 'purple', mr: 5}} />
            <Box sx={{display:'flex', flexDirection: 'column', alignItems:'center'}}>

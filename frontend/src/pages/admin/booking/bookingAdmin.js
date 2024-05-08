@@ -117,7 +117,7 @@ const BookingAdmin = () => {
       }}
     >
       <div style={{ margin: '10px', padding: '10px', boxShadow: '0px 0px 10px rgba(7, 6, 6, 0.5)', borderRadius: '8px', width: '90%' }}>
-        <h1 style={{ textAlign: 'center', marginTop: '25px', color: '#7157d8' }}>Current Booking Details</h1>
+        <h1 style={{ textAlign: 'center', marginTop: '25px', color: '#1B262C' }}>Current Booking Details</h1>
         <div style={{ display: 'flex',alignItems: 'center', marginBottom: '20px' }}>
           <input
             type="text"
@@ -128,10 +128,10 @@ const BookingAdmin = () => {
           />
           <PDFDownloadLink document={<MyDocument bookings={filteredBookings} />} fileName="booking_details.pdf">
             {({ blob, url, loading, error }) =>
-              loading ? 'Generating PDF...' : <button style={{ padding: '10px', backgroundColor: '#bc80f4', color: '#fff', border: 'none', borderRadius: '4px', marginLeft:'40px'}}>Generate PDF</button>
+              loading ? 'Generating PDF...' : <button style={{ padding: '10px', backgroundColor: '#3282B8', color: '#fff', border: 'none', borderRadius: '4px', marginLeft:'40px'}}>Generate PDF</button>
             }
           </PDFDownloadLink>
-          <div style={{ backgroundColor: '#b184ec9c', width: '20%', color: '#4247d5', marginLeft: '500px', borderRadius: '10px', textAlign: 'center' }}>
+          <div style={{ backgroundColor: '#3282B8', width: '20%', color: '#4247d5', marginLeft: '500px', borderRadius: '10px', textAlign: 'center' }}>
             <h3 style={{ margin: '0', padding: '10px' ,color:'#ffffff'}}>Total Bookings: {bookings.length}</h3>
           </div>
         </div>
