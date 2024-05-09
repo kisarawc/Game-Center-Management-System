@@ -106,7 +106,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     fetchUser();
-  }, [authenticated]); // Fetch user data whenever authentication status changes
+  }, [authenticated]); 
 
   const fetchUser = async () => {
     try {
@@ -148,7 +148,7 @@ const ProfilePage = () => {
         fetchUser();
         handleEditProfileClose();
         toast.success('Profile updated successfully');
-        setAuthenticated(false); // Force reauthentication
+        setAuthenticated(false); 
       } else {
         console.error('Error updating user data');
       }
@@ -195,7 +195,7 @@ const ProfilePage = () => {
         <Box className={classes.profileBox}>
           <Typography variant="h4" gutterBottom className={classes.cursiveText}>{`Hi   ${user.username ? user.username.toUpperCase() : ''} 👋`}</Typography>
           <div className={classes.profileInfo}>
-            <Avatar alt="Profile" src={getAvatar()} className={classes.largeAvatar} /> {/* Render avatar dynamically */}
+            <Avatar alt="Profile" src={getAvatar()} className={classes.largeAvatar} /> 
             <div className={classes.userDetails}>
               <Typography variant="body1" className={`${classes.formInput}`}>Name: {user.name || ''}</Typography>
               <Typography variant="body1" className={`${classes.formInput}`}>Username: {user.username || ''}</Typography>

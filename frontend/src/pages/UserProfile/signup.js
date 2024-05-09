@@ -79,7 +79,7 @@ const SignUp = () => {
     <Box>
       <Header />
       <div style={{ backgroundImage: `url(${signupBackground})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat', backgroundPosition: 'center', minHeight: 'calc(100vh - 200px)', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-        <Container component="main" maxWidth="sm" style={{ marginTop: '60px', marginBottom: '60px' }}> {/* Adjust margin top */}
+        <Container component="main" maxWidth="sm" style={{ marginTop: '60px', marginBottom: '60px' }}> 
           <CssBaseline />
           <Paper style={{ padding: '20px', boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)' }}>
             <Typography component="h1" variant="h5" style={{ fontFamily: 'Arial', fontSize: '32px', fontWeight: 'bold', marginBottom: '16px', textAlign: 'center' }}>
