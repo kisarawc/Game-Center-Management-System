@@ -80,7 +80,7 @@ const CommentForm = () => {
   };
 
   return (
-    <Box>
+    <Box style={{ backgroundColor: '#F0F0F0', minHeight: '100vh' }}>
       <Header />
       <Box sx={{
         position: 'relative',
@@ -92,24 +92,12 @@ const CommentForm = () => {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'flex-start',
+        padding: '50px'
       }}>
-
-
-
-
-        <Paper elevation={3} sx={{ maxWidth: 600, margin: 'auto', padding: '20px', borderRadius: '10px', backgroundColor: '#ADD8E6' }}>
+        <Paper elevation={3} sx={{ maxWidth: 800, margin: 'auto', padding: '50px', borderRadius: '10px', backgroundColor: '#FFFFFF' }}>
           <Typography variant="h5" sx={{ textAlign: 'center', marginBottom: 3, color: '#333' }}>Feedback Form</Typography>
-          <Grid container spacing={2}>
-            {/* <Grid item xs={12}>
-              <TextField
-                label="User ID"
-                fullWidth
-                value={userId}
-                onChange={e => setUserId(e.target.value)}
-                variant="outlined"
-              />
-            </Grid> */}
-            <FormControl fullWidth style={{ marginBottom: '10px' }}>
+          <Grid container spacing={3}>
+            <FormControl fullWidth style={{ marginBottom: '30px' }}>
               <InputLabel>Select a game</InputLabel>
               <Select value={selectedGame} onChange={handleGameChange}>
                 <MenuItem value="">
@@ -125,7 +113,7 @@ const CommentForm = () => {
                 label="Comment"
                 fullWidth
                 multiline
-                rows={4}
+                rows={8}
                 value={comment}
                 onChange={e => setComment(e.target.value)}
                 variant="outlined"
@@ -156,7 +144,7 @@ const CommentForm = () => {
               <Button
                 variant="contained"
                 onClick={handleSubmit}
-                sx={{ backgroundColor: '#1976D2', color: '#ADD8E6', fontWeight: 'bold', '&:hover': { backgroundColor: '#1565C0' } }}
+                sx={{ backgroundColor: '#1976D2', color: '#FFFFFF', fontWeight: 'bold', '&:hover': { backgroundColor: '#1565C0' } }}
               >
                 Submit
               </Button>

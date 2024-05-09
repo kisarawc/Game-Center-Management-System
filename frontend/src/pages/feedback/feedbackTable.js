@@ -4,7 +4,7 @@ import { Box, Table, TableHead, TableBody, TableRow, TableCell, Button, Typograp
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
 import { PDFViewer, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
-import jsPDF from 'jspdf'
+import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import logo from '../../images/header/logo.jpeg';
 
@@ -111,17 +111,49 @@ const FeedbackTable = () => {
         >
             <Header />
 
-            <input
-                type="text"
-                placeholder="Search Game Name"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ marginBottom: '20px', width: '40%', padding: '8px', boxSizing: 'border-box' }}
-            />
+            <Box
+                sx={{
+                    position: 'relative',
+                    marginTop: '20px',
+                    marginRight: '20px',
+                }}
+            >
+                <input
+                    type="text"
+                    placeholder="Search Game Name"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    style={{
+                        padding: '8px',
+                        boxSizing: 'border-box',
+                        width: '300px',
+                        position: 'absolute',
+                        top: 0,
+                        right: 0,
+                    }}
+                />
+            </Box>
 
-            <Box sx={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', padding: '20px', borderRadius: '8px', width: '80%', marginTop: '20px' }}>
-                <Typography variant="h4" sx={{ marginBottom: 2 }}>Feedback Form (Admin view)</Typography>
-                <Button onClick={genaratePDFReport} variant="contained" color="primary" sx={{ position: 'absolute', top: '160px', right: '200px', zIndex: 1 }}>Download Report</Button>
+            <Box
+                sx={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    padding: '20px',
+                    borderRadius: '8px',
+                    width: '80%',
+                    marginTop: '20px',
+                }}
+            >
+                <Typography variant="h4" sx={{ marginBottom: 2 }}>
+                    Feedback Form (Admin view)
+                </Typography>
+                <Button
+                    onClick={genaratePDFReport}
+                    variant="contained"
+                    color="primary"
+                    sx={{ position: 'absolute', top: '220px', right: '200px', zIndex: 1 }}
+                >
+                    Download Report
+                </Button>
 
                 <Table>
                     <TableHead>
@@ -150,6 +182,8 @@ const FeedbackTable = () => {
                     </TableBody>
                 </Table>
             </Box>
+
+            {/* Place the Footer outside of the Box */}
             <Footer />
         </Box>
     );
