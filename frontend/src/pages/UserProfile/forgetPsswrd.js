@@ -5,11 +5,13 @@ import axios from 'axios';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
 import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; 
+
 import profileBackground from '../../images/login/profile.jpg';
 
 const ForgetPasswordPage = () => {
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState(false);
+  const [messageSent, setMessageSent] = useState(false); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,14 +25,15 @@ const ForgetPasswordPage = () => {
 
       if (response.status === 201) {
         setEmail("");
-        setMessage(true);
+        setMessageSent(true); 
+        toast.success("Message sent to your email. Please check your inbox.");
       } else {
         toast.error("Invalid User");
       }
     } catch (error) {
       console.error('Error:', error);
+      toast.error("Error sending email. Please try again."); 
     }
-
   };
 
   const handleChange = (e) => {
@@ -47,35 +50,32 @@ const ForgetPasswordPage = () => {
             <Typography component="h1" variant="h5" style={{ fontFamily: 'Arial', fontSize: '32px', fontWeight: 'bold', marginBottom: '16px' }}>
               Forgot Password
             </Typography>
-            {message ? (
-              <Typography variant="body1" style={{ marginBottom: '16px', textAlign: 'center' }}>
-                Message sent to your email. Please check your inbox.
-              </Typography>
-            ) : (
-              <form style={{ width: '100%' }} onSubmit={handleSubmit}>
-                <TextField
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                  autoFocus
-                  value={email}
-                  onChange={handleChange}
-                />
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, color: 'white', backgroundColor: '#05cff7' }}
-                >
-                  Send OTP
-                </Button>
-              </form>
-            )}
+            <form style={{ width: '100%' }} onSubmit={handleSubmit}>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                value={email}
+                onChange={handleChange}
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, color: 'white', backgroundColor: '#05cff7' }}
+              >
+                Send OTP
+              </Button>
+            </form>
+            <Typography variant="body1" style={{ marginBottom: '16px', textAlign: 'center', display: messageSent ? 'block' : 'none' }}>
+              Message sent to your email. Please check your inbox.
+            </Typography>
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <NavLink to="/login" variant="body2" style={{ color: '#05cff7', textDecoration: 'none' }}>

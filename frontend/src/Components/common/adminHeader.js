@@ -29,7 +29,7 @@ const handleLogout = () => {
         </Typography>
 
 <Box sx={{mr:'20px'}}>
-    <Button component={Link} to="/addGgame" variant="contained" sx={{ml:'10px',mr:'20px',fontSize:'15px',backgroundColor:'#00ADB5'}} >
+    <Button component={Link} to="/addgame" variant="contained" sx={{ml:'10px',mr:'20px',fontSize:'15px',backgroundColor:'#00ADB5'}} >
       Games
     </Button>
     <Button component={Link} to="/bookingAdmin" variant="contained" sx={{mr:'20px',fontSize:'15px',backgroundColor:'#00ADB5'}}>

@@ -1,6 +1,6 @@
- import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, TextField, Typography, Paper, Container, CssBaseline, Grid, Box } from '@mui/material';
-import { NavLink, useParams } from 'react-router-dom'; // Import NavLink instead of useHistory
+import { NavLink, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../../Components/common/Header/header';
 import Footer from '../../Components/common/Footer/footer';
@@ -9,19 +9,25 @@ import profileBackground from '../../images/login/profile.jpg';
 
 const PasswordReset = () => {
     const { userId, token } = useParams();
-    const [password, setPassword] = useState("");
-    const [message, setMessage] = useState("");
+    const [formData, setformData] = useState("");
+    const {password} = formData
 
-    const userValid = async () => {
+    const sendPassword = async (e) => {
+        e.preventDefault();
+
         try {
-            const response = await axios.get(`http://localhost:5000/api/users/passwordReset/${userId}/${token}`);
+            const response = await axios.post(`http://localhost:5000/api/users/${userId}/${token}`, formData);
 
             const data = response.data;
 
             if (data.status === 201) {
-                console.log("user valid");
+                setformData("");
+                // Display toast message
+                toast.success("Password reset successful. You can now login.");
+                // Redirect to login page after successfully updating password
+                window.location.href = "/login";
             } else {
-                window.location.href = "*";
+                toast.error("Token Expired. Please generate a new link.");
             }
         } catch (error) {
             console.error("Error:", error);
@@ -29,33 +35,9 @@ const PasswordReset = () => {
     };
 
     const setval = (e) => {
-        setPassword(e.target.value);
+        const{name,value} = e.target;
+        setformData({...formData,[name]: value});
     };
-
-    const sendPassword = async (e) => {
-        e.preventDefault();
-
-        try {
-            const response = await axios.post(`http://localhost:5000/api/users/${userId}/${token}`, password);
-
-            const data = response.data;
-
-            if (data.status === 201) {
-                setPassword("");
-                setMessage(true);
-                // Redirect to login page after successfully updating password
-                window.location.href = "/login";
-            } else {
-                toast.error("!Token Expired, generate new link");
-            }
-        } catch (error) {
-            console.error("Error:", error);
-        }
-    };
-
-    useEffect(() => {
-        userValid();
-    }, []);
 
     return (
         <Box style={{ backgroundImage: `url(${profileBackground})`, backgroundSize: 'cover', minHeight: '100vh' }}>

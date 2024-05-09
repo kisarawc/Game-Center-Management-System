@@ -15,11 +15,11 @@ const ImageButton = styled(ButtonBase)(({ theme }) => ({
   margin: '30px',
   border: '1px solid #FB41FF',
   borderBottom: 'none',
-  borderRadius: '10px', // Add this line to set the border radius
+  borderRadius: '10px', 
   [theme.breakpoints.down('sm')]: {
     width: '100% !important',
     height: 100,
-    borderRadius: '5px', // Smaller radius for small screens
+    borderRadius: '5px', 
   },
   '&:hover, &.Mui-focusVisible': {
     zIndex: 1,

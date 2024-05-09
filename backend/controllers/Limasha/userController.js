@@ -162,7 +162,7 @@ exports.sendLink = async (req, res) => {
     }
 
     const token = jwt.sign({ _id: userfind._id }, keysecret, {
-      expiresIn: "1d"
+      expiresIn: "120s"
     });
     
     const setusertoken = await User.findByIdAndUpdate({_id:userfind._id}, {verifytoken:token},{new:true})
