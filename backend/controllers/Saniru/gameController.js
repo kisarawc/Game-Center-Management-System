@@ -17,8 +17,6 @@ exports.createGame = async (req, res) => {
   }
 };
 
-
-
 exports.getAllGames = async (req, res) => {
   try {
     const games = await Game.find();
@@ -44,7 +42,6 @@ exports.getGameById = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 exports.deleteGame = async (req, res) => {
   try {

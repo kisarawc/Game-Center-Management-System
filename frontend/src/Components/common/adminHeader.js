@@ -2,13 +2,16 @@ import React from 'react';
 import { AppBar, Toolbar, Typography, IconButton, Button, Box } from '@mui/material';
 import { Link } from 'react-router-dom';
 
+
+const AdminAppBar = () => {
 const handleLogout = () => {
   sessionStorage.removeItem('token');
   sessionStorage.removeItem('userId');
   window.location.href='/login';
 };
 
-const AdminAppBar = () => {
+ 
+
   return (
 <Box>
     <AppBar position="static">
@@ -20,14 +23,13 @@ const AdminAppBar = () => {
           aria-label="menu"
           sx={{ mr: 2 }}
         >
-         
         </IconButton>
         <Typography variant="h5" sx={{ flexGrow: 1, color:'#ffffff' }}>
           GG LOUNGE / ADMIN PANEL
         </Typography>
 
 <Box sx={{mr:'20px'}}>
-    <Button component={Link} to="/addGgame" variant="contained" sx={{ml:'10px',mr:'20px',fontSize:'15px',backgroundColor:'#00ADB5'}} >
+    <Button component={Link} to="/addgame" variant="contained" sx={{ml:'10px',mr:'20px',fontSize:'15px',backgroundColor:'#00ADB5'}} >
       Games
     </Button>
     <Button component={Link} to="/bookingAdmin" variant="contained" sx={{mr:'20px',fontSize:'15px',backgroundColor:'#00ADB5'}}>

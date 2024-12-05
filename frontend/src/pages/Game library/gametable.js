@@ -213,7 +213,7 @@ const GameTable = () => {
       startY: 40,
     });
 
-    doc.save('UserReport.pdf');
+    doc.save('GameReport.pdf');
   };
 
   const handleSearch = (e) => {

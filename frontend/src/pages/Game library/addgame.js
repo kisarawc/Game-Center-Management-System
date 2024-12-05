@@ -66,7 +66,6 @@ const CreateGameForm = () => {
         height="90vh"
       >
         <Box boxShadow={2} p={3} width={400}>
-          {/* Add New Game title */}
           <Typography variant="h4" align="center" color="primary" gutterBottom>
             Add New Game
           </Typography>
@@ -129,7 +128,7 @@ const CreateGameForm = () => {
               error={!!errors.description}
               helperText={errors.description}
             />
-            {/* Star rating with margin top and bottom */}
+
             <Box marginTop={2} marginBottom={2}>
               <Rating
                 value={formData.game_rating}

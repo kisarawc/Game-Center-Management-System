@@ -1,8 +1,7 @@
 import React from 'react';
-import { AppBar, Box, Toolbar, Button, ThemeProvider, Divider} from '@mui/material';
+import { AppBar, Box, Toolbar, Button, ThemeProvider, Divider } from '@mui/material';
 import theme from '../../../styles/theme';
 import { Link, NavLink } from 'react-router-dom';
-
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import log from '../../../images/header/logo.jpeg';
 
@@ -16,15 +15,14 @@ const Header = () => {
 
   const getButton = () => ({
     variant: "outlined",
-    sx: { ml: 10 ,color: 'white' , borderRadius: '10px',fontSize:'1.1rem',padding:'10px 50px' , boxShadow: '0 0 10px #05cff7'}
+    sx: { ml: 10, color: 'white', borderRadius: '10px', fontSize: '1.1rem', padding: '10px 50px', boxShadow: '0 0 10px #05cff7' }
   });
-  
 
   return (
     <ThemeProvider theme={theme}>
-      <AppBar position="static" sx={{ backgroundImage: 'linear-gradient(to right, #000000, #3e0f80,#000000ed)', boxShadow: '10'}}>
+      <AppBar position="static" sx={{ backgroundImage: 'linear-gradient(to right, #000000, #3e0f80,#000000ed)', boxShadow: '10' }}>
         <Toolbar>
-          <Box sx={{ display: 'flex', alignItems: 'center', ml: 5, mr:20}}>
+          <Box sx={{ display: 'flex', alignItems: 'center', ml: 5, mr: 20 }}>
             <img
               src={log}
               style={logoStyle}
@@ -53,5 +51,5 @@ const Header = () => {
       </AppBar>
     </ThemeProvider>
   );
-} 
+}
 export default Header;
